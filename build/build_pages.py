@@ -1,0 +1,288 @@
+# -*- coding: utf-8 -*-
+import json, sys
+import os; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+from common import *
+from content_more import TIMELINE, TL_CATS, MAP
+OUT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs')+'/'
+D=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','standards.json')))
+CRED=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs','assets','img','credits.json')))
+def fig(fn,cap):
+    m=CRED[fn]
+    return f'<figure class="rv"><img loading="lazy" src="assets/img/{fn}" alt="{esc(cap)}"><figcaption>{cap}（图源：<a href="{m["page"]}" target="_blank" rel="noopener">Wikimedia Commons</a>，{esc(m["license"])}）</figcaption></figure>'
+# ===================== INDEX =====================
+def build_index():
+    b=[]
+    b.append('''<section class="hero rv" style="background-image:linear-gradient(125deg,rgba(29,39,92,.9),rgba(88,28,135,.86) 55%,rgba(180,83,9,.82)),url(assets/img/assembly.jpg)"><div class="shine"></div>
+<h1>威斯敏斯特标准<br>《信仰告白》·《大要理问答》·《小要理问答》</h1>
+<p>一个站点读懂改革宗正统最重要的英语信仰文件：先跳出框架、从<b>整本圣经</b>与<b>神学核心</b>看全貌，再进入<b>逐章逐问</b>的细节；有时间线、故事线、地图、文化背景，有<b>圣经神学</b>与<b>圣约神学</b>，并以<b>欧陆改革宗</b>（三大普世信经 + 三项联合信条）为对照坐标。</p>
+<div class="chips"><span class="chip">📘 信仰告白 33章</span><span class="chip">📗 大要理 196问</span><span class="chip">📙 小要理 107问</span><span class="chip">🗺️ 地图·时间线</span><span class="chip">🧠 背诵·记忆训练</span><span class="chip">📱 手机/平板/电脑自适应</span></div></section>''')
+    b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('1643','西敏会议开幕'),('5½年','全体会议时期（1643–1649）'),('33','信仰告白章数'),('196','大要理问答'),('107','小要理问答'),('3','王国：英格兰·苏格兰·爱尔兰')])+'</div>')
+    b.append(h2('从这里开始','🚀','start'))
+    cards=[('wcf.html','📘','信仰告白 · 逐章精解','原文 + 核心要义 + 圣经神学 + 圣约神学 + 欧陆对照 + 难点 + 应用 + 记忆钩子'),
+           ('wlc.html','📗','大要理问答 · 196问','15个主题板块，牧者与成熟信徒的“讲道手册”'),
+           ('wsc.html','📙','小要理问答 · 107问','10个主题板块，最适合家庭与初学者背诵'),
+           ('history.html','🗺️','历史 · 地理 · 文化','时间线、故事线、互动地图、人物与派别、文化区域'),
+           ('compare.html','⚖️','深度对比','三份文件异同、为何三份而非一份、与三项联合信条对照矩阵'),
+           ('recite.html','🎙️','干净阅读版 · 背诵','遮盖答案、首字提示、字号调节、已背进度'),
+           ('memory.html','🧠','记忆训练','口诀、记忆宫殿、翻转卡片、小测验'),
+           ('creeds.html','📜','信经与联合信条原文','三大普世信经 + 比利时信条 + 海德堡 + 多特（逐字取自 ccifellowship.org）')]
+    b.append('<div class="grid g4">'+''.join(f'<a class="card navcard rv" href="{u}"><div class="big">{i}</div><h3>{t}</h3><p>{d}</p></a>' for u,i,t,d in cards)+'</div>')
+    # one page summary
+    b.append(h2('一页读懂：为什么写 · 写了什么 · 怎么用','🧩','why'))
+    b.append('''<div class="flow rv">
+<div class="st"><div class="e">⚔️</div><b>处境</b><small>内战、国教危机、三个王国宗教分裂</small></div>
+<div class="st"><div class="e">🤝</div><b>盟约</b><small>1643《庄严联盟与圣约》：追求三国在信仰告白、教会治理、敬拜指南与要理问答上的统一</small></div>
+<div class="st"><div class="e">🏛️</div><b>会议</b><small>国会召集的神学家会议，在西敏寺逐句辩论</small></div>
+<div class="st"><div class="e">📘</div><b>文件</b><small>信仰告白（1646/47）+ 大要理（1647/48）+ 小要理（1647/48）</small></div>
+<div class="st"><div class="e">🌍</div><b>流传</b><small>苏格兰采纳 → 北美长老会 → 全球改革宗/长老会，含华人教会</small></div>
+</div>''')
+    b.append('<div class="grid">'+''.join(f'<div class="card rv {cls}"><h3>{t}</h3>{c}</div>' for t,c,cls in [
+     ('❓ 为什么写（Why）','<p>直接原因：长期国会需要在废除主教制后重建英格兰教会的教义、治理与敬拜；苏格兰盟约派要求以“盟约”为条件提供军事援助，目标是<mark>三个王国宗教上的统一</mark>。深层原因：一百年宗教改革成果需要一份能抵御罗马天主教、阿米念主义、反律主义、索西尼主义等错误的成熟表述。</p>','bl-cov'),
+     ('📝 写了什么（What）','<p><b>信仰告白</b>：从圣经论到末日审判的完整教义体系；<b>大要理问答</b>：以问答形式更详尽地展开信仰与本分，供讲台与成熟信徒；<b>小要理问答</b>：精炼可背的入门版本。三者结构一致：<mark>先“信什么”，后“行什么”</mark>。</p>','bl-rev'),
+     ('🛠️ 怎样应用（How）','<p>个人：以第1问校准人生目的；家庭：以小要理问答作家庭敬拜教材；教会：作为讲道、门训、按立与教会纪律的教义标准；宣教：为华人教会提供成熟、经过历史检验的信仰语言。</p>','bl-sal')])+'</div>')
+    b.append(callout('key-pt','📖 学习顺序（本站所用译本卷末托马斯·曼顿〔Thomas Manton〕序言原句）','<span class="verse">“先学习《小要理问答》，其次是《大要理问答》，最后是《信仰告白》。”</span>'))
+    # whole bible
+    b.append(h2('第一层：跳出框架——从整本圣经看','🌏','bible'))
+    b.append('<p class="lead">西敏标准不是一套抽象哲学，而是对<b>圣经整体叙事</b>的系统总结。下表把圣经的救赎历史主线，与西敏标准、三项联合信条的对应位置并列，帮助你先看见“森林”，再看“树木”。</p>')
+    rows=[('🌳 创造','创1–2','神是创造主，人按神形像受造，伊甸是圣所','WCF 4；WSC 9–10；WLC 15–17','HC 6；BC 12, 14'),
+          ('🍎 行为之约·堕落','创2:16-17；创3；罗5','亚当作为代表元首违约，全人类在他里面堕落','WCF 6–7.2；WSC 12–19；WLC 20–29','HC 3–11；BC 14–15；CD III/IV'),
+          ('🐍 第一福音','创3:15','女人的后裔要伤蛇的头——恩典之约的第一次宣告','WCF 7.3；WLC 30–31','HC 19；BC 17'),
+          ('🌈 挪亚之约','创6–9','普遍恩典中保存世界，为救赎历史搭建舞台','WCF 5（护理）','BC 13'),
+          ('⭐ 亚伯拉罕之约','创12, 15, 17','“我要作你和你后裔的神”——因信称义，约的记号给儿女','WCF 7.5；11.6；28.4','HC 74；BC 34'),
+          ('⛰️ 摩西之约','出19–24；利；申','律法、祭司、献祭、帐幕：预表基督；道德律永远有效','WCF 19；WLC 34, 91–148；WSC 39–81','HC 92–115；BC 25'),
+          ('👑 大卫之约','撒下7；诗2；诗110','永远的王位，弥赛亚是大卫的子孙','WCF 8.1；WLC 45；WSC 26','HC 31'),
+          ('📜 先知与新约应许','耶31:31-34；结36','新心、新灵、罪得赦免——内化的约','WCF 7.6；10.1','CD III/IV 11–12'),
+          ('✝️ 基督：约的中保','福音书；来7–10','降卑、受死、复活、升天：成全行为之约的要求，施行恩典之约','WCF 8；WLC 36–56；WSC 21–28','HC 12–52；BC 18–21'),
+          ('🔥 五旬节与教会','徒2；弗1–4','圣灵把基督的救恩施用给选民，召聚教会','WCF 10–18, 25–31；WLC 57–90','HC 53–85；BC 22–35'),
+          ('🌅 新天新地','启21–22','审判、复活、约的完全成全：“神要与他们同住”','WCF 32–33；WLC 82–90；WSC 37–38','HC 52, 57–58；BC 37')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>救赎历史阶段</th><th>经文</th><th>主线</th><th>西敏标准</th><th>三项联合信条</th></tr></thead><tbody>'+''.join(f'<tr><td><b>{a}</b></td><td>{b_}</td><td>{c}</td><td>{d}</td><td>{e}</td></tr>' for a,b_,c,d,e in rows)+'</tbody></table></div>')
+    b.append('<div class="mermaid">'+esc('''flowchart LR
+  C["🌳 创造"] --> F["🍎 堕落"] --> P["🐍 应许 创3:15"] --> N["🌈 挪亚"] --> A["⭐ 亚伯拉罕"] --> M["⛰️ 摩西"] --> D["👑 大卫"] --> J["📜 新约应许"] --> X(("✝️ 基督"))
+  X --> CH["🔥 教会"] --> NC["🌅 新天新地"]
+  style X fill:#fde68a,stroke:#b45309,stroke-width:3px''')+'</div>')
+    # covenant theology
+    b.append(h2('第二层：神学核心——圣约神学','🤝','covenant'))
+    b.append('<p class="lead">西敏标准最显著的结构特征是<b>圣约</b>：神与人之间“距离如此之远”，人要得着祝福，唯有神<b>屈尊降卑</b>以约的方式与人相交（WCF 7.1）。欧陆改革宗（布林格、乌尔西努、俄利维亚努等）是圣约神学的源头之一；西敏会议把它以信条形式系统化。</p>')
+    b.append('<div class="mermaid">'+esc('''flowchart TB
+  PS["🕊️ 救赎之约（永恒中·父与子）<br/>神学传统中的概念，WCF 8.1 与 WLC 31 隐含其意"]:::a
+  CW["🍎 行为之约 / 生命之约<br/>WCF 7.2；19.1；WLC 20；WSC 12<br/>条件：完全、个人、永久的顺服"]:::w
+  CG["🤝 恩典之约<br/>WCF 7.3；WLC 30–35；WSC 20<br/>与第二亚当基督及在祂里的选民立"]:::g
+  OT["📜 律法时期的施行<br/>应许·预言·献祭·割礼·逾越节·预表"]:::o
+  NT["✝️ 福音时期的施行<br/>圣道·洗礼·圣餐：更简明、更充分、更有效"]:::n
+  PS --> CG
+  CW -- 亚当违约 --> CG
+  CG --> OT
+  CG --> NT
+  OT -. 本质同一 .- NT
+  classDef a fill:#ede9fe,stroke:#7c3aed
+  classDef w fill:#fee2e2,stroke:#dc2626
+  classDef g fill:#fef3c7,stroke:#d97706
+  classDef o fill:#e0f2fe,stroke:#0284c7
+  classDef n fill:#dcfce7,stroke:#16a34a''')+'</div>')
+    b.append('<div class="grid">'+''.join(f'<div class="card rv {c}"><h3>{t}</h3><p>{d}</p></div>' for t,d,c in [
+      ('🍎 行为之约','亚当作为全人类的盟约元首，以完全顺服为条件得生命；违约则死。理解它，才能理解为何需要“第二亚当”以完全顺服成全律法（主动顺服），并替我们受刑（被动顺服）。','bl-man'),
+      ('🤝 恩典之约','“基督是第二个亚当，恩典之约是与祂以及在祂里面的所有选民立的”（WLC 31）。神白白提供生命与救恩，要求信心，并应许赐下圣灵使人愿意并能够相信（WCF 7.3）。','bl-cov'),
+      ('📜 一约两施行','旧约与新约不是两种救法，而是同一恩典之约在不同时期的施行（WCF 7.5–7.6）。这是婴儿洗礼、教会连续性、以经解经的基础。','bl-sal'),
+      ('🇳🇱 与欧陆的连接','海德堡第74问以婴孩“与父母同属于神的圣约和教会”为洗礼根据；《比利时信条》第17条描写神在人堕落后“来寻找战兢地躲避他面的人”。两大传统共享同一圣约骨架，西敏在术语上更系统。','bl-chr')])+'</div>')
+    # mind map
+    b.append(h2('第三层：思维导图——三份文件一张图','🧠','mindmap'))
+    b.append('<div class="mermaid">'+esc('''mindmap
+  root((西敏标准))
+    信仰告白 33章
+      启示 1
+      神 2-5
+      人·约·基督 6-9
+      救恩施行 10-18
+      律法·自由·敬拜 19-24
+      教会·圣礼 25-31
+      末世 32-33
+    大要理 196问
+      当信什么 1-90
+        神与作为
+        恩典之约与中保
+        恩典中·荣耀中与基督相交
+      当尽本分 91-196
+        道德律·十诫
+        蒙恩之道 道·礼·祷告
+    小要理 107问
+      当信什么 1-38
+      当尽本分 39-107
+        十诫 45-81
+        主祷文 99-107''')+'</div>')
+    # continental lens
+    b.append(h2('第四层：欧陆改革宗的阅读视角','🇳🇱','continental'))
+    b.append('<div class="grid g2">'+
+      '<div class="card rv bl-chr"><h3>📜 认信坐标</h3><p>欧陆改革宗教会（如加拿大归正教会 CanRC、北美联合改革宗教会 URCNA、传承改革宗 HRC、更正改革宗 PRCA，以及中文世界的中国改革宗教会、洛杉矶改革宗·恩约教会）以<b>三大普世信经 + 三项联合信条</b>为信仰准则；长老会（如 OPC）以<b>西敏标准</b>为准则。两者同属改革宗认信家族，教义体系高度一致。</p></div>'+
+      '<div class="card rv bl-cov"><h3>🔍 阅读原则</h3><p>① 先以三大普世信经确认三一与基督论的大公根基；② 以三项联合信条为“母语”，把西敏标准当作同一家族中更详尽的“姊妹文件”；③ 在一致处互相丰富，在侧重不同处（如安息日实践、确据与信心的关系、教会与国家）以圣经为最终裁判（WCF 1.10；BC 7）。</p></div></div>')
+    b.append(callout('eu-pt','🏛️ 洛杉矶改革宗·恩约教会《我们的信仰》（原文摘录，来源 ccreformed.org/our-belief）','<span class="verse">“在恩约教会，我们相信并宣告：古代的基督教信经，即《使徒信经》、《尼西亚信经》、《亚他那修信经》，以及三联合信条，即《比利时信条》、《海德堡要理问答》、《多特信经》，包含了我们的教义准则，及公开宣告的信仰内容。这些信仰文件不是我们独有的。古代信经把我们连结在古代基督教会上，而三联合信条把我们连结在十六、十七世纪广大的改革宗传统中。”</span>'))
+    b.append(callout('eu-pt','✍️ 改革宗初学者《信仰告白》（原文摘录，来源 reformedbeginner.net/statement-of-faith）','<span class="verse">“改革宗初学者博客认信普世大公教会所共同持守的大公信经：使徒信经、尼西亚信经、亚他那修信经； 并继承改革宗的认信传统，与历代改革宗基督徒同口承认以下的信仰文件忠心总结了圣经的教义系统：三联合信条（即海德堡要理问答、比利时信条、多特信经）；威敏斯特准则（威敏斯特信仰告白、威敏斯特大、小要理问答）。”</span>'))
+    b.append(h2('第五层：从不同视角读','👓','lenses'))
+    lenses=[('🏺','历史视角','把文件放回1640年代的战争、国会与盟约中：它们是“危机中的信仰告白”。'),('📚','圣经神学视角','跟随救赎历史的主线（创造—堕落—救赎—成全），看每一条教义在圣经故事中的位置。'),('🤝','圣约神学视角','以行为之约与恩典之约为骨架，理解律法与福音、旧约与新约、亚当与基督。'),('🏛️','系统神学视角','按“神论—人论—基督论—救恩论—教会论—末世论”检查体系的完整与一致。'),('🎶','敬拜视角','规范原则、安息日、圣礼、祷告：教义如何塑造主日。'),('👨‍👩‍👧','家庭与教育视角','要理问答原本就是为家庭与儿女写的：曼顿序言强调家长的教导责任。'),('⚖️','伦理与社会视角','大要理的十诫详解是一部完整的基督徒伦理学：家庭、经济、言语、心思。'),('🌏','华人教会视角','在没有基督教王国背景的处境中，学习区分永恒教义与17世纪的政治安排（如官员条款）。')]
+    b.append('<div class="grid g4">'+''.join(f'<div class="card rv"><div class="big" style="font-size:28px">{i}</div><h3 style="margin:4px 0">{t}</h3><p style="margin:0">{d}</p></div>' for i,t,d in lenses)+'</div>')
+    open(OUT+'index.html','w').write(page('index.html','总览：从整本圣经看西敏标准','\n'.join(b),js=MERMAID_JS))
+# ===================== HISTORY =====================
+def build_history():
+    b=[]
+    b.append('''<section class="hero rv" style="background-image:linear-gradient(125deg,rgba(29,39,92,.9),rgba(88,28,135,.86) 55%,rgba(180,83,9,.82)),url(assets/img/jerusalem-chamber.jpg)"><div class="shine"></div><h1>🗺️ 历史 · 地理 · 文化</h1>
+<p>时间线、故事线、互动地图、人物与派别、文化区域——还原1640年代伦敦西敏寺里那场长达五年半的神学会议的<b>真实背景</b>与<b>真实情境</b>。</p></section>''')
+    b.append(h2('时间线（可筛选）','⏳','timeline'))
+    b.append('<div class="filters" data-for="#tl">'+''.join(f'<button data-k="{k}" class="{"on" if k=="all" else ""}">{v}</button>' for k,v in TL_CATS)+'</div>')
+    b.append('<div class="tl" id="tl">'+''.join(f'<div class="ev rv{" big" if big else ""}" data-cat="{cat}" style="--dot:{col}"><span class="y">{y}</span>{t}</div>' for y,t,cat,col,big in TIMELINE)+'</div>')
+    b.append('<p class="muted">注：时间线中关于普世信经与三项联合信条的年代说明以 ccifellowship.org 引言为准；西敏会议的日期依据通行的教会史记载整理。</p>')
+    b.append(h2('故事线：六幕剧','🎭','story'))
+    acts=[('第一幕 · 风暴前夜（1625–1640）','查理一世与大主教劳德推行高派礼仪与主教统治，清教徒受压。1637年，查理强迫苏格兰使用新祈祷书，爱丁堡圣吉尔斯大教堂爆发骚乱；1638年苏格兰人签署《国民圣约》，随后的“主教战争”迫使国王召开国会。','⛈️'),
+          ('第二幕 · 国会与战争（1640–1643）','“长期国会”与国王的冲突升级为1642年内战。国会决心改革英格兰教会，于1643年颁令召开神学家会议，向国会提供意见——会议是国会的咨询机构，不是独立的教会总会。','⚔️'),
+          ('第三幕 · 盟约（1643）','国会需要苏格兰军队，苏格兰则要求宗教上的盟约。《庄严联盟与圣约》由此产生，目标是三国在信仰告白、教会治理、敬拜指南与要理问答上的统一。苏格兰派出专员（如亨德森、卢瑟福、吉莱斯皮、贝利）参与会议。','🤝'),
+          ('第四幕 · 耶路撒冷厅的日与夜（1643–1647）','会议先修订《三十九条》，后转而起草全新的文件。长老派、独立派（“异议弟兄”）、伊拉斯都派围绕教会治理激烈辩论；外面战火未熄（马斯顿荒原、纳斯比）。《公共敬拜指南》《教会治理形式》先后完成，1646年底信仰告白完成。','🕯️'),
+          ('第五幕 · 文件诞生（1646–1648）','信仰告白附经文于1647年呈交；苏格兰教会总会于1647年8月批准。大小要理问答于1647年秋呈交，1648年附经文；苏格兰总会于1648年7月批准。英格兰国会虽部分采纳，但政局巨变使其未能在英格兰长期实行。','📘'),
+          ('第六幕 · 王冠落地之后（1649–今天）','1649年查理一世被处决；1660年王政复辟，1662年大批清教徒牧师被逐。西敏标准却在苏格兰扎根（1690年再获确认），经由移民传到北美（1729年采纳法案、1788年修订），最终成为全球长老会与众多改革宗教会的信仰准则，也进入华人教会。','🌍')]
+    b.append('<div class="grid g2">'+''.join(f'<div class="card rv"><h3>{i} {t}</h3><p>{d}</p></div>' for t,d,i in acts)+'</div>')
+    b.append(h2('互动地图','📍','mapsec'))
+    b.append('<div class="filters" id="mapf">'+''.join(f'<button data-k="{k}" class="{"on" if k=="all" else ""}">{v}</button>' for k,v in [('all','全部'),('wa','西敏会议'),('brit','不列颠'),('war','战场'),('cont','欧陆改革宗'),('ref','宗教改革'),('creed','普世信经'),('am','北美')])+'</div>')
+    b.append('<div id="map"></div><p class="muted">底图 © OpenStreetMap 贡献者。点击标记查看说明；可缩放到伦敦西敏区查看西敏寺、耶路撒冷厅、圣玛格丽特教堂与国会的相对位置。</p>')
+    b.append('<div class="grid">'+fig('abbey.jpg','西敏寺西立面（约翰·布拉克 版画）')+fig('jerusalem-chamber.jpg','耶路撒冷厅——西敏会议的主要会场（19世纪插图）')+fig('assembly.jpg','约翰·罗杰斯·赫伯特所绘：西敏会议中独立派为良心自由辩护（1644年情景的19世纪历史画）')+'</div>')
+    b.append('<div class="grid">'+fig('covenant.jpg','《庄严联盟与圣约》（1643）')+fig('dort.jpg','多特大会（17世纪荷兰版画）')+fig('heidelberg1563.jpg','1563年《海德堡要理问答》扉页')+'</div>')
+    b.append(h2('会议中的人物与派别','👥','people'))
+    parties=[('🟦 长老派（多数）','主张由长老会议治理教会，与苏格兰立场相近；如埃德蒙·卡拉米、安东尼·塔克尼、爱德华·雷诺兹等。'),('🟩 独立派（“异议弟兄”）','主张会众自治，人数少但影响大：托马斯·古德温、菲利普·奈、耶利米·巴勒斯等，1644年发表《辩护陈述》。'),('🟨 伊拉斯都派','主张国家对教会纪律有最终权柄：约翰·塞尔登、约翰·莱特富特、托马斯·科尔曼等。WCF 30.1“在国家官员以外”设立教会治理，正是对此的回应。'),('🟥 苏格兰专员','无表决权，但影响深远：亚历山大·亨德森、塞缪尔·卢瑟福、乔治·吉莱斯皮、罗伯特·贝利（其书信是重要史料）。'),('⬜ 主持人','威廉·特威斯（William Twisse）为首任会议主持（prolocutor），1646年去世后由查尔斯·赫尔（Charles Herle）接任。'),('🟪 缺席者','大主教厄舍（James Ussher）虽被提名却未出席，但他主导的《爱尔兰信纲》（1615）深刻影响了信仰告白的结构与用语。')]
+    b.append('<div class="grid">'+''.join(f'<div class="card rv"><h3>{t}</h3><p>{d}</p></div>' for t,d in parties)+'</div>')
+    b.append(h2('文化区域特征','🏰','culture'))
+    rows=[('🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰','国教会（主教制）+ 清教运动；国会政治与普通法传统；伦敦印刷业与小册子战','清教徒“平实讲道”、守主日、家庭敬拜、良心问题（案例神学）','会议地点与召集者；信条的法律与政治处境（官员条款）'),
+          ('🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰','长老制“柯克”（Kirk）、总会制度；盟约传统（1638国民圣约）','教会独立于王权的“两国论”、公开的教会纪律、要理问答教育','推动“统一”的动力；最终采纳并长期实行西敏标准'),
+          ('☘️ 爱尔兰','厄舍与都柏林三一学院；1615年《爱尔兰信纲》；1641年叛乱','学术性的改革宗正统','信条结构与用语的蓝本之一'),
+          ('🇳🇱 低地国家','在西班牙统治与逼迫下形成的改革宗教会；多特大会','殉道者信仰、会议制教会、诗篇吟唱、海德堡问答讲道','三项联合信条；国际改革宗正统的共识'),
+          ('🇩🇪 普法尔茨','选帝侯腓德烈三世；海德堡大学','温暖、个人化的要理问答传统（“唯一的安慰”）','圣约神学先驱（乌尔西努、俄利维亚努）'),
+          ('🇨🇭 日内瓦/瑞士','加尔文、贝扎、布林格','学院与流亡者网络；圣经注释传统','英格兰/苏格兰改教者的神学母校')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>区域</th><th>政治与教会结构</th><th>敬虔与文化特征</th><th>与西敏标准的关系</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{x}</td>' for x in r)+'</tr>' for r in rows)+'</tbody></table></div>')
+    mapjs='<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>'
+    pts=json.dumps([dict(lat=a,lng=b_,t=t,d=d,c=c) for a,b_,t,d,c in MAP],ensure_ascii=False)
+    js=mapjs+'''<script>window.__pageInit=function(){
+ if(!window.L){document.getElementById('map').innerHTML='<p style="padding:20px">地图组件加载失败（可能是网络限制），请刷新重试。</p>';return}
+ const P='''+pts+''';
+ const col={wa:'#16a34a',brit:'#0891b2',war:'#dc2626',cont:'#b45309',ref:'#2563eb',creed:'#7c3aed',am:'#be185d'};
+ const m=L.map('map',{scrollWheelZoom:false}).setView([52.5,3],5); window.__map=m;
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(m);
+ const layers=P.map(p=>{const mk=L.circleMarker([p.lat,p.lng],{radius:9,color:'#fff',weight:2,fillColor:col[p.c],fillOpacity:.95}).bindPopup('<b>'+p.t+'</b><br>'+p.d);mk.addTo(m);mk.c=p.c;return mk});
+ const f=document.getElementById('mapf');
+ f.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;[...f.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');const k=b.dataset.k;const vis=[];layers.forEach(l=>{if(k==='all'||l.c===k){l.addTo(m);vis.push(l.getLatLng())}else m.removeLayer(l)});if(vis.length)m.fitBounds(L.latLngBounds(vis).pad(.3),{maxZoom:15})});
+};</script>'''
+    open(OUT+'history.html','w').write(page('history.html','历史 · 地理 · 文化','\n'.join(b),js=js))
+# ===================== COMPARE =====================
+def build_compare():
+    b=[]
+    b.append('''<section class="hero rv" style="background-image:linear-gradient(125deg,rgba(29,39,92,.9),rgba(88,28,135,.86) 55%,rgba(180,83,9,.82)),url(assets/img/dort.jpg)"><div class="shine"></div><h1>⚖️ 深度对比</h1>
+<p>三份西敏文件之间的异同；为什么需要三份而不是一份；它们各自要解决什么问题；以及西敏标准与欧陆<b>三项联合信条</b>、<b>三大普世信经</b>的系统对照。</p></section>''')
+    b.append(h2('三份西敏文件总览','📊','three'))
+    rows=[('体裁','系统性信条（章·节）','详尽的问答','精炼的问答'),
+          ('完成/呈交','1646年12月；1647年附经文','1647年10月；1648年附经文','1647年11月；1648年附经文'),
+          ('苏格兰批准','1647年8月','1648年7月2日','1648年7月'),
+          ('篇幅','33章','196问','107问'),
+          ('主要对象','教会与圣职人员：教义标准与界线','牧者讲道、教师、成熟信徒','儿童、家庭、初信者'),
+          ('结构','圣经→神→人与约→基督→救恩→律法与敬拜→教会→末世','序言1–5；当信6–90；本分91–196','序言1–3；当信4–38；本分39–107'),
+          ('圣约','第7章系统论述；19.1','20（生命之约）、30–35（恩典之约）','12（生命之约）、20（恩典之约）'),
+          ('独有亮点','精密定义与驳谬（如1.6、7.5–7.6、11.1、18.3）','有形/无形教会；“恩典中/荣耀中”与基督相交；99问解经八规则；167问善用洗礼','第1问；第4问对神的定义；简洁可背'),
+          ('语气','法庭式、宣告式（“我们相信”隐含）','教师式、细致、实践','教理问答式、简明、易记')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>维度</th><th>📘 信仰告白</th><th>📗 大要理问答</th><th>📙 小要理问答</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{"<b>"+x+"</b>" if i==0 else x}</td>' for i,x in enumerate(r))+'</tr>' for r in rows)+'</tbody></table></div>')
+    b.append(h2('为什么需要三份，而不是一份？','❓','whythree'))
+    b.append('<div class="grid">'+''.join(f'<div class="card rv {c}"><h3>{t}</h3><p>{d}</p></div>' for t,d,c in [
+      ('1️⃣ 功能不同','信条是教会公开的“界碑”，用于按立与纪律；要理问答是“课本”，用于教导与背诵。一份文件很难同时做到精密与易记。','bl-rev'),
+      ('2️⃣ 对象不同','会议在起草过程中决定写两部要理问答：一部更精确、更全面，一部更简单、更短，供初学者使用。这正是大、小要理问答的分工。','bl-sal'),
+      ('3️⃣ 盟约要求','《庄严联盟与圣约》追求的统一包括信仰告白与要理问答两项，因此两类文件都是“盟约任务”的组成部分。','bl-cov'),
+      ('4️⃣ 改教传统','改教时期普遍“信条 + 要理问答”并行：如加尔文的日内瓦要理问答与法国信条；欧陆的《比利时信条》与《海德堡要理问答》。','bl-chr'),
+      ('5️⃣ 教学阶梯','曼顿的建议：先小要理、再大要理、最后信仰告白——由浅入深、由记忆到理解再到体系。','bl-law'),
+      ('6️⃣ 互相保护','三份文件同一体系、互相印证：要理问答的简洁表述受信条的精确定义保护，信条的抽象表述因要理问答而落地为生活。','bl-chu')])+'</div>')
+    b.append(h2('各自要解决的问题','🎯','problems'))
+    probs=[('📘 信仰告白','三国教会的教义统一；回应罗马天主教（圣经与传统、弥撒、炼狱）、阿米念主义（预定、恩典、坚忍）、反律主义（律法与成圣）、索西尼主义（三一、补赎）、重洗派（婴儿洗礼、官员）、伊拉斯都主义（教会治理权）'),
+           ('📗 大要理问答','为讲台提供系统而详尽的教义大纲；尤其为伦理生活（十诫）与蒙恩之道（道、礼、祷告）提供牧养细节'),
+           ('📙 小要理问答','在家庭与教会中培养下一代；让每个信徒都能用简短准确的话表达信仰（“荣耀神，永远因祂而喜乐”）')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>文件</th><th>主要针对的问题</th></tr></thead><tbody>'+''.join(f'<tr><td><b>{a}</b></td><td>{c}</td></tr>' for a,c in probs)+'</tbody></table></div>')
+    b.append(h2('同一教义在三份文件中的位置','🧭','matrix'))
+    mx=[('圣经','1','2–5','2–3','2–7','—（参21、22）','—'),('神与三一','2','6–11','4–6','1, 8–11','25','—'),('预定','3','12–14','7–8','16','54','第一项'),('创造与护理','4–5','15–19','9–11','12–13','26–28','—'),('堕落与原罪','6','21–29','13–19','14–15','3–11','第三、四项'),('圣约','7','20, 30–35','12, 20','17（应许）','74（洗礼与约）','—'),('中保基督','8','36–56','21–28','18–21, 26','12–19, 29–52','第二项'),('自由意志','9','25, 149','—','14','8','第三、四项'),('有效呼召','10','67–68','31','—','54, 65','第三、四项'),('称义','11','70–73','33','22–23','59–64','第二项'),('成圣与善行','13, 16','75, 77–78','35','24','86–91','—'),('坚忍与确据','17–18','79–81','36','—','1, 53–54','第五项'),('律法与十诫','19','91–152','39–84','25','92–115','—'),('敬拜与安息日','21','108–121','45–62','—','96–98, 103','—'),('教会','25–26','61–65','—','27–29','54–55','—'),('圣礼','27–29','161–177','91–97','33–35','65–82','—'),('教会惩戒与治理','30–31','—','—','30–32','83–85','—'),('政府官员','23','—','—','36','—','—'),('末后之事','32–33','82–90','37–38','37','52, 57–58','—')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>教义</th><th>📘 WCF 章</th><th>📗 WLC 问</th><th>📙 WSC 问</th><th>📕 BC 条</th><th>📗 HC 问</th><th>📙 CD</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{"<b>"+x+"</b>" if i==0 else x}</td>' for i,x in enumerate(r))+'</tr>' for r in mx)+'</tbody></table></div>')
+    b.append('<p class="muted">对应关系为学习用的参考索引（并非逐字对应）。BC=比利时信条，HC=海德堡要理问答，CD=多特信经。</p>')
+    b.append(h2('西敏标准 vs 三项联合信条','🇳🇱','vs3fu'))
+    rows=[('年代','1643–1648','1561 / 1563 / 1618–1619'),
+          ('地点','伦敦·西敏寺','南尼德兰 / 海德堡 / 多特'),
+          ('作者','国会召集的神学家会议（集体起草）','德布利 / 乌尔西努与俄利维亚努等 / 国际性总会'),
+          ('处境','内战与三国宗教统一','逼迫中的护教 / 领地的教导 / 阿米念争议'),
+          ('体裁','一部信条 + 两部要理问答（同一会议、同一体系）','一部信条 + 一部要理问答 + 一部护教性法规（不同时代、不同作者）'),
+          ('起点','WSC 1：人生首要目的——荣耀神、以神为乐','HC 1：或生或死唯一的安慰——属于基督'),
+          ('结构特色','“当信什么 / 当尽何本分”二分','HC：“罪与愁苦 / 得救 / 感恩”三分'),
+          ('圣约','明确提出行为之约与恩典之约（WCF 7）','恩典之约贯穿（HC 74；BC 17, 34）；“行为之约”术语未直接出现'),
+          ('预定','WCF 3（含“越过”与谨慎教导）','CD 第一项（更详细、更牧养）'),
+          ('确据','WCF 18.3：完全确据不属于信仰的本质','HC 21：真信心包含确信；CD V 9–13 论确据'),
+          ('安息日','WCF 21.7–8：严格的基督教安息日','HC 103：参与公共敬拜、一生不作恶、预尝永远安息'),
+          ('教会治理','长老会议制（另有《教会治理形式》）','堂会—区会—总会（《多特教会规章》）'),
+          ('政府官员','WCF 23（1788美国修订）','BC 36（ccifellowship注明1905年荷兰总会删除部分字句）'),
+          ('今日主要使用者','长老会：OPC、PCA、苏格兰自由教会等','欧陆改革宗：CanRC、URCNA、HRC、PRCA、中国改革宗教会等')]
+    b.append('<div class="tbl rv"><table><thead><tr><th>维度</th><th>西敏标准</th><th>三项联合信条</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{"<b>"+x+"</b>" if i==0 else x}</td>' for i,x in enumerate(r))+'</tr>' for r in rows)+'</tbody></table></div>')
+    b.append('<div class="grid g2">'+callout('key-pt','✅ 本质一致','唯独圣经、三一神、神的主权与预定、全然败坏、基督的替代性补赎、唯独因信称义（归算）、圣灵的有效恩召、圣徒蒙保守、律法作为感恩生活的准则、属灵临在的圣餐观、婴儿洗礼、长老治理的教会与纪律——两套文件在这些核心上完全一致。')+callout('hard-pt','🔍 侧重不同','西敏更系统、更精密、更“经院式”，更突出圣约结构与伦理细节；三项联合信条更个人、更温暖（HC“我”的语言）、更具殉道与护教色彩（BC），并在预定论上有最详尽的牧养处理（CD）。')+'</div>')
+    b.append(h2('与三大普世信经的关系','🕊️','ecumenical'))
+    b.append('<p>《比利时信条》第9条说：“在这一教义上，我们甘愿接受《使徒信经》、《尼西亚信经》和《亚他拿修信经》，以及其他与它们不相悖，且受到教父们一致认可的信经。”（ccifellowship.org 原文）西敏标准没有单独列出普世信经，但其三一论（WCF 2.3）与基督论（WCF 8.2）完全承接尼西亚与迦克墩的界线；小要理问答末尾所附的主祷文、十诫与使徒信经（历史上常随印本附录）也显示其大公根基。</p>')
+    b.append('<div class="tbl rv"><table><thead><tr><th>普世信经</th><th>核心</th><th>西敏标准中的回响</th></tr></thead><tbody><tr><td><b>使徒信经</b></td><td>三一架构的洗礼信仰告白</td><td>WLC/WSC“当信什么”部分的骨架；HC 23–58 逐句讲解</td></tr><tr><td><b>尼西亚信经</b></td><td>子与父同质；圣灵是主</td><td>WCF 2.3“同享一个本质、相同的权能、同样的永恒”；WLC 9–11</td></tr><tr><td><b>亚他那修信经</b></td><td>三一与基督二性的精确表述</td><td>WCF 8.2 两性“没有相互转化、没有结合成一个、也没有混在一起”；WLC 36–40</td></tr></tbody></table></div>')
+    open(OUT+'compare.html','w').write(page('compare.html','深度对比','\n'.join(b)))
+# ===================== MEMORY =====================
+def build_memory():
+    wsc=[dict(q=u['q'],k=u['ques'],a=__import__('re').sub(r'⟦\d+⟧','',u['ans'])) for u in D['wsc']]
+    wcft=[c['title'] for c in D['wcf']]
+    b=[]
+    b.append('''<section class="hero rv"><div class="shine"></div><h1>🧠 记忆训练营</h1><p>口诀 + 记忆宫殿 + 翻转卡片 + 小测验：把“读过”变成“记住”，把“记住”变成“活出”。</p></section>''')
+    b.append(h2('五个数字记住全局','🔢','numbers'))
+    b.append('<div class="stats">'+''.join(f'<div class="stat rv"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('1643','开会·立约'),('1646','信条完成'),('1647','两部要理问答呈交'),('1648','苏格兰批准要理问答'),('33·196·107','章·问·问')])+'</div>')
+    b.append(callout('mem-pt','🎵 年代口诀','<b>“四三开会立盟约，四六信条交国会，四七要理双出炉，四八苏格兰全通过。”</b>'))
+    b.append(h2('信仰告白33章口诀','📘','wcf33'))
+    rhyme=['一经二神三预旨，','四造五护六堕罪，','七约八保九意志，','十召十一称为义，','十二收养十三圣，','十四信心十五悔，','十六善行十七坚，','十八确据十九律，','二十自由二一拜，','二二誓愿二三官，','二四婚姻二五会，','二六相通二七礼，','二八洗礼二九餐，','三十惩戒三一议，','三二死后三三审。']
+    b.append('<div class="bigquote rv">'+'<br>'.join(rhyme)+'</div>')
+    b.append('<p class="muted">口诀为本站学习整理；各章正式标题见下方记忆宫殿。</p>')
+    b.append(h2('记忆宫殿：走过一座“七间房”的教堂','🏛️','palace'))
+    rooms=[('rev','🚪 门廊（1）','圣经：进门先读约书',[1]),('god','🕍 中殿（2–5）','神、预旨、创造、护理：抬头仰望穹顶',[2,3,4,5]),('man','🕳️ 地窖（6–9）','堕落、圣约、中保、自由意志：从深处被拯救',[6,7,8,9]),('sal','🌿 回廊（10–18）','呼召→称义→收养→成圣→信→悔→善行→坚忍→确据：一路向前走',list(range(10,19))),('law','📜 法庭（19–24）','律法、自由、敬拜、起誓、官员、婚姻：生活的秩序',list(range(19,25))),('chu','⛪ 圣所（25–31）','教会、相通、圣礼、洗礼、圣餐、惩戒、会议：神的家',list(range(25,32))),('end','🌅 钟楼（32–33）','死后与审判：钟声宣告主必再来',[32,33])]
+    b.append('<div class="grid">'+''.join(f'<div class="card rv bl-{c}"><h3>{t}</h3><p>{d}</p><div>'+''.join(f'<a class="pill" href="wcf.html#c{n}">{n}. {esc(wcft[n-1])}</a>' for n in ns)+'</div></div>' for c,t,d,ns in rooms)+'</div>')
+    b.append(h2('小要理问答结构口诀','📙','wscmap'))
+    b.append('<div class="flow rv">'+''.join(f'<div class="st"><div class="e">{e}</div><b>{t}</b><small>{s}</small></div>' for e,t,s in [('🎯','1–3','目的·准则'),('✨','4–11','神·预旨·创造·护理'),('💔','12–19','约·堕落·罪'),('✝️','20–28','恩典之约·救赎主'),('🌱','29–38','召·义·子·圣'),('🔟','39–81','本分·十诫'),('🔥','82–87','罪·信·悔'),('💧','88–97','道·礼'),('🙏','98–107','祷告·主祷文')])+'</div>')
+    b.append(callout('mem-pt','🔟 十诫一句话','<b>一“谁”二“怎”三“名”四“时”</b>（拜谁·怎样拜·怎样称名·何时拜）；<b>五“权”六“命”七“洁”八“财”九“真”十“心”</b>（权柄·生命·贞洁·财产·真理·心思）。'))
+    b.append(callout('mem-pt','🙏 主祷文六求','<b>前三求为神</b>：愿名为圣、愿国降临、愿旨意行；<b>后三求为我</b>：日用饮食、赦免罪债、不遇试探。'))
+    b.append(h2('翻转卡片：小要理问答','🃏','flashsec'))
+    b.append('''<div class="card"><div class="filters"><select id="fRange" class="btn"><option value="1-107">全部 1–107</option><option value="1-38">当信 1–38</option><option value="39-81">十诫 39–81</option><option value="82-107">蒙恩之道 82–107</option></select>
+<button class="btn" id="fPrev">⬅️ 上一张</button><button class="btn pri" id="fFlip">🔄 翻转</button><button class="btn" id="fNext">下一张 ➡️</button><button class="btn" id="fRand">🎲 随机</button></div>
+<div class="flash" id="flash"><div class="inner"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+<p class="muted center">点击卡片或按空格翻转；←/→ 切换。</p></div>''')
+    b.append(h2('小测验','✅','quizsec'))
+    b.append('''<div class="grid g2"><div class="card"><h3>📘 这一章是第几章？</h3><div id="q1"></div></div><div class="card"><h3>📙 这个答案属于哪一问？</h3><div id="q2"></div></div></div>''')
+    js='<script>const WSC='+json.dumps(wsc,ensure_ascii=False)+';const WCFT='+json.dumps(wcft,ensure_ascii=False)+''';
+window.__pageInit=function(){
+ const $=s=>document.querySelector(s); let list=WSC.slice(), i=0;
+ const fl=$('#flash'), fr=$('#fFront'), bk=$('#fBack');
+ function show(){const u=list[i];fl.classList.remove('flip');fr.innerHTML='<div style="font-size:14px;opacity:.8">小要理 第'+u.q+'问</div><div>'+u.k+'</div>';setTimeout(()=>bk.innerHTML='<div>'+u.a+'</div>',200)}
+ $('#fRange').onchange=e=>{const [a,b]=e.target.value.split('-').map(Number);list=WSC.filter(u=>u.q>=a&&u.q<=b);i=0;show()};
+ $('#fPrev').onclick=()=>{i=(i-1+list.length)%list.length;show()};$('#fNext').onclick=()=>{i=(i+1)%list.length;show()};
+ $('#fRand').onclick=()=>{i=Math.floor(Math.random()*list.length);show()};$('#fFlip').onclick=()=>fl.classList.toggle('flip');fl.onclick=()=>fl.classList.toggle('flip');
+ document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;if(e.key===' '){e.preventDefault();fl.classList.toggle('flip')}if(e.key==='ArrowRight')$('#fNext').click();if(e.key==='ArrowLeft')$('#fPrev').click()});
+ show();
+ const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+ function quiz(el,mk){let score=0,tot=0;function next(){const {prompt,opts,ans}=mk();el.innerHTML='<p style="font-family:var(--serif);font-size:17px">'+prompt+'</p><div class="filters">'+opts.map(o=>'<button data-v="'+o+'">'+o+'</button>').join('')+'</div><p class="muted">得分 '+score+' / '+tot+'</p>';
+   el.querySelectorAll('button').forEach(b=>b.onclick=()=>{tot++;if(+b.dataset.v===ans){score++;b.style.background='#16a34a';b.style.color='#fff'}else{b.style.background='#dc2626';b.style.color='#fff';el.querySelector('[data-v="'+ans+'"]').style.background='#16a34a'}setTimeout(next,900)})}next()}
+ quiz($('#q1'),()=>{const n=1+Math.floor(Math.random()*33);const s=new Set([n]);while(s.size<4)s.add(1+Math.floor(Math.random()*33));return {prompt:'“'+WCFT[n-1]+'”是第几章？',opts:sh([...s]),ans:n}});
+ quiz($('#q2'),()=>{const u=WSC[Math.floor(Math.random()*WSC.length)];const s=new Set([u.q]);while(s.size<4)s.add(1+Math.floor(Math.random()*107));return {prompt:'“'+(u.a.length>70?u.a.slice(0,70)+'……':u.a)+'”',opts:sh([...s]),ans:u.q}});
+};</script>'''
+    open(OUT+'memory.html','w').write(page('memory.html','记忆训练','\n'.join(b),js=js))
+# ===================== SOURCES =====================
+def build_sources():
+    b=['<section class="hero rv"><div class="shine"></div><h1>🔗 来源 · 致谢 · 版本</h1><p>本站坚持：引用原文逐字照录、注明出处；讲解与图表为学习整理，不冒充原文。</p></section>']
+    b.append(h2('原文来源','📚','src'))
+    b.append('<div class="tbl"><table><thead><tr><th>内容</th><th>来源</th><th>说明</th></tr></thead><tbody>'
+      '<tr><td>西敏信仰告白、大要理问答、小要理问答（全文及证明经文）</td><td><a href="https://rtf-usa.com" target="_blank" rel="noopener">RTF-USA</a>《威斯敏斯特标准》简体中文新版，贾少彬 译，© 2024 RTF-USA</td><td>原书注明“FOR FREE DISTRIBUTION ONLY – NOT FOR SALE”。为1647年原文版本的译本。本站从其公开PDF中提取文字并重新排版；个别排版断行与脚注位置经程序整理，如有出入以原书为准。</td></tr>'
+      '<tr><td>三大普世信经、比利时信条、海德堡要理问答、多特信经</td><td><a href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a></td><td>逐字取自网站（2026-10-20 抓取），仅调整排版。用户提供的PDF《中国改革宗教会 敬拜手册（2015版）》与网站同源，本站以网站文本为准。</td></tr>'
+      '<tr><td>“我们的信仰”摘录</td><td><a href="https://www.ccreformed.org/our-belief/" target="_blank" rel="noopener">洛杉矶改革宗·恩约教会</a></td><td>逐字摘录</td></tr>'
+      '<tr><td>“信仰告白”摘录</td><td><a href="https://www.reformedbeginner.net/statement-of-faith/" target="_blank" rel="noopener">改革宗初学者</a></td><td>逐字摘录</td></tr>'
+      '<tr><td>历史图片</td><td>Wikimedia Commons</td><td>公有领域 / CC0，见各图片说明</td></tr>'
+      '<tr><td>地图底图</td><td>OpenStreetMap</td><td>© OpenStreetMap 贡献者</td></tr>'
+      '</tbody></table></div>')
+    b.append(h2('延伸学习资源','🧭','more'))
+    links=[('欧陆改革宗','https://canrc.org','Canadian Reformed Churches'),('欧陆改革宗','https://www.urcna.org','United Reformed Churches in North America'),('欧陆改革宗','https://heritagereformed.com','Heritage Reformed Congregations'),('欧陆改革宗','https://www.prca.org','Protestant Reformed Churches in America'),('长老会改革宗','https://opc.org','Orthodox Presbyterian Church（含西敏标准英文本）'),('神学院','https://www.wts.edu','Westminster Theological Seminary（含 WCF 英文本 wts.edu/wcf）'),('神学院','https://crts.edu','Canadian Reformed Theological Seminary'),('神学院','https://canadianreformedseminary.ca','Canadian Reformed Seminary'),('中文','https://ccifellowship.org','中国改革宗教会（敬拜手册、海德堡要理问答证道）'),('中文','https://www.ccreformed.org','洛杉矶改革宗·恩约教会'),('中文','https://www.reformedbeginner.net','改革宗初学者'),('中文','https://rtf-usa.com','RTF-USA 改革宗翻译社')]
+    b.append('<div class="grid g4">'+''.join(f'<a class="card navcard" href="{u}" target="_blank" rel="noopener"><span class="pill">{k}</span><h3 style="font-size:16px">{u.replace("https://","")}</h3><p>{d}</p></a>' for k,u,d in links)+'</div>')
+    b.append(h2('版本记录','🗂️','versions'))
+    b.append('<div class="tl"><div class="ev big" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
+    b.append(h2('图片署名','🖼️','credits'))
+    b.append('<ul>'+''.join(f'<li><a href="{m["page"]}" target="_blank" rel="noopener">{esc(m["title"])}</a> — {esc(m["license"])}</li>' for m in CRED.values())+'</ul>')
+    open(OUT+'sources.html','w').write(page('sources.html','来源 · 致谢 · 版本','\n'.join(b)))
+if __name__=='__main__':
+    build_index(); build_history(); build_compare(); build_memory(); build_sources(); print('pages ok')
