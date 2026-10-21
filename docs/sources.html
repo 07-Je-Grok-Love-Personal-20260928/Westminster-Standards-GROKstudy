@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="light" data-palette="aurora">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>来源 · 致谢 · 版本 | 威斯敏斯特标准 · 深度学习站</title>
-<meta name="description" content="《威斯敏斯特信仰告白》《大要理问答》《小要理问答》全文与深度解读：历史时间线、故事线、地图、圣经神学、圣约神学、欧陆改革宗对照、背诵与记忆训练。">
-<meta name="theme-color" content="#3b5bdb">
+<meta name="description" content="《威斯敏斯特信仰告白》《大要理问答》《小要理问答》全文与深度解读：历史时间线、故事线、地图、圣经神学、圣约神学、欧陆改革宗与长老会正统视角、背诵与记忆训练。">
+<meta name="theme-color" content="#4f46e5">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=v1.0">
+<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css?v=v2.0">
 
+<script src="assets/js/app.js?v=v2.0" defer></script>
 </head>
 <body>
-<div class="backdrop"><i></i><i></i><i></i></div>
+<div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
 <header class="topbar">
   <button class="iconbtn" id="tocBtn" title="显示/隐藏目录" aria-label="目录">☰</button>
   <a class="brand" href="index.html"><span class="logo">W</span><span class="t">西敏标准·GROKstudy</span></a>
-  <nav class="topnav"><a href="index.html" class="">🏠 总览</a><a href="history.html" class="">🗺️ 历史·地理</a><a href="wcf.html" class="">📘 信仰告白</a><a href="wlc.html" class="">📗 大要理问答</a><a href="wsc.html" class="">📙 小要理问答</a><a href="compare.html" class="">⚖️ 深度对比</a><a href="recite.html" class="">🎙️ 背诵版</a><a href="memory.html" class="">🧠 记忆训练</a><a href="creeds.html" class="">📜 信经与联合信条</a><a href="sources.html" class="on">🔗 来源</a></nav>
-  <button class="iconbtn" id="themeBtn" title="切换深色/浅色" aria-label="主题">🌙</button>
+  <nav class="topnav"><a href="index.html" class=""><span class="ni">🏠</span>总览</a><a href="history.html" class=""><span class="ni">🗺️</span>历史·地理</a><a href="wcf.html" class=""><span class="ni">📘</span>信仰告白</a><a href="wlc.html" class=""><span class="ni">📗</span>大要理问答</a><a href="wsc.html" class=""><span class="ni">📙</span>小要理问答</a><a href="compare.html" class=""><span class="ni">⚖️</span>深度对比</a><a href="recite.html" class=""><span class="ni">🎙️</span>背诵版</a><a href="memory.html" class=""><span class="ni">🧠</span>记忆训练</a><a href="creeds.html" class=""><span class="ni">📜</span>信经与联合信条</a><a href="sources.html" class="on"><span class="ni">🔗</span>来源</a></nav>
+  <button class="iconbtn" id="legendBtn" title="标注图例" aria-label="标注图例">🖍️</button>
+  <button class="iconbtn" id="themeBtn" title="主题与显示" aria-label="主题">🎨</button>
 </header>
-<div class="progress"></div>
+<div class="progress"><i></i></div>
 <div class="scrim"></div>
+<div class="pop" id="themePanel" role="dialog" aria-label="主题">
+  <h4>🎨 配色主题</h4><div class="swatches"><button class="sw" data-pal="aurora" title="晨曦" style="--s1:#4f46e5;--s2:#9333ea;--s3:#f59e0b"><i></i><span>晨曦</span></button><button class="sw" data-pal="jade" title="翡翠" style="--s1:#059669;--s2:#0d9488;--s3:#84cc16"><i></i><span>翡翠</span></button><button class="sw" data-pal="crimson" title="绛红金" style="--s1:#b91c1c;--s2:#9a3412;--s3:#ca8a04"><i></i><span>绛红金</span></button><button class="sw" data-pal="ocean" title="深海" style="--s1:#0369a1;--s2:#4338ca;--s3:#06b6d4"><i></i><span>深海</span></button><button class="sw" data-pal="sunset" title="暮光" style="--s1:#e11d48;--s2:#f97316;--s3:#a855f7"><i></i><span>暮光</span></button></div>
+  <h4>🌗 明暗</h4><div class="seg" id="modeSeg"><button data-mode="light">☀️ 浅色</button><button data-mode="dark">🌙 深色</button><button data-mode="auto">🖥️ 跟随系统</button></div>
+  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="smooth">🪶 丝滑滚动</button><button data-opt="motion">✨ 动画</button></div>
+  <p class="muted small">设置保存在本机浏览器。丝滑滚动仅在电脑（鼠标滚轮）上启用，手机使用原生滚动。</p>
+</div>
+<div class="pop" id="legendPanel" role="dialog" aria-label="标注图例">
+  <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist"><li><span class="lgx"><b>粗体</b></span><span>关键词</span></li><li><span class="lgx"><span class="c-term">彩色字</span></span><span>神学术语</span></li><li><span class="lgx"><mark>荧光底</mark></span><span>必背金句 / 核心结论</span></li><li><span class="lgx"><span class="u-bib">实线下划线</span></span><span>圣经出处</span></li><li><span class="lgx"><span class="u-cmp">虚线下划线</span></span><span>对比 / 区别</span></li><li><span class="lgx"><span class="u-err">波浪线</span></span><span>难点 / 易错 / 争议</span></li><li><span class="lgx"><span class="c-ref">WLC 31</span></span><span>文献交叉索引</span></li><li><span class="lgx">“ ”</span><span>原文逐字引用</span></li><li><span class="lgx">「 」</span><span>术语 / 口诀 / 概括（非原文）</span></li></ul>
+  <h4>🧩 提示框</h4><ul class="lglist two"><li><span class="lgc key-pt">🎯</span><span>核心要义</span></li><li><span class="lgc hard-pt">🔍</span><span>难点辨析</span></li><li><span class="lgc mem-pt">🧠</span><span>记忆钩子</span></li><li><span class="lgc warn-pt">🚫</span><span>常见误解</span></li><li><span class="lgc app-pt">🛠️</span><span>生活应用</span></li><li><span class="lgc bt-pt">📚</span><span>圣经神学</span></li><li><span class="lgc cov-pt">🤝</span><span>圣约神学</span></li><li><span class="lgc eu-pt">🇳🇱</span><span>欧陆改革宗</span></li><li><span class="lgc pr-pt">🏴</span><span>长老会正统</span></li></ul>
+</div>
 <div class="layout">
   <aside class="toc" aria-label="目录">
     <h4>📑 本页目录</h4>
@@ -29,23 +42,22 @@
     <ol id="tocList"></ol>
   </aside>
   <main><div class="wrap">
-<section class="hero rv"><div class="shine"></div><h1>🔗 来源 · 致谢 · 版本</h1><p>本站坚持：引用原文逐字照录、注明出处；讲解与图表为学习整理，不冒充原文。</p></section>
+<section class="hero"><div class="shine"></div><div class="floaty">🔗</div><h1>🔗 来源 · 致谢 · 版本</h1><p>本站坚持：引用原文逐字照录、注明出处（“ ”内为逐字原文；「 」内为术语或概括）；讲解与图表为学习整理，不冒充原文。</p></section>
 <h2 class="h rv" id="src"><span class="ic">📚</span><span>原文来源</span></h2>
-<div class="tbl"><table><thead><tr><th>内容</th><th>来源</th><th>说明</th></tr></thead><tbody><tr><td>西敏信仰告白、大要理问答、小要理问答（全文及证明经文）</td><td><a href="https://rtf-usa.com" target="_blank" rel="noopener">RTF-USA</a>《威斯敏斯特标准》简体中文新版，贾少彬 译，© 2024 RTF-USA</td><td>原书注明“FOR FREE DISTRIBUTION ONLY – NOT FOR SALE”。为1647年原文版本的译本。本站从其公开PDF中提取文字并重新排版；个别排版断行与脚注位置经程序整理，如有出入以原书为准。</td></tr><tr><td>三大普世信经、比利时信条、海德堡要理问答、多特信经</td><td><a href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a></td><td>逐字取自网站（2026-10-20 抓取），仅调整排版。用户提供的PDF《中国改革宗教会 敬拜手册（2015版）》与网站同源，本站以网站文本为准。</td></tr><tr><td>“我们的信仰”摘录</td><td><a href="https://www.ccreformed.org/our-belief/" target="_blank" rel="noopener">洛杉矶改革宗·恩约教会</a></td><td>逐字摘录</td></tr><tr><td>“信仰告白”摘录</td><td><a href="https://www.reformedbeginner.net/statement-of-faith/" target="_blank" rel="noopener">改革宗初学者</a></td><td>逐字摘录</td></tr><tr><td>历史图片</td><td>Wikimedia Commons</td><td>公有领域 / CC0，见各图片说明</td></tr><tr><td>地图底图</td><td>OpenStreetMap</td><td>© OpenStreetMap 贡献者</td></tr></tbody></table></div>
+<div class="tbl"><table><thead><tr><th>内容</th><th>来源</th><th>说明</th></tr></thead><tbody><tr><td>西敏信仰告白、大要理问答、小要理问答（全文及证明经文）</td><td><a href="https://rtf-usa.com" target="_blank" rel="noopener">RTF-USA</a>《威斯敏斯特标准》简体中文新版，贾少彬 译，© 2024 RTF-USA</td><td>原书注明“FOR FREE DISTRIBUTION ONLY – NOT FOR SALE”。为1647年原文版本的译本。本站从其公开PDF中提取文字并重新排版；个别排版断行与脚注位置经程序整理，如有出入以原书为准。</td></tr><tr><td>三大普世信经、比利时信条、海德堡要理问答、多特信经</td><td><a href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a></td><td>逐字取自网站（2026-10-20 抓取），仅调整排版。用户提供的PDF《中国改革宗教会 敬拜手册（2015版）》与网站同源，本站以网站文本为准。</td></tr><tr><td>“我们的信仰”摘录</td><td><a href="https://www.ccreformed.org/our-belief/" target="_blank" rel="noopener">洛杉矶改革宗·恩约教会</a></td><td>逐字摘录</td></tr><tr><td>“信仰告白”摘录</td><td><a href="https://www.reformedbeginner.net/statement-of-faith/" target="_blank" rel="noopener">改革宗初学者</a></td><td>逐字摘录</td></tr><tr><td>美国修订本对照</td><td><a href="https://opc.org/wcf.html" target="_blank" rel="noopener">opc.org/wcf.html</a></td><td>正统长老会（OPC）现行英文本，用于「1647原文 vs 美国修订本」对照（中文为本站概括）</td></tr><tr><td>历史图片</td><td>Wikimedia Commons</td><td>公有领域 / CC0，见各图片说明</td></tr><tr><td>地图底图</td><td>OpenStreetMap</td><td>© OpenStreetMap 贡献者</td></tr></tbody></table></div>
 <h2 class="h rv" id="more"><span class="ic">🧭</span><span>延伸学习资源</span></h2>
 <div class="grid g4"><a class="card navcard" href="https://canrc.org" target="_blank" rel="noopener"><span class="pill">欧陆改革宗</span><h3 style="font-size:16px">canrc.org</h3><p>Canadian Reformed Churches</p></a><a class="card navcard" href="https://www.urcna.org" target="_blank" rel="noopener"><span class="pill">欧陆改革宗</span><h3 style="font-size:16px">www.urcna.org</h3><p>United Reformed Churches in North America</p></a><a class="card navcard" href="https://heritagereformed.com" target="_blank" rel="noopener"><span class="pill">欧陆改革宗</span><h3 style="font-size:16px">heritagereformed.com</h3><p>Heritage Reformed Congregations</p></a><a class="card navcard" href="https://www.prca.org" target="_blank" rel="noopener"><span class="pill">欧陆改革宗</span><h3 style="font-size:16px">www.prca.org</h3><p>Protestant Reformed Churches in America</p></a><a class="card navcard" href="https://opc.org" target="_blank" rel="noopener"><span class="pill">长老会改革宗</span><h3 style="font-size:16px">opc.org</h3><p>Orthodox Presbyterian Church（含西敏标准英文本）</p></a><a class="card navcard" href="https://www.wts.edu" target="_blank" rel="noopener"><span class="pill">神学院</span><h3 style="font-size:16px">www.wts.edu</h3><p>Westminster Theological Seminary（含 WCF 英文本 wts.edu/wcf）</p></a><a class="card navcard" href="https://crts.edu" target="_blank" rel="noopener"><span class="pill">神学院</span><h3 style="font-size:16px">crts.edu</h3><p>Canadian Reformed Theological Seminary</p></a><a class="card navcard" href="https://canadianreformedseminary.ca" target="_blank" rel="noopener"><span class="pill">神学院</span><h3 style="font-size:16px">canadianreformedseminary.ca</h3><p>Canadian Reformed Seminary</p></a><a class="card navcard" href="https://ccifellowship.org" target="_blank" rel="noopener"><span class="pill">中文</span><h3 style="font-size:16px">ccifellowship.org</h3><p>中国改革宗教会（敬拜手册、海德堡要理问答证道）</p></a><a class="card navcard" href="https://www.ccreformed.org" target="_blank" rel="noopener"><span class="pill">中文</span><h3 style="font-size:16px">www.ccreformed.org</h3><p>洛杉矶改革宗·恩约教会</p></a><a class="card navcard" href="https://www.reformedbeginner.net" target="_blank" rel="noopener"><span class="pill">中文</span><h3 style="font-size:16px">www.reformedbeginner.net</h3><p>改革宗初学者</p></a><a class="card navcard" href="https://rtf-usa.com" target="_blank" rel="noopener"><span class="pill">中文</span><h3 style="font-size:16px">rtf-usa.com</h3><p>RTF-USA 改革宗翻译社</p></a></div>
 <h2 class="h rv" id="versions"><span class="ic">🗂️</span><span>版本记录</span></h2>
-<div class="tl"><div class="ev big" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>
+<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>
 <h2 class="h rv" id="credits"><span class="ic">🖼️</span><span>图片署名</span></h2>
 <ul><li><a href="https://commons.wikimedia.org/wiki/File:Assertion_of_Liberty_of_Conscience_by_the_Independents_of_the_Westminster_Assembly_of_Divines,_1644.jpg" target="_blank" rel="noopener">File:Assertion of Liberty of Conscience by the Independents of the Westminster Assembly of Divines, 1644.jpg</a> — Public domain</li><li><a href="https://commons.wikimedia.org/wiki/File:Jerusalem_Chamber_-_Walks_in_London,_Augustus_Hare,_1878.jpg" target="_blank" rel="noopener">File:Jerusalem Chamber - Walks in London, Augustus Hare, 1878.jpg</a> — Public domain</li><li><a href="https://commons.wikimedia.org/wiki/File:Solemn_League_and_Covenant.jpg" target="_blank" rel="noopener">File:Solemn League and Covenant.jpg</a> — Public domain</li><li><a href="https://commons.wikimedia.org/wiki/File:John_Bluck_-_West_Front_of_Westminster_Abbey_-_B1977.14.16428_-_Yale_Center_for_British_Art.jpg" target="_blank" rel="noopener">File:John Bluck - West Front of Westminster Abbey - B1977.14.16428 - Yale Center for British Art.jpg</a> — CC0</li><li><a href="https://commons.wikimedia.org/wiki/File:The-Synod-of-Dort-in-a-seventeenth-century-Dutch-engraving.jpg" target="_blank" rel="noopener">File:The-Synod-of-Dort-in-a-seventeenth-century-Dutch-engraving.jpg</a> — Public domain</li><li><a href="https://commons.wikimedia.org/wiki/File:Heidelberger_Katechismus_1563.jpg" target="_blank" rel="noopener">File:Heidelberger Katechismus 1563.jpg</a> — Public domain</li></ul>
 <footer class="foot">
-  <div><b>西敏标准 · 深度学习站</b>（Westminster-Standards-20261020-v1.0-GROKstudy）</div>
+  <div><b>西敏标准 · 深度学习站</b>（威斯敏斯特标准-20261021-v2.0-GROKstudy）</div>
   <div>西敏三份文件中文正文：RTF-USA《威斯敏斯特标准》简体中文新版（贾少彬 译，© 2024 RTF-USA，免费分发）。三大普世信经与三项联合信条原文：<a href="https://ccifellowship.org" target="_blank" rel="noopener">ccifellowship.org</a>（中国改革宗教会《敬拜手册》）。解读、图表、记忆法为本站学习整理，仅供学习，不代表任何教会的官方解释。</div>
-  <div class="muted">版本 v1.0 · 更新于 2026-10-20（台北时间） · <a href="sources.html">来源与致谢</a></div>
+  <div class="muted">版本 v2.0 · 更新于 2026-10-21（台北时间） · <a href="sources.html">来源与致谢</a> · <a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy" target="_blank" rel="noopener">源码</a></div>
 </footer>
   </div></main>
 </div>
-<button class="iconbtn totop" title="回到顶部">⬆️</button>
-<script src="assets/js/app.js?v=v1.0"></script>
+<button class="iconbtn totop" title="回到顶部" aria-label="回到顶部">⬆️</button>
 
 </body></html>

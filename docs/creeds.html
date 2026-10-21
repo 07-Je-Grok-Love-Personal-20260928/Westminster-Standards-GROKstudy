@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="light" data-palette="aurora">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>三大普世信经与三项联合信条（原文） | 威斯敏斯特标准 · 深度学习站</title>
-<meta name="description" content="《威斯敏斯特信仰告白》《大要理问答》《小要理问答》全文与深度解读：历史时间线、故事线、地图、圣经神学、圣约神学、欧陆改革宗对照、背诵与记忆训练。">
-<meta name="theme-color" content="#3b5bdb">
+<meta name="description" content="《威斯敏斯特信仰告白》《大要理问答》《小要理问答》全文与深度解读：历史时间线、故事线、地图、圣经神学、圣约神学、欧陆改革宗与长老会正统视角、背诵与记忆训练。">
+<meta name="theme-color" content="#4f46e5">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=v1.0">
+<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css?v=v2.0">
 
+<script src="assets/js/app.js?v=v2.0" defer></script>
 </head>
 <body>
-<div class="backdrop"><i></i><i></i><i></i></div>
+<div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
 <header class="topbar">
   <button class="iconbtn" id="tocBtn" title="显示/隐藏目录" aria-label="目录">☰</button>
   <a class="brand" href="index.html"><span class="logo">W</span><span class="t">西敏标准·GROKstudy</span></a>
-  <nav class="topnav"><a href="index.html" class="">🏠 总览</a><a href="history.html" class="">🗺️ 历史·地理</a><a href="wcf.html" class="">📘 信仰告白</a><a href="wlc.html" class="">📗 大要理问答</a><a href="wsc.html" class="">📙 小要理问答</a><a href="compare.html" class="">⚖️ 深度对比</a><a href="recite.html" class="">🎙️ 背诵版</a><a href="memory.html" class="">🧠 记忆训练</a><a href="creeds.html" class="on">📜 信经与联合信条</a><a href="sources.html" class="">🔗 来源</a></nav>
-  <button class="iconbtn" id="themeBtn" title="切换深色/浅色" aria-label="主题">🌙</button>
+  <nav class="topnav"><a href="index.html" class=""><span class="ni">🏠</span>总览</a><a href="history.html" class=""><span class="ni">🗺️</span>历史·地理</a><a href="wcf.html" class=""><span class="ni">📘</span>信仰告白</a><a href="wlc.html" class=""><span class="ni">📗</span>大要理问答</a><a href="wsc.html" class=""><span class="ni">📙</span>小要理问答</a><a href="compare.html" class=""><span class="ni">⚖️</span>深度对比</a><a href="recite.html" class=""><span class="ni">🎙️</span>背诵版</a><a href="memory.html" class=""><span class="ni">🧠</span>记忆训练</a><a href="creeds.html" class="on"><span class="ni">📜</span>信经与联合信条</a><a href="sources.html" class=""><span class="ni">🔗</span>来源</a></nav>
+  <button class="iconbtn" id="legendBtn" title="标注图例" aria-label="标注图例">🖍️</button>
+  <button class="iconbtn" id="themeBtn" title="主题与显示" aria-label="主题">🎨</button>
 </header>
-<div class="progress"></div>
+<div class="progress"><i></i></div>
 <div class="scrim"></div>
+<div class="pop" id="themePanel" role="dialog" aria-label="主题">
+  <h4>🎨 配色主题</h4><div class="swatches"><button class="sw" data-pal="aurora" title="晨曦" style="--s1:#4f46e5;--s2:#9333ea;--s3:#f59e0b"><i></i><span>晨曦</span></button><button class="sw" data-pal="jade" title="翡翠" style="--s1:#059669;--s2:#0d9488;--s3:#84cc16"><i></i><span>翡翠</span></button><button class="sw" data-pal="crimson" title="绛红金" style="--s1:#b91c1c;--s2:#9a3412;--s3:#ca8a04"><i></i><span>绛红金</span></button><button class="sw" data-pal="ocean" title="深海" style="--s1:#0369a1;--s2:#4338ca;--s3:#06b6d4"><i></i><span>深海</span></button><button class="sw" data-pal="sunset" title="暮光" style="--s1:#e11d48;--s2:#f97316;--s3:#a855f7"><i></i><span>暮光</span></button></div>
+  <h4>🌗 明暗</h4><div class="seg" id="modeSeg"><button data-mode="light">☀️ 浅色</button><button data-mode="dark">🌙 深色</button><button data-mode="auto">🖥️ 跟随系统</button></div>
+  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="smooth">🪶 丝滑滚动</button><button data-opt="motion">✨ 动画</button></div>
+  <p class="muted small">设置保存在本机浏览器。丝滑滚动仅在电脑（鼠标滚轮）上启用，手机使用原生滚动。</p>
+</div>
+<div class="pop" id="legendPanel" role="dialog" aria-label="标注图例">
+  <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist"><li><span class="lgx"><b>粗体</b></span><span>关键词</span></li><li><span class="lgx"><span class="c-term">彩色字</span></span><span>神学术语</span></li><li><span class="lgx"><mark>荧光底</mark></span><span>必背金句 / 核心结论</span></li><li><span class="lgx"><span class="u-bib">实线下划线</span></span><span>圣经出处</span></li><li><span class="lgx"><span class="u-cmp">虚线下划线</span></span><span>对比 / 区别</span></li><li><span class="lgx"><span class="u-err">波浪线</span></span><span>难点 / 易错 / 争议</span></li><li><span class="lgx"><span class="c-ref">WLC 31</span></span><span>文献交叉索引</span></li><li><span class="lgx">“ ”</span><span>原文逐字引用</span></li><li><span class="lgx">「 」</span><span>术语 / 口诀 / 概括（非原文）</span></li></ul>
+  <h4>🧩 提示框</h4><ul class="lglist two"><li><span class="lgc key-pt">🎯</span><span>核心要义</span></li><li><span class="lgc hard-pt">🔍</span><span>难点辨析</span></li><li><span class="lgc mem-pt">🧠</span><span>记忆钩子</span></li><li><span class="lgc warn-pt">🚫</span><span>常见误解</span></li><li><span class="lgc app-pt">🛠️</span><span>生活应用</span></li><li><span class="lgc bt-pt">📚</span><span>圣经神学</span></li><li><span class="lgc cov-pt">🤝</span><span>圣约神学</span></li><li><span class="lgc eu-pt">🇳🇱</span><span>欧陆改革宗</span></li><li><span class="lgc pr-pt">🏴</span><span>长老会正统</span></li></ul>
+</div>
 <div class="layout">
   <aside class="toc" aria-label="目录">
     <h4>📑 本页目录</h4>
@@ -29,8 +42,8 @@
     <ol id="tocList"></ol>
   </aside>
   <main><div class="wrap">
-<section class="hero rv"><div class="shine"></div><h1>📜 三大普世信经 · 三项联合信条（原文）</h1>
-<p>本页全部原文<b>逐字取自</b> <a style="color:#fde68a" href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a>（中国改革宗教会），未作任何改动；仅为阅读排版而调整格式。欧陆改革宗以此为教义准则，本站以它们作为解读西敏标准的“对照坐标”。</p>
+<section class="hero" style="background-image:var(--hero-grad),url(assets/img/heidelberg1563.jpg)"><div class="shine"></div><div class="floaty">📜</div><h1> 三大普世信经 · 三项联合信条（原文）</h1>
+<p>本页全部原文<b>逐字取自</b> <a style="color:#fde68a" href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a>（中国改革宗教会），未作任何改动；仅为阅读排版而调整格式。欧陆改革宗以此为教义准则，本站以它们作为解读西敏标准的「对照坐标」。</p>
 <div class="chips"><span class="chip">使徒信经</span><span class="chip">尼西亚信经</span><span class="chip">亚他那修信经</span><span class="chip">比利时信条 37条</span><span class="chip">海德堡要理问答 129问</span><span class="chip">多特信经 4项</span></div></section>
 <h2 class="h rv" id="creeds"><span class="ic">🕊️</span><span>普世信经</span></h2>
 <div class="card rv"><p>《比利时信条》第9条将从公元1世纪陆续写成的基督教会三大信经称为“我们甘愿接受”的信经。它们分别是《使徒信经》、《尼西亚信经》和《亚他那修信经》。这些信经之所以被称为“普世信经”，是因为它们受到世上几乎所有基督教会的赞同和认可。</p></div>
@@ -1468,13 +1481,12 @@
 <p><strong>错谬九：</strong>基督从来没有为信徒恒久地持守信仰而祷告。</p>
 <p><strong>驳斥：</strong>这与基督所说的话不符，基督亲口说：“我已经为你祈求，叫你不至于失了信心。你回头以后，要坚固你的弟兄。”（路22:32）这也与使徒约翰的话相抵触，他说基督不但为众使徒祷告：“圣父啊，求你因你所赐给我的名保守他们，叫他们合而为一，像我们一样”（约17:11）；也为那些因使徒的话而信的人祷告：“我不但为这些人祈求，也为那些因他们的话信我的人祈求”（约17: 20）；基督又说，“我不求你叫他们离开世界，只求你保守他们脱离那恶者”（约17:15）。</p><p class="muted"><a href="https://ccifellowship.org//books/book-of-praise/confessions/canons-of-dort/section5/16" target="_blank" rel="noopener">原文链接</a></p></div></details>
 <footer class="foot">
-  <div><b>西敏标准 · 深度学习站</b>（Westminster-Standards-20261020-v1.0-GROKstudy）</div>
+  <div><b>西敏标准 · 深度学习站</b>（威斯敏斯特标准-20261021-v2.0-GROKstudy）</div>
   <div>西敏三份文件中文正文：RTF-USA《威斯敏斯特标准》简体中文新版（贾少彬 译，© 2024 RTF-USA，免费分发）。三大普世信经与三项联合信条原文：<a href="https://ccifellowship.org" target="_blank" rel="noopener">ccifellowship.org</a>（中国改革宗教会《敬拜手册》）。解读、图表、记忆法为本站学习整理，仅供学习，不代表任何教会的官方解释。</div>
-  <div class="muted">版本 v1.0 · 更新于 2026-10-20（台北时间） · <a href="sources.html">来源与致谢</a></div>
+  <div class="muted">版本 v2.0 · 更新于 2026-10-21（台北时间） · <a href="sources.html">来源与致谢</a> · <a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy" target="_blank" rel="noopener">源码</a></div>
 </footer>
   </div></main>
 </div>
-<button class="iconbtn totop" title="回到顶部">⬆️</button>
-<script src="assets/js/app.js?v=v1.0"></script>
+<button class="iconbtn totop" title="回到顶部" aria-label="回到顶部">⬆️</button>
 <script>window.__pageInit=function(){const b=document.getElementById("creedHide");let on=false;b.onclick=()=>{on=!on;document.body.classList.toggle("mode-hide",on)}}</script>
 </body></html>
