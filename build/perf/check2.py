@@ -12,12 +12,13 @@ return {docOverflow:document.documentElement.scrollWidth-W,bad,trunc,topbarOverl
  imgs:[...document.images].filter(i=>i.complete&&i.naturalWidth===0).length,map:document.getElementById('map')?document.querySelectorAll('#map .leaflet-tile-loaded').length:null}}'''
 JS_CONTRAST='''()=>{const L=c=>{const m=c.match(/[\\d.]+/g).map(Number);const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return [0.2126*f(m[0])+0.7152*f(m[1])+0.0722*f(m[2]),m[3]===undefined?1:m[3]]};
 const bgOf=e=>{while(e){const c=getComputedStyle(e).backgroundColor;const a=c.match(/[\\d.]+/g);if(a&&(a.length<4||+a[3]>0.5))return c;e=e.parentElement}return getComputedStyle(document.body).backgroundColor};
-const res={};for(const sel of ['.c-term','.c-ref','.callout b.lbl','.callout','mark','.u-bib','.tb','main p','.muted','.toc li a','.qa .a']){const e=document.querySelector(sel);if(!e)continue;const fg=L(getComputedStyle(e).color.replace(/color\\(srgb ([\\d.]+) ([\\d.]+) ([\\d.]+)\\)/,(m,a,b,c)=>`rgb(${a*255},${b*255},${c*255})`));const bc=bgOf(e).replace(/color\\(srgb ([\\d.]+) ([\\d.]+) ([\\d.]+)(?: \\/ ([\\d.]+))?\\)/,(m,a,b,c,d)=>`rgba(${a*255},${b*255},${c*255},${d||1})`);const bg=L(bc);const r=(Math.max(fg[0],bg[0])+.05)/(Math.min(fg[0],bg[0])+.05);res[sel]=+r.toFixed(2)}return res}'''
+const res={};for(const sel of ['.c-term','.c-ref','.callout b.lbl','.callout','mark','.u-bib','.tb','main section:not(.hero) p','.muted','.toc li a','.qa .a']){const e=document.querySelector(sel);if(!e)continue;const fg=L(getComputedStyle(e).color.replace(/color\\(srgb ([\\d.]+) ([\\d.]+) ([\\d.]+)\\)/,(m,a,b,c)=>`rgb(${a*255},${b*255},${c*255})`));const bc=bgOf(e).replace(/color\\(srgb ([\\d.]+) ([\\d.]+) ([\\d.]+)(?: \\/ ([\\d.]+))?\\)/,(m,a,b,c,d)=>`rgba(${a*255},${b*255},${c*255},${d||1})`);const bg=L(bc);const r=(Math.max(fg[0],bg[0])+.05)/(Math.min(fg[0],bg[0])+.05);res[sel]=+r.toFixed(2)}return res}'''
 out=[]
 with sync_playwright() as p:
-    b=p.chromium.launch()
-    combos=[('aurora','light')] if mode=='layout' else [(pa,m) for pa in pals for m in ('light','dark')]
-    for w in (390,768,1440):
+    b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
+    combos=[('aurora','light')] if mode=='layout' else [(pa,m) for pa in pals for m in ('light','dark')] if mode=='all' else [(pa,m) for pa in pals for m in ('light','dark')]
+    WS=[int(x) for x in sys.argv[3].split(',')] if len(sys.argv)>3 else (390,768,1440)
+    for w in WS:
         for pal,md in combos:
             ctx=b.new_context(viewport={'width':w,'height':844 if w<500 else 900})
             ctx.add_init_script(f"localStorage.setItem('wsg_palette',JSON.stringify('{pal}'));localStorage.setItem('wsg_mode',JSON.stringify('{md}'))")
@@ -30,6 +31,16 @@ with sync_playwright() as p:
                     for y in range(0,h,700): x.evaluate(f'scrollTo(0,{y})'); x.wait_for_timeout(60)
                     x.wait_for_timeout(2500)
                     r=x.evaluate(JS_LAYOUT)
+                elif mode=='all':
+                    h=x.evaluate('document.documentElement.scrollHeight')
+                    for y in range(0,h,1100): x.evaluate(f'scrollTo(0,{y})'); x.wait_for_timeout(35)
+                    x.wait_for_timeout(900)
+                    r=x.evaluate(JS_LAYOUT); x.evaluate('scrollTo(0,document.documentElement.scrollHeight/3)'); x.wait_for_timeout(300)
+                    r['contrast']=x.evaluate(JS_CONTRAST); r['theme']=x.evaluate('document.documentElement.dataset.theme+"/"+document.documentElement.dataset.palette')
+                    for t in x.query_selector_all('.tabs .tb')[:12]:
+                        try: t.click(timeout=1500)
+                        except Exception: pass
+                    r['tabsOverflow']=x.evaluate("[...document.querySelectorAll('.tabs')].filter(t=>t.getBoundingClientRect().right>innerWidth+1).length")
                 else:
                     x.wait_for_timeout(400); x.evaluate('scrollTo(0,document.documentElement.scrollHeight/3)'); x.wait_for_timeout(500)
                     r={'docOverflow':x.evaluate('document.documentElement.scrollWidth-innerWidth'),'contrast':x.evaluate(JS_CONTRAST),'theme':x.evaluate('document.documentElement.dataset.theme+"/"+document.documentElement.dataset.palette')}
@@ -37,7 +48,7 @@ with sync_playwright() as p:
                 out.append(r); x.close()
             ctx.close()
     b.close()
-json.dump(out,open(f'/workspace/perf/check_{mode}.json','w'),ensure_ascii=False,indent=0)
-probs=[r for r in out if r.get('docOverflow',0)>0 or r.get('bad') or r.get('trunc') or r.get('topbarOverlap') or r['errs'] or (r.get('mermaid') and not r['mermaid'].startswith('0/')) or r.get('imgs') or (r.get('map') is not None and r.get('map')==0) or (r.get('contrast') and min(r['contrast'].values())<4.5)]
+json.dump(out,open(f'/workspace/perf/check_{mode}_{"-".join(map(str,WS))}.json','w'),ensure_ascii=False,indent=0)
+probs=[r for r in out if r.get('docOverflow',0)>0 or r.get('bad') or r.get('trunc') or r.get('topbarOverlap') or r['errs'] or (r.get('mermaid') and not r['mermaid'].startswith('0/')) or r.get('imgs') or r.get('tabsOverflow') or (r.get('map') is not None and r.get('map')==0) or (r.get('contrast') and min(r['contrast'].values())<4.5)]
 print('checked',len(out),'problems',len(probs))
 for r in probs[:40]: print(json.dumps(r,ensure_ascii=False)[:400])

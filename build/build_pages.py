@@ -82,11 +82,11 @@ def build_index():
   CG --> OT
   CG --> NT
   OT -. 本质同一 .- NT
-  classDef a fill:#ede9fe,stroke:#7c3aed
-  classDef w fill:#fee2e2,stroke:#dc2626
-  classDef g fill:#fef3c7,stroke:#d97706
-  classDef o fill:#e0f2fe,stroke:#0284c7
-  classDef n fill:#dcfce7,stroke:#16a34a''')+'</div>')
+  classDef a fill:#ede9fe,stroke:#7c3aed,color:#1f2937
+  classDef w fill:#fee2e2,stroke:#dc2626,color:#1f2937
+  classDef g fill:#fef3c7,stroke:#d97706,color:#1f2937
+  classDef o fill:#e0f2fe,stroke:#0284c7,color:#1f2937
+  classDef n fill:#dcfce7,stroke:#16a34a,color:#1f2937''')+'</div>')
     b.append('<div class="grid">'+''.join(f'<div class="card rv {c}"><h3>{t}</h3><p>{mk(d)}</p></div>' for t,d,c in [
       ('🍎 行为之约','亚当作为全人类的盟约元首，以完全顺服为条件得生命；违约则死。理解它，才能理解为何需要「第二亚当」以完全顺服成全律法（主动顺服），并替我们受刑（被动顺服）。','bl-man'),
       ('🤝 恩典之约','“基督是第二个亚当，恩典之约是与祂以及在祂里面的所有选民立的”（WLC 31）。神白白提供生命与救恩，要求信心，并应许赐下圣灵使人愿意并能够相信（WCF 7.3）。','bl-cov'),
@@ -286,6 +286,10 @@ def build_memory():
     b.append('<div class="flow rv">'+''.join(f'<div class="st"><div class="e">{e}</div><b>{t}</b><small>{s}</small></div>' for e,t,s in [('🎯','1–3','目的·准则'),('✨','4–11','神·预旨·创造·护理'),('💔','12–19','约·堕落·罪'),('✝️','20–28','恩典之约·救赎主'),('🌱','29–38','召·义·子·圣'),('🔟','39–81','本分·十诫'),('🔥','82–87','罪·信·悔'),('💧','88–97','道·礼'),('🙏','98–107','祷告·主祷文')])+'</div>')
     b.append(callout('mem-pt','🔟 十诫一句话',raw=True,content='<b>一“谁”二“怎”三“名”四“时”</b>（拜谁·怎样拜·怎样称名·何时拜）；<b>五“权”六“命”七“洁”八“财”九“真”十“心”</b>（权柄·生命·贞洁·财产·真理·心思）。'))
     b.append(callout('mem-pt','🙏 主祷文六求',raw=True,content='<b>前三求为神</b>：愿名为圣、愿国降临、愿旨意行；<b>后三求为我</b>：日用饮食、赦免罪债、不遇试探。'))
+    b.append(h2('大要理问答结构口诀','📗','wlcmap'))
+    b.append('<div class="flow rv">'+''.join(f'<div class="st"><div class="e">{e}</div><b>{t}</b><small>{s}</small></div>' for e,t,s in [('🎯','1–5','目的·圣经'),('✨','6–20','神·预旨·创造·护理·生命之约'),('💔','21–29','堕落·罪·刑罚'),('🤝','30–35','恩典之约'),('✝️','36–56','中保：位格·三职·两状态'),('⛪','57–65','施行·教会'),('🌱','66–81','恩典中相交'),('🌅','82–90','荣耀中相交'),('📜','91–97','道德律三用'),('🔟','98–148','十诫'),('⚖️','149–153','罪的轻重与出路'),('💧','154–177','圣道与圣礼'),('🙏','178–196','祷告')])+'</div>')
+    b.append(callout('mem-pt','🧠 「前90信、后106行」',raw=True,content='大要理问答以<b>第90问</b>为分水岭：<b>1–90</b> 当信什么（神 → 人 → 约 → 基督 → 恩典中 → 荣耀中），<b>91–196</b> 当尽何本分（律法 → 十诫 → 罪与出路 → 蒙恩之道）。口诀：「<b>神人约主，恩荣两交；律诫罪道，祷告收尾</b>」。'))
+    b.append(callout('mem-pt','📏 十诫解释八规则（WLC 99，概括）',raw=True,content='<ol style="margin:.3em 0 0 1.2em"><li><b>完全</b>：律法要求全人完全的顺服。</li><li><b>属灵</b>：管到悟性、意志、情感与心灵。</li><li><b>互见</b>：同一件事可在几条诫命中从不同角度被要求或禁止。</li><li><b>正反</b>：吩咐一项本分，就禁止相反的罪；禁止一项罪，就吩咐相反的本分。</li><li><b>时机</b>：所禁止的任何时候都不可行；所吩咐的总是本分，但不是每项本分时时都要做。</li><li><b>同类</b>：一项罪或本分之下，同类的一切连同其原因、手段、机会都包括在内。</li><li><b>推己</b>：自己当守的，也要按身份帮助别人守。</li><li><b>助人</b>：别人当守的，我们要按身份与呼召帮助他们。</li></ol>口诀：「<b>全灵互反，时类己人</b>」。逐字原文见 <a href="wlc.html#q99">大要理第99问</a>。'))
     b.append(h2('翻转卡片：小要理问答','🃏','flashsec'))
     b.append('''<div class="card"><div class="filters"><select id="fRange" class="btn"><option value="1-107">全部 1–107</option><option value="1-38">当信 1–38</option><option value="39-81">十诫 39–81</option><option value="82-107">蒙恩之道 82–107</option></select>
 <button class="btn" id="fPrev">⬅️ 上一张</button><button class="btn pri" id="fFlip">🔄 翻转</button><button class="btn" id="fNext">下一张 ➡️</button><button class="btn" id="fRand">🎲 随机</button></div>
@@ -327,7 +331,7 @@ def build_sources():
     links=[('欧陆改革宗','https://canrc.org','Canadian Reformed Churches'),('欧陆改革宗','https://www.urcna.org','United Reformed Churches in North America'),('欧陆改革宗','https://heritagereformed.com','Heritage Reformed Congregations'),('欧陆改革宗','https://www.prca.org','Protestant Reformed Churches in America'),('长老会改革宗','https://opc.org','Orthodox Presbyterian Church（含西敏标准英文本）'),('神学院','https://www.wts.edu','Westminster Theological Seminary（含 WCF 英文本 wts.edu/wcf）'),('神学院','https://crts.edu','Canadian Reformed Theological Seminary'),('神学院','https://canadianreformedseminary.ca','Canadian Reformed Seminary'),('中文','https://ccifellowship.org','中国改革宗教会（敬拜手册、海德堡要理问答证道）'),('中文','https://www.ccreformed.org','洛杉矶改革宗·恩约教会'),('中文','https://www.reformedbeginner.net','改革宗初学者'),('中文','https://rtf-usa.com','RTF-USA 改革宗翻译社')]
     b.append('<div class="grid g4">'+''.join(f'<a class="card navcard" href="{u}" target="_blank" rel="noopener"><span class="pill">{k}</span><h3 style="font-size:16px">{u.replace("https://","")}</h3><p>{d}</p></a>' for k,u,d in links)+'</div>')
     b.append(h2('版本记录','🗂️','versions'))
-    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
+    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v2.1 · 2026-10-22</span>流程图与思维导图改为构建时预渲染的 SVG（页面不再运行 Mermaid，颜色随主题切换）；Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN（只有地图底图来自 OpenStreetMap）；大、小要理问答每个板块新增「圣约神学 · 长老会正统 · 生活应用」三个视角；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。v2.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021" target="_blank" rel="noopener">GitHub Release v2.0-20261021</a>。</div><div class="ev" style="--dot:#7c3aed"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
     b.append(h2('图片署名','🖼️','credits'))
     b.append('<ul>'+''.join(f'<li><a href="{m["page"]}" target="_blank" rel="noopener">{esc(m["title"])}</a> — {esc(m["license"])}</li>' for m in CRED.values())+'</ul>')
     open(OUT+'sources.html','w').write(page('sources.html','来源 · 致谢 · 版本','\n'.join(b)))

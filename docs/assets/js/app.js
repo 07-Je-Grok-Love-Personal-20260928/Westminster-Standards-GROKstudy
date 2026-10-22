@@ -100,34 +100,38 @@ function mmConfig(){const dark=root.dataset.theme==='dark';const a1=probe('var(-
     themeVariables:{darkMode:dark,background:card,primaryColor:tint,primaryBorderColor:a1,primaryTextColor:ink,secondaryColor:tint2,secondaryBorderColor:a2,secondaryTextColor:ink,tertiaryColor:card,tertiaryTextColor:ink,lineColor:line,textColor:ink,mainBkg:tint,nodeBorder:a1,clusterBkg:tint2,edgeLabelBackground:card,fontSize:'15px'},
     flowchart:{useMaxWidth:true,htmlLabels:true,curve:'basis'},mindmap:{useMaxWidth:true}}}
 function getMermaid(){if(mm)return Promise.resolve(mm);if(mmLoading)return mmLoading;
-  mmLoading=import('https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs').then(m=>m.default).catch(()=>loadScript('https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js').then(()=>window.mermaid)).then(m=>{mm=m;mm.initialize(mmConfig());return mm});return mmLoading}
+  mmLoading=loadScript('assets/vendor/mermaid/mermaid.min.js').then(()=>window.mermaid).then(m=>{mm=m;mm.initialize(mmConfig());return mm});return mmLoading}
 let mmQueue=Promise.resolve(), lastScroll=0;addEventListener('scroll',()=>{lastScroll=performance.now()},{passive:true});
 /* heavy work only when the user is not actively scrolling, and in idle time */
 const whenCalm=()=>new Promise(res=>{const calm=()=>performance.now()-lastScroll>250;const chk=()=>{if(calm())idle(()=>calm()?res():setTimeout(chk,160),{timeout:1500});else setTimeout(chk,160)};chk()});
 function renderMermaid(el){if(!mmSrc.has(el))mmSrc.set(el,el.textContent);mmQueue=mmQueue.then(whenCalm).then(()=>getMermaid()).then(m=>whenCalm().then(()=>m)).then(m=>{el.removeAttribute('data-processed');el.innerHTML=mmSrc.get(el);return m.run({nodes:[el]})}).then(()=>{el.setAttribute('data-done','');el.setAttribute('data-lenis-prevent','');mmDone.add(el)}).catch(e=>{console.warn(e);el.setAttribute('data-done','');el.innerHTML='<p class="muted">图表加载失败（可能是网络限制），请刷新重试。</p>'})}
 function reMermaid(){if(!mm)return;mm.initialize(mmConfig());mmDone.forEach(el=>renderMermaid(el))}
-const mEls=$$('.mermaid');if(mEls.length){addEventListener('load',()=>whenCalm().then(getMermaid),{once:true});mEls.forEach(el=>mmSrc.set(el,el.textContent));const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mio.unobserve(e.target);renderMermaid(e.target)}}),{rootMargin:'1400px 0px'});mEls.forEach(el=>mio.observe(el))}
+/* v2.1: diagrams are pre-rendered to SVG at build time; runtime Mermaid is only a fallback for un-rendered blocks */
+const mEls=$$('.mermaid:not([data-done])');if(mEls.length){mEls.forEach(el=>mmSrc.set(el,el.textContent));const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mio.unobserve(e.target);renderMermaid(e.target)}}),{rootMargin:'1400px 0px'});mEls.forEach(el=>mio.observe(el))}
 
 /* ---------- lazy Leaflet ---------- */
-const mapEl=$('#map');if(mapEl&&window.__mapInit){mapEl.textContent='🗺️ 地图加载中…';const lio=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;lio.disconnect();loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
-  loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js').then(()=>{mapEl.textContent='';mapEl.style.display='block';window.__mapInit();mapEl.setAttribute('data-lenis-prevent','')}).catch(()=>{mapEl.innerHTML='<p style="padding:20px">地图组件加载失败（可能是网络限制），请刷新重试。</p>'})},{rootMargin:'600px 0px'});lio.observe(mapEl)}
+const mapEl=$('#map');if(mapEl&&window.__mapInit){mapEl.textContent='🗺️ 地图加载中…';const lio=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;lio.disconnect();loadCSS('assets/vendor/leaflet/leaflet.css');
+  loadScript('assets/vendor/leaflet/leaflet.js').then(whenCalm).then(()=>{mapEl.textContent='';mapEl.style.display='block';window.__mapInit();mapEl.setAttribute('data-lenis-prevent','')}).catch(()=>{mapEl.innerHTML='<p style="padding:20px">地图组件加载失败（可能是网络限制），请刷新重试。</p>'})},{rootMargin:'600px 0px'});lio.observe(mapEl)}
 
 /* ---------- silky smooth wheel scrolling (desktop only, Lenis) ---------- */
 let lenis=null;
 const PREVENT='.toc,.tbl,.mermaid,#map,.pop,.leaflet-container,.flash .face,.topnav,.tbar,select,textarea';
 function startLenis(){if(lenis||RM||!matchMedia('(pointer:fine)').matches||!LS.get('smooth',true))return;
-  loadScript('https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js').then(()=>{if(lenis||!window.Lenis)return;
+  loadScript('assets/vendor/lenis/lenis.min.js').then(()=>{if(lenis||!window.Lenis)return;
     $$(PREVENT).forEach(n=>n.setAttribute('data-lenis-prevent',''));
     lenis=new window.Lenis({lerp:0.11,smoothWheel:true,wheelMultiplier:1,prevent:n=>!!(n.closest&&n.closest(PREVENT))});window.__lenis=lenis;
     const raf=t=>{if(!lenis)return;lenis.raf(t);requestAnimationFrame(raf)};requestAnimationFrame(raf)}).catch(()=>{})}
 function stopLenis(){if(lenis){lenis.destroy();lenis=null;window.__lenis=null}}
 /* accurate in-page navigation: render skipped content-visibility blocks above the target first */
 function topOff(){return (parseInt(getComputedStyle(root).getPropertyValue('--top-h'))||58)+12}
-function settle(t){const cvs=$$('.cv').filter(c=>c.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_FOLLOWING||c.contains(t));cvs.forEach(c=>c.style.contentVisibility='visible');t.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>cvs.forEach(c=>c.style.contentVisibility=''))),500)}
+function settle(t){const cvs=$$('.cv').filter(c=>c.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_FOLLOWING||c.contains(t));cvs.forEach(c=>c.style.contentVisibility='visible');t.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>{/* lock each block's real height as its placeholder size, so reverting to content-visibility:auto never shifts the page */const hs=cvs.map(c=>c.getBoundingClientRect().height);cvs.forEach((c,i)=>{c.style.containIntrinsicSize='auto '+Math.round(hs[i])+'px';c.style.contentVisibility=''})}),500)}
 function goTo(t,smooth){settle(t);const y=()=>t.getBoundingClientRect().top+(root.scrollTop||scrollY)-topOff();
   if(lenis&&smooth){lenis.scrollTo(y(),{duration:1.1,onComplete:()=>{const d=t.getBoundingClientRect().top-topOff();if(Math.abs(d)>4)lenis.scrollTo(y(),{immediate:true})}});return}
-  scrollTo({top:y(),behavior:smooth&&!RM?'smooth':'auto'});
-  let n=0;const fix=()=>{const d=t.getBoundingClientRect().top-topOff();if(Math.abs(d)>4&&n++<6)scrollTo({top:y(),behavior:'auto'})};if(smooth&&!RM){addEventListener('scrollend',fix,{once:true});setTimeout(fix,1200)}else{requestAnimationFrame(fix);setTimeout(fix,700)}}
+  /* 'instant' overrides CSS scroll-behavior:smooth; then re-check a few times while late layout settles, unless the user takes over */
+  let user=false;const stop=()=>{user=true};['wheel','touchstart','keydown','pointerdown'].forEach(ev=>addEventListener(ev,stop,{once:true,passive:true}));
+  const fix=()=>{if(user)return;const d=t.getBoundingClientRect().top-topOff();if(Math.abs(d)>4)scrollTo({top:y(),behavior:'instant'})};
+  if(smooth&&!RM){scrollTo({top:y(),behavior:'smooth'});addEventListener('scrollend',fix,{once:true});[1300,2000].forEach(ms=>setTimeout(fix,ms))}
+  else{scrollTo({top:y(),behavior:'instant'});requestAnimationFrame(fix);[150,400,800,1300,2000].forEach(ms=>setTimeout(fix,ms))}}
 window.__goTo=goTo;
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey)return;const id=decodeURIComponent(a.getAttribute('href').slice(1));const t=id&&document.getElementById(id);if(!t)return;
   e.preventDefault();history.pushState(null,'','#'+id);goTo(t,true)});

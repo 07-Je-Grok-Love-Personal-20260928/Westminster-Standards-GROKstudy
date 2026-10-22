@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import html, re, json
-VERSION='v2.0'; DATE='2026-10-21'
+VERSION='v2.1'; DATE='2026-10-22'
 SITE_TITLE='威斯敏斯特标准 · 深度学习站'
 PAGES=[('index.html','🏠','总览'),('history.html','🗺️','历史·地理'),('wcf.html','📘','信仰告白'),('wlc.html','📗','大要理问答'),('wsc.html','📙','小要理问答'),('compare.html','⚖️','深度对比'),('recite.html','🎙️','背诵版'),('memory.html','🧠','记忆训练'),('creeds.html','📜','信经与联合信条'),('sources.html','🔗','来源')]
 CATS={'rev':('启示论','📖'),'god':('神论','✨'),'man':('人论·罪','💔'),'cov':('圣约','🤝'),'chr':('基督论','✝️'),'sal':('救恩论','🌱'),'law':('律法·伦理·敬拜','📜'),'chu':('教会·圣礼','⛪'),'end':('末世论','🌅')}
@@ -65,7 +65,6 @@ def page(fn,title,body,head='',js='',desc=''):
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
 {BOOT}
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css?v={VERSION}">
 {head}
 <script src="assets/js/app.js?v={VERSION}" defer></script>

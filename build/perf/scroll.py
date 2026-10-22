@@ -9,7 +9,7 @@ JS='''()=>new Promise(res=>{const d=[];let last=performance.now(),t0=last;let lt
  requestAnimationFrame(f)})'''
 out={}
 with sync_playwright() as p:
-    b=p.chromium.launch(args=['--enable-gpu-rasterization'])
+    b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox','--enable-gpu-rasterization'])
     for w,h,thr in ((390,844,4),(1440,900,1)):
         ctx=b.new_context(viewport={'width':w,'height':h},device_scale_factor=2 if w<500 else 1)
         for n in pages:

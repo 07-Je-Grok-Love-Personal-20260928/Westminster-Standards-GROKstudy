@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from content_v21 import X as XV
 import json, re, sys
 import os; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from common import *
@@ -136,7 +137,8 @@ def build_cat(doc):
         rng=list(range(a,b+1))
         for i in range(0,len(rng),8):
             chunks.append('<div class="cv">'+''.join(qa_card(doc,Q[q]) for q in rng[i:i+8])+'</div>')
-        tb=tabs([('bt-pt','📚 圣经神学',mk(g['bt'])),('eu-pt','🇳🇱 欧陆对照',mk(g['eu'],cmp=True))],f'tab{doc}{a}')
+        xx=XV[(doc,a)]
+        tb=tabs([('bt-pt','📚 圣经神学',mk(g['bt'])),('cov-pt','🤝 圣约神学',mk(xx['cov'])),('eu-pt','🇳🇱 欧陆对照',mk(g['eu'],cmp=True)),('pr-pt','🏴 长老会',mk(xx['pr'])),('app-pt','🛠️ 应用',mk(xx['ap']))],f'tab{doc}{a}')
         parts.append(f'''<section class="sec">{h2(f"第{a}–{b}问 · {g['title']}",g['icon'],f"g{a}",f"{a}–{b} {g['title']}")}
 <span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span>
 {callout('key-pt','🎯 核心要义',g['key'])}
@@ -175,7 +177,7 @@ window.__pageInit=function(){
  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
  const doc=$('#rDoc'),mode=$('#rMode'),size=$('#rSize');
  const LSg=(k,d)=>{try{return JSON.parse(localStorage.getItem('wsg_'+k))??d}catch(e){return d}},LSs=(k,v)=>{try{localStorage.setItem('wsg_'+k,JSON.stringify(v))}catch(e){}};
- const h=location.hash.match(/^#(wsc|wlc|wcf)/); doc.value=h?h[1]:LSg('rdoc','wsc'); mode.value=LSg('rmode','read'); size.value=LSg('rsize',18);
+ const h=location.hash.match(/^#(?:r-)?(wsc|wlc|wcf)/); doc.value=h?h[1]:LSg('rdoc','wsc'); mode.value=LSg('rmode','read'); size.value=LSg('rsize',18);
  function cloze(el){ if(el.dataset.cz)return; el.dataset.orig=el.innerHTML; const t=el.textContent.replace(/\\d+(?=[，。；、：！？」”）]|$)/g,'');
    el.dataset.cz=t.replace(/[&<>]/g,'').replace(/([\\u4e00-\\u9fff])([\\u4e00-\\u9fff]+)/g,(m,a,b)=>a+'<span class="cl">'+b+'</span>'); }
  function apply(){ $$('.rdoc').forEach(d=>d.classList.toggle('hide',d.dataset.doc!==doc.value));
@@ -191,6 +193,7 @@ window.__pageInit=function(){
  [doc,mode,size].forEach(x=>x.addEventListener('input',apply));
  $('#rShowAll').onclick=()=>$$('.ansbody').forEach(el=>el.classList.add('show'));
  apply();
+ if(location.hash.length>1){const t=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(t&&window.__goTo)requestAnimationFrame(()=>window.__goTo(t,false))}
 };
 </script>'''
     open(OUT+'recite.html','w').write(page('recite.html','干净阅读版 · 背诵模式',body,js=js))

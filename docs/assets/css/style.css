@@ -21,7 +21,7 @@ html{
   --grad:linear-gradient(135deg,var(--a1),var(--a2));
   --grad3:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));
   --hero-grad:linear-gradient(125deg,color-mix(in srgb,color-mix(in srgb,var(--a1) 78%,#0b1020) 92%,transparent) 0%,color-mix(in srgb,color-mix(in srgb,var(--a2) 75%,#0b1020) 86%,transparent) 55%,color-mix(in srgb,color-mix(in srgb,var(--a3) 70%,#2a1300) 82%,transparent) 100%);
-  --term:color-mix(in srgb,var(--a1) 85%,#000); --hl:color-mix(in srgb,#fde047 70%,var(--a3));
+  --term:color-mix(in srgb,var(--a1) 74%,#000); --hl:color-mix(in srgb,#fde047 70%,var(--a3));
   --bib:#2563eb; --cmp:#059669; --err:#dc2626; --ref:color-mix(in srgb,var(--a2) 80%,#000); --refbg:color-mix(in srgb,var(--a2) 12%,transparent);
   --accent:color-mix(in srgb,var(--a1) 90%,#000); --accent2:color-mix(in srgb,var(--a3) 70%,#7c2d12);
 }
@@ -321,3 +321,16 @@ footer.foot{margin-top:60px;padding:24px;border-radius:20px;background:var(--car
 @keyframes rise{from{transform:translateY(14px)}to{transform:none}}
 .no-motion .hero>*{animation:none!important}
 @media (prefers-reduced-motion:reduce){.hero>*{animation:none!important}}
+/* v2.1 pre-rendered Mermaid SVG: colours are CSS variables → follows palette + light/dark */
+:root{--mm-a1:var(--a1);--mm-a2:var(--a2);--mm-ink:var(--ink);--mm-card:color-mix(in srgb,var(--bg) 70%,#fff);--mm-line:color-mix(in srgb,var(--a2) 70%,var(--ink));
+ --mm-tint:color-mix(in srgb,var(--a1) 12%,#fff);--mm-tint2:color-mix(in srgb,var(--a2) 10%,#fff);--mm-mix:#fff;--mm-pct:20%;
+ --mm-s0:color-mix(in srgb,var(--a1) var(--mm-pct),var(--mm-mix));--mm-s1:color-mix(in srgb,var(--a2) var(--mm-pct),var(--mm-mix));--mm-s2:color-mix(in srgb,var(--a3) var(--mm-pct),var(--mm-mix));--mm-s3:color-mix(in srgb,var(--c-sal) var(--mm-pct),var(--mm-mix));
+ --mm-s4:color-mix(in srgb,var(--c-chu) var(--mm-pct),var(--mm-mix));--mm-s5:color-mix(in srgb,var(--c-end) var(--mm-pct),var(--mm-mix));--mm-s6:color-mix(in srgb,var(--c-law) var(--mm-pct),var(--mm-mix));--mm-s7:color-mix(in srgb,var(--c-god) var(--mm-pct),var(--mm-mix));
+ --mm-s8:color-mix(in srgb,var(--c-rev) var(--mm-pct),var(--mm-mix));--mm-s9:color-mix(in srgb,var(--c-man) var(--mm-pct),var(--mm-mix));--mm-s10:color-mix(in srgb,var(--c-cov) var(--mm-pct),var(--mm-mix));--mm-s11:color-mix(in srgb,var(--c-chr) var(--mm-pct),var(--mm-mix));
+ --mm-l0:var(--ink);--mm-l1:var(--ink);--mm-l2:var(--ink);--mm-l3:var(--ink);--mm-l4:var(--ink);--mm-l5:var(--ink);--mm-l6:var(--ink);--mm-l7:var(--ink);--mm-l8:var(--ink);--mm-l9:var(--ink);--mm-l10:var(--ink);--mm-l11:var(--ink)}
+html[data-theme=dark]{--mm-card:color-mix(in srgb,var(--bg) 80%,#2a3350);--mm-tint:color-mix(in srgb,var(--a1) 30%,#111827);--mm-tint2:color-mix(in srgb,var(--a2) 28%,#111827);--mm-mix:#111827;--mm-pct:38%}
+.mermaid.mm-pre{min-height:0;max-height:none;color:inherit;white-space:normal}
+.mermaid.mm-pre svg{display:block;margin:0 auto;max-width:100%!important;height:auto}
+.mermaid foreignObject{overflow:visible}
+@media (max-width:700px){.mermaid.mm-pre[data-wide] svg{max-width:none!important;width:var(--mmw)}
+ .mermaid.mm-pre[data-wide]{padding-bottom:30px}.mermaid.mm-pre[data-wide]::after{content:"← 左右滑动查看全图 →";position:sticky;left:0;display:block;font-size:12px;color:var(--muted);margin-top:6px}}
