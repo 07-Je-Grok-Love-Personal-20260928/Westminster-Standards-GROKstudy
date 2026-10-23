@@ -1,16 +1,16 @@
-# 威斯敏斯特标准-20261023-v3.0-GROKstudy
+# 威斯敏斯特标准-20261023-v3.1-GROKstudy
 
-**Westminster-Standards-20261023-v3.0-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.0 聚焦 **历史 · 地图 · 文化**。
+**Westminster-Standards-20261023-v3.1-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.1 聚焦 **真机流畅度 · 配色 · 标注与排版**（v3.0 为历史 · 地图 · 文化）。
 
-## 🌐 在线访问（v3.0，当前版本）
+## 🌐 在线访问（v3.1，当前版本）
 
 | 平台 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-grok-love-personal-20260928.github.io/Westminster-Standards-GROKstudy/ |
-| Surge | https://westminster-standards-20261023-v3-grokser.surge.sh |
-| Netlify | https://westminster-standards-20261023-v3-grokser.netlify.app |
+| Surge | https://westminster-standards-20261023-v3-1-grokser.surge.sh |
+| Netlify | https://westminster-standards-20261023-v3-1-grokser.netlify.app |
 
-GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.0-20261023
+GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.1-20261023
 
 源码仓库：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy
 
@@ -18,11 +18,12 @@ GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminste
 
 | 版本 | Git 标签 / Release（含整站 zip） | Surge | Netlify |
 |---|---|---|---|
+| v3.0（2026-10-23） | [v3.0-20261023](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.0-20261023) | https://westminster-standards-20261023-v3-grokser.surge.sh | https://westminster-standards-20261023-v3-grokser.netlify.app |
 | v2.1（2026-10-22） | [v2.1-20261022](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022) | https://westminster-standards-20261022-v2-1-grokser.surge.sh | https://westminster-standards-20261022-v2-1-grokser.netlify.app |
 | v2.0（2026-10-21） | [v2.0-20261021](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021) | https://westminster-standards-20261021-v2-grokser.surge.sh | https://westminster-standards-20261021-v2-grokser.netlify.app |
 | v1.0（2026-10-20） | [v1.0-20261020](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020) | https://westminster-standards-20261020-v1-grokser.surge.sh | https://westminster-standards-20261020-v1-grokser.netlify.app |
 
-GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.1-20261022`（或 `v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
+GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v3.0-20261023`（或 `v2.1-20261022`、`v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
 
 ## 📚 内容
 
@@ -40,31 +41,34 @@ GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.1-202610
 | `creeds.html` 信经与联合信条 | 三大普世信经、比利时信条、海德堡要理问答、多特信经（逐字取自 ccifellowship.org） |
 | `sources.html` 来源 | 原文来源、延伸资源、版本记录、图片署名 |
 
-## 🖍️ 标注系统（全站统一，右上角 🖍️ 查看图例）
+## 🖍️ 标注系统（全站统一，右上角 🖍️ 查看图例；v3.1 按用途分组）
 
-| 标注 | 含义 |
-|---|---|
-| **粗体** | 关键词 |
-| 彩色字 | 神学术语 |
-| 荧光底 | 必背金句 / 核心结论 |
-| 实线下划线 | 圣经出处 |
-| 虚线下划线 | 对比 / 区别 |
-| 波浪线 | 难点 / 易错 / 争议 |
-| 小标签 `WLC 31` | 文献交叉索引 |
-| 蓝色底 / 绿色底 | 定义、概念说明 / 应用、实践要点（v3.0） |
-| 双下划线 | 关键论证 / 转折（v3.0） |
-| 年代标签 `1643年` | 年代 / 日期（自动标注，v3.0） |
-| 点线下划线 | 地名（v3.0） |
-| 加粗彩色 + 底线 | 人物（v3.0） |
-| 左色条段落 | 导读 / 本节概要（v3.0） |
-| “ ” | 原文逐字引用 |
-| 「 」 | 术语 / 口诀 / 概括（非原文） |
+| 组 | 标注 | 含义 |
+|---|---|---|
+| 字色 · 字重 | **粗体** | 关键词 |
+| | 彩色字 | 神学术语 |
+| | 红色字 ⊘（淡删除线，v3.1） | 信条明确拒绝的错误立场（化质说、阿米念主义、抗辩派、反律主义、重洗派、炼狱等） |
+| | 加粗彩色 + 底线 | 人物 |
+| | 小标签 `WLC 31` | 文献交叉索引（可点击） |
+| 底色 | 荧光底 | 必背金句 / 核心结论 |
+| | 蓝色底 | 定义 / 概念说明——v3.1 起自动标出「术语＋是…」句 |
+| | 绿色底 | 应用 / 实践要点——v3.1 起自动标出「应用」栏首句 |
+| | 年代标签 `1643年` | 年代 / 日期 |
+| 下划线 | 双下划线 | 关键论证 / 转折——v3.1 起自动标出「不是…而是…」「所以…」 |
+| | 实线下划线 | 圣经出处 |
+| | 虚线下划线 | 对比 / 区别 |
+| | 波浪线 | 难点 / 易错 / 争议 |
+| | 点线下划线 | 地名 |
+| 引文 · 块 | “ ”（衬线体，v3.1） | 原文逐字引用 |
+| | 「 」（琥珀色，v3.1） | 术语 / 口诀 / 概括（非原文） |
+| | 左色条段落 | 导读 / 本节概要 |
+| | 彩色卡片 | 见下方提示框 |
 
 提示框：🎯 核心要义 · 🔍 难点辨析 · 🧠 记忆钩子 · 🚫 常见误解 · 🛠️ 生活应用 · 📚 圣经神学 · 🤝 圣约神学 · 🇳🇱 欧陆改革宗 · 🏴 长老会正统。
 
 ## 🎨 主题
 
-6 套配色（晨曦 · 翡翠 · 绛红金 · 深海 · 暮光 · 史卷〔v3.0 新增〕）× 浅色 / 深色 / 跟随系统；设置保存在 localStorage，页面加载前即应用（无闪烁）。
+10 套配色（晨曦 · 翡翠 · 绛红金 · 深海 · 暮光 · 史卷〔v3.0〕· **水墨 · 樱粉 · 皇家 · 北境**〔v3.1 新增〕）× 浅色 / 深色 / 跟随系统；主题面板每套配色显示浅色 / 深色双色预览卡；所有组合的正文、术语、交叉索引、标注文字对比度 ≥ 4.5；设置保存在 localStorage，页面加载前即应用（无闪烁）。
 
 ## 🧭 地图（v3.0）
 
@@ -142,7 +146,7 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 - 美国修订本对照：https://opc.org/wcf.html （OPC 现行英文本）
 - 图片：Wikimedia Commons（公有领域 / CC0）。
 - 地图：离线底图 Natural Earth（公有领域）；在线瓦片 © OpenStreetMap 贡献者（ODbL）、HOT 样式 / OSM France 托管、OpenTopoMap（CC-BY-SA）。地图上的地点、日期均附来源链接（主要为 Wikipedia 与西敏寺官网）。
-- 第三方库（均自托管于 `docs/assets/vendor/`，附各自 LICENSE）：Mermaid 10.9.1（只在构建时使用，页面中作为备用）、Leaflet 1.9.4、Lenis 1.1.20。只有实景地图的在线瓦片来自外部（失败时自动退回本站离线底图）。
+- 第三方库（均自托管于 `docs/assets/vendor/`，附各自 LICENSE）：Mermaid 10.9.1（只在构建时使用，页面中作为备用）、Leaflet 1.9.4（v3.1 起不再使用 Lenis，改为浏览器原生滚动）。只有实景地图的在线瓦片来自外部（失败时自动退回本站离线底图）。
 - 讲解、图表、口诀为学习整理，不代表任何教会的官方解释。
 
 ## 🛠️ 目录结构与构建
@@ -171,7 +175,7 @@ generator/           # 生成器（Python 3）
 
 部署：
 ```bash
-npx -y surge docs westminster-standards-20261023-v3-grokser.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
+npx -y surge docs westminster-standards-20261023-v3-1-grokser.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
 env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --site <site-id>
 ```
 
