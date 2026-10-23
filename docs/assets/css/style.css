@@ -433,3 +433,5 @@ h3.rqh{font-size:15px;font-family:var(--sans);color:var(--muted);letter-spacing:
 .pbar{display:inline-block;width:64px;height:8px;border-radius:5px;background:color-mix(in srgb,var(--a2) 22%,transparent);vertical-align:middle;overflow:hidden}
 .pbar i{display:block;height:100%;width:100%;background:var(--a1);transform-origin:left;transform:scaleX(var(--w));transition:transform 1s cubic-bezier(.2,.8,.2,1)}
 .rv:not(.in) .pbar i{transform:scaleX(0)}
+html[data-palette=nord][data-theme=dark]{--muted:#b4bdcf;--ink2:#d8dee9;--card:rgba(52,59,73,.85);--card2:rgba(56,63,78,.96)}
+html[data-palette=nord][data-theme=dark] .callout b.lbl{color:color-mix(in srgb,var(--k) 38%,#fff)}
