@@ -1,0 +1,11 @@
+v31 390 index {"dcl": 547, "load": 551, "fcp": 512, "nodes": 1630, "html_kb": 21, "script_ms": 32, "layout_ms": 418, "style_ms": 83, "heapMB": 1.1, "tbt": 3, "maxLT": 53, "inp": 48, "cls": 0}
+v31 390 wcf {"dcl": 404, "load": 408, "fcp": 300, "nodes": 1336, "html_kb": 139, "script_ms": 22, "layout_ms": 164, "style_ms": 79, "heapMB": 1.1, "tbt": 11, "maxLT": 61, "inp": 48, "cls": 0}
+v31 390 wlc {"dcl": 333, "load": 336, "fcp": 264, "nodes": 977, "html_kb": 73, "script_ms": 21, "layout_ms": 152, "style_ms": 75, "heapMB": 1.0, "tbt": 0, "maxLT": 0, "inp": 48, "cls": 0}
+v31 390 wsc {"dcl": 282, "load": 300, "fcp": 260, "nodes": 800, "html_kb": 30, "script_ms": 15, "layout_ms": 146, "style_ms": 65, "heapMB": 1.5, "tbt": 0, "maxLT": 0, "inp": 48, "cls": 0}
+v31 390 recite {"dcl": 253, "load": 257, "fcp": 196, "nodes": 1207, "html_kb": 113, "script_ms": 27, "layout_ms": 142, "style_ms": 49, "heapMB": 1.1, "tbt": 24, "maxLT": 74, "inp": 48, "cls": 0}
+v31 390 creeds {"dcl": 390, "load": 408, "fcp": 320, "nodes": 897, "html_kb": 83, "script_ms": 15, "layout_ms": 168, "style_ms": 68, "heapMB": 1.0, "tbt": 10, "maxLT": 60, "inp": 40, "cls": 0}
+v31 390 history {"dcl": 278, "load": 313, "fcp": 344, "nodes": 867, "html_kb": 28, "script_ms": 22, "layout_ms": 163, "style_ms": 78, "heapMB": 1.1, "tbt": 185, "maxLT": 235, "inp": 568, "cls": 0}
+v31 390 atlas {"dcl": 423, "load": 445, "fcp": 356, "nodes": 2014, "html_kb": 52, "script_ms": 35, "layout_ms": 279, "style_ms": 83, "heapMB": 1.1, "tbt": 34, "maxLT": 84, "inp": 96, "cls": 0}
+v31 390 compare {"dcl": 242, "load": 267, "fcp": 288, "nodes": 988, "html_kb": 13, "script_ms": 17, "layout_ms": 147, "style_ms": 53, "heapMB": 1.6, "tbt": 141, "maxLT": 191, "inp": 48, "cls": 0}
+v31 390 memory {"dcl": 292, "load": 296, "fcp": 272, "nodes": 652, "html_kb": 18, "script_ms": 23, "layout_ms": 182, "style_ms": 71, "heapMB": 1.6, "tbt": 0, "maxLT": 0, "inp": 48, "cls": 0}
+v31 390 sources {"dcl": 191, "load": 214, "fcp": 232, "nodes": 475, "html_kb": 8, "script_ms": 16, "layout_ms": 116, "style_ms": 48, "heapMB": 1.5, "tbt": 97, "maxLT": 147, "inp": 48, "cls": 0}
