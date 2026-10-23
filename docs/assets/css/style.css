@@ -429,3 +429,7 @@ h3.rqh{font-size:15px;font-family:var(--sans);color:var(--muted);letter-spacing:
 @media (prefers-reduced-motion:reduce){h2.h::after{transform:none!important;transition:none!important}}
 /* hydration placeholders: visible but quiet */
 .lz:empty{min-height:24px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 10px;vertical-align:middle}
+.pbar{display:inline-block;width:64px;height:8px;border-radius:5px;background:color-mix(in srgb,var(--a2) 22%,transparent);vertical-align:middle;overflow:hidden}
+.pbar i{display:block;height:100%;width:100%;background:var(--a1);transform-origin:left;transform:scaleX(var(--w));transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.rv:not(.in) .pbar i{transform:scaleX(0)}

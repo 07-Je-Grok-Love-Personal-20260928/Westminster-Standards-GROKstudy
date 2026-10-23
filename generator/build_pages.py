@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json, sys
+import json, sys, re
 import os; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from common import *
 from content_more import TIMELINE, TL_CATS, MAP
@@ -8,13 +8,48 @@ from atlas import mapblock, confession_chart
 OUT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs')+'/'
 D=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','standards.json')))
 CRED=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs','assets','img','credits.json')))
+IMGSZ=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','imgsize.json')))
 def fig(fn,cap):
     m=CRED[fn]
-    return f'<figure class="rv"><img loading="lazy" src="assets/img/{fn}" alt="{esc(cap)}"><figcaption>{cap}（图源：<a href="{m["page"]}" target="_blank" rel="noopener">Wikimedia Commons</a>，{esc(m["license"])}）</figcaption></figure>'
+    b=fn[:-4];w,h=IMGSZ[fn]
+    ss=f' srcset="assets/img/{b}-800.webp 800w, assets/img/{b}.webp {w}w" sizes="(max-width:700px) 92vw, 400px"' if w>800 else ''
+    return f'<figure class="rv"><img loading="lazy" decoding="async" src="assets/img/{b}.webp"{ss} width="{w}" height="{h}" alt="{esc(cap)}"><figcaption>{cap}（图源：<a href="{m["page"]}" target="_blank" rel="noopener">Wikimedia Commons</a>，{esc(m["license"])}）</figcaption></figure>'
+
+# v3.1: proof-text statistics computed from the official proof texts in data/standards.json
+NT=['马太福音','马可福音','路加福音','约翰福音','使徒行传','罗马书','哥林多前书','哥林多后书','加拉太书','以弗所书','腓立比书','歌罗西书','帖撒罗尼迦前书','帖撒罗尼迦后书','提摩太前书','提摩太后书','提多书','腓利门书','希伯来书','雅各书','彼得前书','彼得后书','约翰一书','约翰二书','约翰三书','犹大书','启示录']
+def _norm(b):
+    b=re.sub(r'^(参见|见)','',b); b=re.sub(r'第$','',b)
+    return {'创世纪':'创世记','列王纪上':'列王记上','列王纪下':'列王记下','提撒罗尼迦前书':'帖撒罗尼迦前书','提撒罗尼迦后书':'帖撒罗尼迦后书','腓力比书':'腓立比书','以弗所':'以弗所书','腓利比书':'腓立比书','王下':'列王记下'}.get(b,b)
+def proof_stats():
+    import collections
+    D=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','standards.json')))
+    R=[]
+    for ch in D['wcf']:
+        for x in ch['secs']: R+=[('wcf',v) for v in x['refs'].values()]
+    for d in ('wlc','wsc'):
+        for u in D[d]: R+=[(d,v) for v in u['refs'].values()]
+    c=collections.Counter(); per=collections.defaultdict(lambda:[0,0])
+    for d,v in R:
+        for m in re.finditer(r'([\u4e00-\u9fff]{2,8})\s*\d',v):
+            b=_norm(m.group(1))
+            if len(b)<2 or not (b.endswith(('书','记','篇','言','歌','福音','行传','录','上','下')) or b in ('箴言','雅歌','传道书')): continue
+            c[b]+=1; per[d][1 if b in NT else 0]+=1
+    return c,per,len(R)
+def proof_section():
+    c,per,n=proof_stats()
+    pal=['var(--a1)','var(--a2)','var(--a3)']
+    rows=[(b,v,pal[0] if b in NT else pal[1],None) for b,v in c.most_common(12)]
+    ot=sum(v for b,v in c.items() if b not in NT); nt=sum(v for b,v in c.items() if b in NT)
+    nm={'wcf':'信条','wlc':'大要理','wsc':'小要理'}
+    tb='<div class="tbl"><table><thead><tr><th>文件</th><th>旧约卷名次数</th><th>新约卷名次数</th><th>新约占比</th></tr></thead><tbody>'+''.join(f'<tr><td>{nm[d]}</td><td>{per[d][0]}</td><td>{per[d][1]}</td><td><span class="pbar" style="--w:{per[d][1]/(sum(per[d]) or 1):.3f}"><i></i></span> {per[d][1]*100//(sum(per[d]) or 1)}%</td></tr>' for d in ('wcf','wlc','wsc'))+'</tbody></table></div>'
+    return (h2('经文版图：三份文件引用了哪些书卷？','📊','proofs')
+      +'<p class="lead">以下数字由本站数据<b>自动统计</b>：遍历信条与两份要理问答的全部 '+str(n)+' 条经文出处脚注，计算每卷书名出现的次数（只计书卷名本身的出现；同卷续引如「2:1」不另计）。它显示西敏标准的论证以<b>罗马书、诗篇、马太福音</b>为三大支柱；新约卷名约占 '+f'{round(nt*100/(ot+nt))}'+'%，但旧约（诗篇、以赛亚书、创世记……）同样是论证基石——正合「以经解经」的原则（WCF 1.9）。</p>'
+      +'<div class="grid g2 rv"><div class="card"><h3>🏆 被引最多的 12 卷书</h3>'+bars(rows)+'<p class="muted" style="font-size:13px"><span class="dot" style="background:var(--a1)"></span>新约 <span class="dot" style="background:var(--a2)"></span>旧约</p></div>'
+      +'<div class="card"><h3>⚖️ 新约 vs 旧约</h3>'+donut([('旧约',ot,'var(--a2)'),('新约',nt,'var(--a1)')],f'{ot+nt}','卷名引用')+tb+'</div></div>')
 # ===================== INDEX =====================
 def build_index():
     b=[]
-    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/assembly.jpg)"><div class="shine"></div><div class="floaty">🕊️</div>
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/assembly.webp)"><div class="shine"></div><div class="floaty">🕊️</div>
 <h1>威斯敏斯特标准<br>《信仰告白》·《大要理问答》·《小要理问答》</h1>
 <p>一个站点读懂改革宗正统最重要的英语信仰文件：先跳出框架、从<b>整本圣经</b>与<b>神学核心</b>看全貌，再进入<b>逐章逐问</b>的细节；有时间线、故事线、地图、文化背景，有<b>圣经神学</b>与<b>圣约神学</b>，并以<b>欧陆改革宗</b>（三大普世信经 + 三项联合信条）与<b>长老会改革宗正统</b>两个视角对照阅读。</p>
 <div class="chips"><span class="chip">📘 信仰告白 33章</span><span class="chip">📗 大要理 196问</span><span class="chip">📙 小要理 107问</span><span class="chip">🗺️ 地图·时间线</span><span class="chip">🧠 背诵·记忆训练</span><span class="chip">📱 手机/平板/电脑自适应</span></div></section>''')
@@ -72,6 +107,7 @@ def build_index():
   X --> CH["🔥 教会"] --> NC["🌅 新天新地"]
   style X fill:#fde68a,stroke:#b45309,stroke-width:3px''')+'</div>')
     # covenant theology
+    b.append(proof_section())
     b.append(h2('第二层：神学核心——圣约神学','🤝','covenant'))
     b.append('<p class="lead">西敏标准最显著的结构特征是<b>圣约</b>：神与人之间“距离是如此之远”，人要得着祝福，唯有神<b>屈尊降卑</b>以约的方式与人相交（WCF 7.1）。欧陆改革宗（布林格、乌尔西努、俄利维亚努等）是圣约神学的源头之一；西敏会议把它以信条形式系统化。</p>')
     b.append('<div class="mermaid">'+esc('''flowchart TB
@@ -152,7 +188,7 @@ def build_index():
 # ===================== HISTORY =====================
 def build_history():
     b=[]
-    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/jerusalem-chamber.jpg)"><div class="shine"></div><div class="floaty">🗺️</div><h1> 历史 · 地理 · 文化</h1>
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/jerusalem-chamber.webp)"><div class="shine"></div><div class="floaty">🗺️</div><h1> 历史 · 地理 · 文化</h1>
 <p>时间线、故事线、互动地图、人物与派别、文化区域——还原1640年代伦敦西敏寺里那场长达五年半的神学会议的<b>真实背景</b>与<b>真实情境</b>。</p></section>''')
     b.append(h2('时间线（可筛选）','⏳','timeline'))
     b.append('<div class="filters" data-for="#tl">'+''.join(f'<button data-k="{k}" class="{"on" if k=="all" else ""}">{v}</button>' for k,v in TL_CATS)+'</div>')
@@ -186,7 +222,7 @@ def build_history():
 # ===================== ATLAS (v3.0) =====================
 def build_atlas():
     b=[]
-    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.jpg)"><div class="shine"></div><div class="floaty">🧭</div><h1>历史地图集</h1>
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.webp)"><div class="shine"></div><div class="floaty">🧭</div><h1>历史地图集</h1>
 <p>五幅主题地图，每幅都有<b>手绘示意图</b>（离线可用、带动画路线）和<b>可缩放的实景地图</b>（自带底图 + 在线瓦片自动切换），并配本图时间线与文化区域特征。所有日期与地点均附来源。</p></section>''')
     n=sum(len(m['places']) for m in MAPS)
     b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('5','主题地图'),(str(n),'标注地点'),('1517','起点：维登堡'),('1643','西敏会议开幕'),('1872','马偕抵淡水')])+'</div>')
@@ -206,7 +242,7 @@ def build_atlas():
 # ===================== COMPARE =====================
 def build_compare():
     b=[]
-    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.jpg)"><div class="shine"></div><div class="floaty">⚖️</div><h1> 深度对比</h1>
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.webp)"><div class="shine"></div><div class="floaty">⚖️</div><h1> 深度对比</h1>
 <p>三份西敏文件之间的异同；为什么需要三份而不是一份；它们各自要解决什么问题；以及西敏标准与欧陆<b>三项联合信条</b>、<b>三大普世信经</b>的系统对照。</p></section>''')
     b.append(h2('三份西敏文件总览','📊','three'))
     rows=[('体裁','系统性信条（章·节）','详尽的问答','精炼的问答'),
@@ -279,7 +315,7 @@ def build_memory():
     wsc=[dict(q=u['q'],k=u['ques'],a=__import__('re').sub(r'⟦\d+⟧','',u['ans'])) for u in D['wsc']]
     wcft=[c['title'] for c in D['wcf']]
     b=[]
-    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/abbey.jpg)"><div class="shine"></div><div class="floaty">🧠</div><h1>🧠 记忆训练营</h1><p>口诀 + 记忆宫殿 + 翻转卡片 + 小测验：把「读过」变成“记住”，把“记住”变成“活出”。</p></section>''')
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/abbey.webp)"><div class="shine"></div><div class="floaty">🧠</div><h1>🧠 记忆训练营</h1><p>口诀 + 记忆宫殿 + 翻转卡片 + 小测验：把「读过」变成“记住”，把“记住”变成“活出”。</p></section>''')
     b.append(h2('我的背诵进度','📈','progress'))
     b.append('<div class="rings">'+''.join(f'<div class="pring rv" data-ring="{p}" data-total="{t}" style="--c:{c}"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="45"/><circle class="fgc" cx="55" cy="55" r="45" stroke-dasharray="283" stroke-dashoffset="283"/></svg><b>0 / {t}</b><span>{n}</span></div>' for p,t,c,n in [('wsc-',107,'var(--a3)','📙 小要理问答'),('wlc-',196,'var(--a2)','📗 大要理问答'),('wcf-',172,'var(--a1)','📘 信仰告白（节）')])+'</div>')
     b.append('<p class="muted">在<a href="recite.html">背诵版</a>或问答页点击「☆ 标记」，进度自动保存在本机。</p>')

@@ -54,7 +54,7 @@ def cvb(h,f=1.0):
 def build_wcf():
     from content_v2 import PR, WARN, ORDO, AMREV
     W=D['wcf']; parts=[]
-    parts.append(f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/jerusalem-chamber.jpg)"><div class="shine"></div><div class="floaty">📘</div>
+    parts.append(f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/jerusalem-chamber.webp)"><div class="shine"></div><div class="floaty">📘</div>
 <h1>《西敏信仰告白》逐章精解</h1>
 <p>1646年完成、1647年附经文呈交的<b>33章 · {sum(len(c['secs']) for c in W)}节</b>信仰告白。每章：<b>核心一句话</b> → <b>原文</b>（RTF-USA 2024 简体译本）→ 解读标签页（圣经神学 · 圣约神学 · 欧陆改革宗 · 长老会正统 · 难点 · 应用）→ 记忆钩子与常见误解 → 三项联合信条<b>原文</b>对照。</p>
 <div class="chips"><span class="chip">📖 33 章</span><span class="chip">🧩 {sum(len(c['secs']) for c in W)} 节</span><span class="chip">📎 附证明经文</span><span class="chip">🏛️ 1647 原文版本</span><span class="chip">🖍️ 统一标注系统</span></div></section>''')
@@ -115,7 +115,7 @@ def build_cat(doc):
   A --> C["📜 当尽何本分 39-107"]
   B --> B1["✨ 神 4-11"] --> B2["💔 约与堕落 12-19"] --> B3["✝️ 恩典之约与基督 20-28"] --> B4["🌱 救恩施行 29-38"]
   C --> C1["🔟 律法与十诫 39-81"] --> C2["🔥 罪·信·悔 82-87"] --> C3["💧 圣道与圣礼 88-97"] --> C4["🙏 祷告与主祷文 98-107"]'''
-        img='abbey.jpg'
+        img='abbey.webp'
     else:
         title='西敏大要理问答 · 196问精解'; h1='📗《西敏大要理问答》196问'
         intro='1647年10月呈交国会，「更精确、更全面」，主要供牧者讲道与成熟信徒深入学习。<b>第1–90问：人当信什么；第91–196问：人当尽何本分。</b>其特色在于“与基督联合”的恩惠（恩典中/荣耀中）、详尽的十诫伦理与蒙恩之道。'
@@ -124,7 +124,7 @@ def build_cat(doc):
   A --> C["📜 当尽何本分 91-196"]
   B --> B1["✨ 神·预旨·创造·护理 6-20"] --> B2["💔 堕落与罪 21-29"] --> B3["🤝 恩典之约 30-35"] --> B4["✝️ 中保基督 36-56"] --> B5["⛪ 施行·教会 57-65"] --> B6["🌱 恩典中 66-81"] --> B7["🌅 荣耀中 82-90"]
   C --> C1["📜 道德律 91-97"] --> C2["🔟 十诫 98-148"] --> C3["⚖️ 罪与出路 149-153"] --> C4["💧 道与圣礼 154-177"] --> C5["🙏 祷告 178-196"]'''
-        img='covenant.jpg'
+        img='covenant.webp'
     parts=[f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/{img})"><div class="shine"></div><div class="floaty">{'📙' if doc=='wsc' else '📗'}</div><h1>{h1}</h1><p>{intro}</p>
 <div class="chips"><span class="chip">正文：RTF-USA 2024 简体译本</span><span class="chip">附证明经文</span><span class="chip">☆ 可标记「已背」</span><span class="chip">已背：<b data-count="{doc}-">0</b> / {len(data)}</span></div></section>''']
     parts.append(h2('结构总览','🧭','overview'))
@@ -207,7 +207,7 @@ window.__pageInit=function(){
     open(OUT+'recite.html','w').write(page('recite.html','干净阅读版 · 背诵模式',body,js=js))
 # ================= Creeds & Three Forms (verbatim ccifellowship) =================
 def build_creeds():
-    parts=[f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/heidelberg1563.jpg)"><div class="shine"></div><div class="floaty">📜</div><h1> 三大普世信经 · 三项联合信条（原文）</h1>
+    parts=[f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/heidelberg1563.webp)"><div class="shine"></div><div class="floaty">📜</div><h1> 三大普世信经 · 三项联合信条（原文）</h1>
 <p>本页全部原文<b>逐字取自</b> <a style="color:#fde68a" href="https://ccifellowship.org/books/book-of-praise" target="_blank" rel="noopener">ccifellowship.org《敬拜手册》</a>（中国改革宗教会），未作任何改动；仅为阅读排版而调整格式。欧陆改革宗以此为教义准则，本站以它们作为解读西敏标准的「对照坐标」。</p>
 <div class="chips"><span class="chip">使徒信经</span><span class="chip">尼西亚信经</span><span class="chip">亚他那修信经</span><span class="chip">比利时信条 37条</span><span class="chip">海德堡要理问答 129问</span><span class="chip">多特信经 4项</span></div></section>''']
     parts.append(h2('普世信经','🕊️','creeds'))
