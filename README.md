@@ -80,7 +80,7 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 
 ### v1.0 → v2.0
 
-测量环境：本机 headless Chromium；Lighthouse 12.8 移动端默认模拟（慢速 4G + 4 倍 CPU 降速，本地服务器未开 gzip）；滚动测试为 5 秒连续滚动的帧间隔统计（脚本见 `build/perf/`）。
+测量环境：本机 headless Chromium；Lighthouse 12.8 移动端默认模拟（慢速 4G + 4 倍 CPU 降速，本地服务器未开 gzip）；滚动测试为 5 秒连续滚动的帧间隔统计（脚本见 `generator/perf/`）。
 
 | 页面 | Lighthouse 分数 | FCP | LCP | 传输量 |
 |---|---|---|---|---|
@@ -113,7 +113,7 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 
 ```
 docs/            # 发布的静态网站（GitHub Pages / Surge / Netlify 均发布此目录）
-build/           # 生成器（Python 3）
+generator/           # 生成器（Python 3）
   data/standards.json   # 从 RTF-USA PDF 提取的西敏三份文件（含证明经文）
   data/cci_struct.json  # 从 ccifellowship.org 抓取的信经与三项联合信条
   content_wcf.py        # 信仰告白逐章解读
@@ -128,7 +128,7 @@ build/           # 生成器（Python 3）
   build_pages.py        # 生成 index/history/compare/memory/sources 页面
 ```
 
-重新生成：`build/build_all.sh`（只有图表源码改动时才需要 Playwright + Chrome）
+重新生成：`generator/build_all.sh`（只有图表源码改动时才需要 Playwright + Chrome）
 
 部署：
 ```bash
