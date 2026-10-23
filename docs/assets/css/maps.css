@@ -62,7 +62,7 @@
 .mtl b{display:inline-block;min-width:5.5em;color:var(--date);font-variant-numeric:tabular-nums}
 .msrc{margin-top:10px;font-size:14px}.msrc ul{columns:2 260px;margin:6px 0}
 .cta{margin:14px 0}.cta .btn{display:inline-block;padding:10px 16px;border-radius:14px;background:var(--grad);color:#fff!important;font-weight:700;box-shadow:var(--shadow)}
-.cta .btn:hover{text-decoration:none;filter:brightness(1.08)}
+.cta .btn:hover{text-decoration:none;opacity:.9}
 /* live map */
 .lmap{height:clamp(320px,56vh,500px);border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--geo-sea);display:grid;place-items:center;color:var(--muted);font-size:14px}
 .lmap.leaflet-container{display:block;font-family:var(--sans)}

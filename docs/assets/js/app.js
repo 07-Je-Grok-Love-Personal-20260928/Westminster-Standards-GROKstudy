@@ -22,10 +22,9 @@ const LMAPS=[];
 applyMode();applyPalette(LS.get('palette','aurora'));
 $$('.sw').forEach(b=>b.addEventListener('click',()=>{LS.set('palette',b.dataset.pal);applyPalette(b.dataset.pal);themeChanged()}));
 $$('#modeSeg button').forEach(b=>b.addEventListener('click',()=>{LS.set('mode',b.dataset.mode);applyMode();themeChanged()}));
-function syncOpts(){$$('#optSeg button').forEach(b=>{const k=b.dataset.opt;b.classList.toggle('on',k==='smooth'?LS.get('smooth',true):LS.get('motion','on')!=='off')})}
+function syncOpts(){$$('#optSeg button').forEach(b=>{const k=b.dataset.opt;b.classList.toggle('on',LS.get('motion','on')!=='off')})}
 $$('#optSeg button').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.opt;
-  if(k==='smooth'){const v=!LS.get('smooth',true);LS.set('smooth',v);v?startLenis():stopLenis()}
-  else{const off=LS.get('motion','on')!=='off';LS.set('motion',off?'off':'on');root.classList.toggle('no-motion',off)}syncOpts()}));
+  {const off=LS.get('motion','on')!=='off';LS.set('motion',off?'off':'on');root.classList.toggle('no-motion',off)}syncOpts()}));
 syncOpts();
 /* popovers */
 const pops=[['themeBtn','themePanel'],['legendBtn','legendPanel']];
@@ -58,10 +57,12 @@ window.__rebuildToc=()=>{watchActive()};
 
 /* ---------- scroll: progress + floating nav cluster (one rAF per frame max) ---------- */
 const pg=$('.progress i'), fab=$('.fab'), fr=$('.fab .fr1'), fm=$('.fab-main');let ticking=false,lastTop=-1,dirY=0;
-function onFrame(){ticking=false;const h=root;const y=h.scrollTop||window.scrollY;if(y===lastTop)return;const dy=y-lastTop;lastTop=y;const max=h.scrollHeight-h.clientHeight||1,p=Math.min(1,y/max);
-  if(pg)pg.style.transform='scaleX('+p.toFixed(4)+')';if(fr)fr.style.strokeDashoffset=(100-p*100).toFixed(1);
+const SDA=window.CSS&&CSS.supports&&CSS.supports('animation-timeline: scroll()');if(SDA)root.classList.add('sda');
+let maxS=0;const remax=()=>{maxS=root.scrollHeight-root.clientHeight||1};
+function onFrame(){ticking=false;const y=window.scrollY;if(y===lastTop)return;const dy=y-lastTop;lastTop=y;if(!maxS)remax();const p=Math.min(1,y/maxS);
+  if(!SDA){if(pg)pg.style.transform='scaleX('+p.toFixed(4)+')';if(fr)fr.style.strokeDashoffset=(100-p*100).toFixed(1)}
   if(fab){dirY=dy>0?Math.min(dirY+dy,400):Math.max(dirY+dy,-400);if(dirY>160&&y>500){fab.classList.add('hide');dirY=0}else if(dirY<-60||y<200||p>.985){fab.classList.remove('hide');dirY=Math.min(dirY,0)}}}
-addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onFrame)}},{passive:true});onFrame();
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onFrame)}},{passive:true});addEventListener('resize',()=>{maxS=0},{passive:true});new ResizeObserver(()=>{maxS=0}).observe(body);requestAnimationFrame(onFrame);
 if(fab){const setOpen=o=>{fab.classList.toggle('open',o);fm.setAttribute('aria-expanded',o)};
   fm.addEventListener('click',e=>{e.stopPropagation();setOpen(!fab.classList.contains('open'))});
   document.addEventListener('click',e=>{if(!fab.contains(e.target))setOpen(false)});
@@ -71,33 +72,50 @@ if(fab){const setOpen=o=>{fab.classList.toggle('open',o);fm.setAttribute('aria-e
   if(!$('#tocList'))$('[data-act=toc]',fab).hidden=true;
   fab.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const k=b.dataset.act;
     if(k==='back')history.back();else if(k==='fwd')history.forward();
-    else if(k==='top'){lenis?lenis.scrollTo(0):scrollTo({top:0,behavior:RM?'auto':'smooth'});fab.classList.remove('hide')}
+    else if(k==='top'){scrollTo({top:0,behavior:RM?'auto':'smooth'});fab.classList.remove('hide')}
     else if(k==='bottom'){const f=$('footer.foot')||main.lastElementChild;goTo(f,true)}
     else if(k==='toc'){if(isMobile())body.classList.add('toc-open');else{body.classList.remove('toc-off');LS.set('tocoff',false)}setTimeout(()=>{const a=$('#tocList a.active')||$('#tocList a');a&&a.focus({preventScroll:false})},isMobile()?320:60)}
     if(k!=='toc')setOpen(false)})}
 
+/* ---------- v3.1 progressive hydration: off-screen chapters / closed <details> live in <template> until needed ---------- */
+const hyq=[];let hyBusy=false;
+function hydrate(el){const t=el&&el.querySelector(':scope>template');if(!t){el&&el.classList.add('hy');return}
+  t.replaceWith(t.content);el.classList.add('hy');initScope(el)}
+function initScope(sc){watchLz(sc);initTabs(sc);paintMemos(sc);stagger(sc);$$('.rv,.bars,.stats',sc).forEach(x=>rio.observe(x));if(window.__onHydrate)window.__onHydrate(sc)}
+function hydrateAll(){let n;do{n=$$('.lz:not(.hy),details.lzd:not(.hy)');n.forEach(hydrate)}while(n.length)}
+function pump(){hyBusy=false;const t0=performance.now();while(hyq.length&&performance.now()-t0<8)hydrate(hyq.shift());if(hyq.length){hyBusy=true;requestAnimationFrame(pump)}}
+const lzio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){lzio.unobserve(e.target);hyq.push(e.target);if(!hyBusy){hyBusy=true;requestAnimationFrame(pump)}}}),{rootMargin:'1600px 0px'});
+const watchLz=sc=>$$('.lz:not(.hy)',sc).forEach(x=>lzio.observe(x));
+document.addEventListener('toggle',e=>{const d=e.target;if(d.matches&&d.matches('details.lzd')&&d.open)hydrate(d)},true);
+/* find an id even if it still sits inside a template; hydrate its ancestors */
+function findId(id){for(let k=0;k<6;k++){const el=document.getElementById(id);if(el){let d=el.closest('details:not([open])');while(d){d.open=true;d=d.parentElement.closest('details:not([open])')}return el}
+  const ts=$$('template');const t=ts.find(x=>x.content.getElementById(id))||ts.find(x=>[...x.content.querySelectorAll('template')].some(y=>y.content.getElementById(id)));if(!t)return null;hydrate(t.parentElement)}return null}
+window.__findId=findId;window.__hydrateAll=hydrateAll;window.__hydrate=hydrate;
 /* ---------- reveal + stagger + counters + charts ---------- */
-$$('.grid,.stats,.flow,.chain,.rings').forEach(g=>{let i=0;[...g.children].forEach(c=>{if(c.classList.contains('rv')){c.style.setProperty('--d',Math.min(i,6)*0.06+'s');i++}})});
+function stagger(sc){$$('.grid,.stats,.flow,.chain,.rings',sc).forEach(g=>{let i=0;[...g.children].forEach(c=>{if(c.classList.contains('rv')){c.style.setProperty('--d',Math.min(i,6)*0.06+'s');i++}})})}stagger(document);
 const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const t=e.target;t.classList.add('in');rio.unobserve(t);if(t.matches('.stats'))countUp(t)}}),{rootMargin:'0px 0px -6% 0px'});
-$$('.rv,.bars,.stats').forEach(el=>rio.observe(el));
+$$('.rv,.bars,.stats').forEach(el=>rio.observe(el));watchLz(document);
 function countUp(box){if(RM||root.classList.contains('no-motion'))return;$$('.stat .v',box).forEach(v=>{const t=v.textContent.trim();if(!/^\d{1,4}$/.test(t))return;const n=+t,from=n>1000?n-60:0,t0=performance.now();
   const step=now=>{const p=Math.min(1,(now-t0)/1100),e=1-Math.pow(1-p,3);v.textContent=Math.round(from+(n-from)*e);if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 /* pause hero animations when off-screen */
 const hio=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('paused',!e.isIntersecting)));$$('.hero').forEach(h=>hio.observe(h));
 
 /* ---------- tabs ---------- */
-$$('.tabs').forEach(t=>{t.classList.add('js');const bs=$$('.tb',t),ps=$$('.tp',t);
-  const sel=i=>{bs.forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});ps.forEach((p,j)=>p.classList.toggle('on',j===i))};
-  bs.forEach((b,i)=>{b.addEventListener('click',()=>sel(i));b.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){bs[(i+1)%bs.length].focus();sel((i+1)%bs.length)}if(e.key==='ArrowLeft'){bs[(i-1+bs.length)%bs.length].focus();sel((i-1+bs.length)%bs.length)}})})});
+/* v3.1: delegated (works for lazily hydrated content too) */
+const initTabs=sc=>$$('.tabs:not(.js)',sc).forEach(t=>t.classList.add('js'));initTabs(document);
+function selTab(t,i){const bs=$$(':scope>.tbar>.tb',t),ps=$$(':scope>.tp',t);bs.forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});ps.forEach((p,j)=>p.classList.toggle('on',j===i))}
+document.addEventListener('click',e=>{const b=e.target.closest('.tabs .tb');if(!b)return;const t=b.closest('.tabs');selTab(t,$$(':scope>.tbar>.tb',t).indexOf(b))});
+document.addEventListener('keydown',e=>{const b=e.target.closest&&e.target.closest('.tabs .tb');if(!b||(e.key!=='ArrowRight'&&e.key!=='ArrowLeft'))return;const t=b.closest('.tabs'),bs=$$(':scope>.tbar>.tb',t),n=bs.length,i=(bs.indexOf(b)+(e.key==='ArrowRight'?1:n-1))%n;bs[i].focus();selTab(t,i)});
 
 /* ---------- refs toggle / filters / timeline ---------- */
 const rb=$('#refsBtn');if(rb){if(LS.get('norefs',false))body.classList.add('no-refs');rb.addEventListener('click',()=>{body.classList.toggle('no-refs');LS.set('norefs',body.classList.contains('no-refs'))})}
-const df=$('#docFilter');if(df){let tmr;df.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{const v=df.value.trim();$$('[data-search]').forEach(el=>{el.classList.toggle('hide',!!v&&!el.textContent.includes(v))});$$('.grp').forEach(g=>{if(!v){g.open=g.dataset.open==='1';return}g.open=true})},180)})}
+const df=$('#docFilter');if(df){let tmr;df.addEventListener('focus',()=>idle(hydrateAll),{once:true});df.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{hydrateAll();const v=df.value.trim();$$('[data-search]').forEach(el=>{el.classList.toggle('hide',!!v&&!el.textContent.includes(v))});$$('.grp').forEach(g=>{if(!v){g.open=g.dataset.open==='1';return}g.open=true})},180)})}
 $$('.filters[data-for]').forEach(f=>{f.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('button',f).forEach(x=>x.classList.remove('on'));b.classList.add('on');const k=b.dataset.k;$$(f.dataset.for+' [data-cat]').forEach(ev=>ev.classList.toggle('hide',k!=='all'&&!ev.dataset.cat.split(' ').includes(k)))})});
 
 /* ---------- memorised marks + progress rings ---------- */
 const done=LS.get('done',{});
-$$('.memo').forEach(m=>{const k=m.dataset.k;const paint=()=>{m.classList.toggle('done',!!done[k]);m.textContent=done[k]?'✔ 已背':'☆ 标记'};paint();m.addEventListener('click',e=>{e.stopPropagation();done[k]=!done[k];paint();LS.set('done',done);updateCount()})});
+const paintMemo=m=>{const k=m.dataset.k;m.classList.toggle('done',!!done[k]);m.textContent=done[k]?'✔ 已背':'☆ 标记'};const paintMemos=sc=>$$('.memo',sc).forEach(paintMemo);paintMemos(document);
+document.addEventListener('click',e=>{const m=e.target.closest('.memo');if(!m)return;e.stopPropagation();const k=m.dataset.k;done[k]=!done[k];paintMemo(m);LS.set('done',done);updateCount()});
 function updateCount(){$$('[data-count]').forEach(el=>{const p=el.dataset.count;el.textContent=Object.keys(done).filter(k=>done[k]&&k.startsWith(p)).length});
   $$('.pring[data-ring]').forEach(r=>{const p=r.dataset.ring,tot=+r.dataset.total;const n=Object.keys(done).filter(k=>done[k]&&k.startsWith(p)).length;const c=r.querySelector('.fgc');const L=2*Math.PI*45;c.style.strokeDasharray=L;c.style.strokeDashoffset=L*(1-Math.min(1,n/tot));r.querySelector('b').textContent=n+' / '+tot})}
 updateCount();
@@ -118,7 +136,7 @@ function getMermaid(){if(mm)return Promise.resolve(mm);if(mmLoading)return mmLoa
 let mmQueue=Promise.resolve(), lastScroll=0;addEventListener('scroll',()=>{lastScroll=performance.now()},{passive:true});
 /* heavy work only when the user is not actively scrolling, and in idle time */
 const whenCalm=()=>new Promise(res=>{const calm=()=>performance.now()-lastScroll>250;const chk=()=>{if(calm())idle(()=>calm()?res():setTimeout(chk,160),{timeout:1500});else setTimeout(chk,160)};chk()});
-function renderMermaid(el){if(!mmSrc.has(el))mmSrc.set(el,el.textContent);mmQueue=mmQueue.then(whenCalm).then(()=>getMermaid()).then(m=>whenCalm().then(()=>m)).then(m=>{el.removeAttribute('data-processed');el.innerHTML=mmSrc.get(el);return m.run({nodes:[el]})}).then(()=>{el.setAttribute('data-done','');el.setAttribute('data-lenis-prevent','');mmDone.add(el)}).catch(e=>{console.warn(e);el.setAttribute('data-done','');el.innerHTML='<p class="muted">图表加载失败（可能是网络限制），请刷新重试。</p>'})}
+function renderMermaid(el){if(!mmSrc.has(el))mmSrc.set(el,el.textContent);mmQueue=mmQueue.then(whenCalm).then(()=>getMermaid()).then(m=>whenCalm().then(()=>m)).then(m=>{el.removeAttribute('data-processed');el.innerHTML=mmSrc.get(el);return m.run({nodes:[el]})}).then(()=>{el.setAttribute('data-done','');mmDone.add(el)}).catch(e=>{console.warn(e);el.setAttribute('data-done','');el.innerHTML='<p class="muted">图表加载失败（可能是网络限制），请刷新重试。</p>'})}
 function reMermaid(){if(!mm)return;mm.initialize(mmConfig());mmDone.forEach(el=>renderMermaid(el))}
 /* v2.1: diagrams are pre-rendered to SVG at build time; runtime Mermaid is only a fallback for un-rendered blocks */
 const mEls=$$('.mermaid:not([data-done])');if(mEls.length){mEls.forEach(el=>mmSrc.set(el,el.textContent));const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mio.unobserve(e.target);renderMermaid(e.target)}}),{rootMargin:'1400px 0px'});mEls.forEach(el=>mio.observe(el))}
@@ -206,30 +224,21 @@ function initMapbox(box){
 }
 $$('.mapbox').forEach(initMapbox);
 
-/* ---------- silky smooth wheel scrolling (desktop only, Lenis) ---------- */
-let lenis=null;
+/* v3.1: Lenis removed — native scrolling (smoother on phones/trackpads, zero main-thread scroll work) */
 const PREVENT='.toc,.tbl,.mermaid,.lmap,.hscroll,.pop,.leaflet-container,.flash .face,.topnav,.tbar,select,textarea';
-function startLenis(){if(lenis||RM||!matchMedia('(pointer:fine)').matches||!LS.get('smooth',true))return;
-  loadScript('assets/vendor/lenis/lenis.min.js').then(()=>{if(lenis||!window.Lenis)return;
-    $$(PREVENT).forEach(n=>n.setAttribute('data-lenis-prevent',''));
-    lenis=new window.Lenis({lerp:0.11,smoothWheel:true,wheelMultiplier:1,prevent:n=>!!(n.closest&&n.closest(PREVENT))});window.__lenis=lenis;
-    const raf=t=>{if(!lenis)return;lenis.raf(t);requestAnimationFrame(raf)};requestAnimationFrame(raf)}).catch(()=>{})}
-function stopLenis(){if(lenis){lenis.destroy();lenis=null;window.__lenis=null}}
 /* accurate in-page navigation: render skipped content-visibility blocks above the target first */
 function topOff(){return (parseInt(getComputedStyle(root).getPropertyValue('--top-h'))||58)+12}
-function settle(t){const cvs=$$('.cv').filter(c=>c.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_FOLLOWING||c.contains(t));cvs.forEach(c=>c.style.contentVisibility='visible');t.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>{/* lock each block's real height as its placeholder size, so reverting to content-visibility:auto never shifts the page */const hs=cvs.map(c=>c.getBoundingClientRect().height);cvs.forEach((c,i)=>{c.style.containIntrinsicSize='auto '+Math.round(hs[i])+'px';c.style.contentVisibility=''})}),500)}
+function settle(t){$$('.lz:not(.hy)').filter(c=>c.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_FOLLOWING).forEach(hydrate);const cvs=$$('.cv,.lz').filter(c=>c.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_FOLLOWING||c.contains(t));cvs.forEach(c=>c.style.contentVisibility='visible');t.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>{/* lock each block's real height as its placeholder size, so reverting to content-visibility:auto never shifts the page */const hs=cvs.map(c=>c.getBoundingClientRect().height);cvs.forEach((c,i)=>{c.style.containIntrinsicSize='auto '+Math.round(hs[i])+'px';c.style.contentVisibility=''})}),500)}
 function goTo(t,smooth){settle(t);const y=()=>t.getBoundingClientRect().top+(root.scrollTop||scrollY)-topOff();
-  if(lenis&&smooth){lenis.scrollTo(y(),{duration:1.1,onComplete:()=>{const d=t.getBoundingClientRect().top-topOff();if(Math.abs(d)>4)lenis.scrollTo(y(),{immediate:true})}});return}
   /* 'instant' overrides CSS scroll-behavior:smooth; then re-check a few times while late layout settles, unless the user takes over */
   let user=false;const stop=()=>{user=true};['wheel','touchstart','keydown','pointerdown'].forEach(ev=>addEventListener(ev,stop,{once:true,passive:true}));
   const fix=()=>{if(user)return;const d=t.getBoundingClientRect().top-topOff();if(Math.abs(d)>4)scrollTo({top:y(),behavior:'instant'})};
   if(smooth&&!RM){scrollTo({top:y(),behavior:'smooth'});addEventListener('scrollend',fix,{once:true});[1300,2000].forEach(ms=>setTimeout(fix,ms))}
   else{scrollTo({top:y(),behavior:'instant'});requestAnimationFrame(fix);[150,400,800,1300,2000].forEach(ms=>setTimeout(fix,ms))}}
 window.__goTo=goTo;
-document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey)return;const id=decodeURIComponent(a.getAttribute('href').slice(1));const t=id&&document.getElementById(id);if(!t)return;
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey)return;const id=decodeURIComponent(a.getAttribute('href').slice(1));const t=id&&findId(id);if(!t)return;
   e.preventDefault();history.pushState(null,'','#'+id);goTo(t,true)});
-if(location.hash.length>1){const t=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(t){if('scrollRestoration' in history)history.scrollRestoration='manual';requestAnimationFrame(()=>goTo(t,false))}}
-idle(startLenis);
+if(location.hash.length>1){const t=findId(decodeURIComponent(location.hash.slice(1)));if(t){if('scrollRestoration' in history)history.scrollRestoration='manual';requestAnimationFrame(()=>goTo(t,false))}}
 
 /* ---------- page hooks ---------- */
 if(window.__pageInit)window.__pageInit();

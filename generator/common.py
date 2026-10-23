@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import html, re, json
-VERSION='v3.0'; DATE='2026-10-23'
+VERSION='v3.1'; DATE='2026-10-23'
 SITE_TITLE='威斯敏斯特标准 · 深度学习站'
 PAGES=[('index.html','🏠','总览'),('history.html','🗺️','历史·地理'),('atlas.html','🧭','地图集'),('wcf.html','📘','信仰告白'),('wlc.html','📗','大要理问答'),('wsc.html','📙','小要理问答'),('compare.html','⚖️','深度对比'),('recite.html','🎙️','背诵版'),('memory.html','🧠','记忆训练'),('creeds.html','📜','信经与联合信条'),('sources.html','🔗','来源')]
 CATS={'rev':('启示论','📖'),'god':('神论','✨'),'man':('人论·罪','💔'),'cov':('圣约','🤝'),'chr':('基督论','✝️'),'sal':('救恩论','🌱'),'law':('律法·伦理·敬拜','📜'),'chu':('教会·圣礼','⛪'),'end':('末世论','🌅')}
-PALETTES=[('aurora','晨曦','#4f46e5','#9333ea','#f59e0b'),('jade','翡翠','#059669','#0d9488','#84cc16'),('crimson','绛红金','#b91c1c','#9a3412','#ca8a04'),('ocean','深海','#0369a1','#4338ca','#06b6d4'),('sunset','暮光','#e11d48','#f97316','#a855f7'),('parchment','史卷','#8a5a2b','#9f1239','#0f766e')]
+PALETTES=[('aurora','晨曦','#4f46e5','#9333ea','#f59e0b'),('jade','翡翠','#059669','#0d9488','#84cc16'),('crimson','绛红金','#b91c1c','#9a3412','#ca8a04'),('ocean','深海','#0369a1','#4338ca','#06b6d4'),('sunset','暮光','#e11d48','#f97316','#a855f7'),('parchment','史卷','#8a5a2b','#9f1239','#0f766e'),('ink','水墨','#334155','#b91c1c','#a16207'),('sakura','樱粉','#be185d','#7e22ce','#f472b6'),('royal','皇家','#1e3a8a','#a16207','#eab308'),('nord','北境','#4c6a92','#2e6f6f','#d08770')]
+# light / dark page base used by the picker previews
+PBASE={'aurora':('#f6f6fb','#0b0f1a'),'jade':('#f6f6fb','#0b0f1a'),'crimson':('#fbf7ef','#0b0f1a'),'ocean':('#f6f6fb','#0b0f1a'),'sunset':('#f6f6fb','#0b0f1a'),'parchment':('#f8f3e8','#16120d'),'ink':('#f7f6f1','#111214'),'sakura':('#fdf4f7','#1a0f16'),'royal':('#f5f6fb','#0a1024'),'nord':('#eceff4','#2e3440')}
 esc=lambda s: html.escape(str(s),quote=True)
 def fmt(t):
     t=esc(t)
@@ -26,7 +28,49 @@ PERSONS=['加尔文','诺克斯','慈运理','布林格','乌尔西努','俄利�
 DATERE=re.compile(r'(?<![\d:.\-–])((?:1[0-9]{3}|20[0-2][0-9])(?:[–-](?:1[0-9]{3}|20[0-2][0-9]))?年(?:\d{1,2}月(?:\d{1,2}日)?)?)')
 PPRE=re.compile('(?:'+'|'.join(map(re.escape,sorted(PLACES+PERSONS,key=len,reverse=True)))+')(?!宗)')
 CMP=re.compile(r'([^。；<>]*(?:侧重|不同|差异|区别|相比|而西敏|更突出|更强调|更系统|更个人)[^。；<>]*)')
-def mk(s, cmp=False):
+NEG=['化质说','同质说','阿米念主义','阿米念派','抗辩派','反律主义','律法主义','重洗派','炼狱','弥撒献祭']
+NEGRE=re.compile('|'.join(map(re.escape,sorted(NEG,key=len,reverse=True))))
+DEFRE=re.compile(r'(<span class="c-term">[^<]+</span>)(就是|乃是|是指|即|是)([^。；！？<“”「」]{4,48})')
+KEYRE=re.compile(r'((?:不是[^。；！？<“”，]{1,24}，?)?而是|所以)([^。；！？<“”]{2,36})')
+def _balanced(x):
+    return x.count('<span')==x.count('</span>') and x.count('<b>')==x.count('</b>') and x.count('<mark')==x.count('</mark>') and '<a ' not in x and '</a>' not in x
+def _wrapq(s,o,c,cls,maxlen):
+    out=[];i=0
+    while True:
+        a=s.find(o,i)
+        if a<0: out.append(s[i:]);break
+        b=s.find(c,a+1)
+        if b<0 or b-a>maxlen: out.append(s[i:a+1]);i=a+1;continue
+        seg=s[a:b+1]; pre=s[:a]
+        if _balanced(seg) and pre.rfind('<')<=pre.rfind('>'): out.append(s[i:a]+f'<span class="{cls}">{seg}</span>')
+        else: out.append(s[i:b+1])
+        i=b+1
+    return ''.join(out)
+def _post(s,app=False):
+    """v3.1 semantic marks: definitions (blue tint), key turns (double underline), rejected positions (red), quotes"""
+    s=re.sub(r'<span class="c-term">('+NEGRE.pattern+r')</span>',r'<span class="c-neg">\1</span>',s)
+    s=DEFRE.sub(lambda m:f'{m.group(1)}<span class="m-blue">{m.group(2)}{m.group(3)}</span>',s)
+    parts=re.split(r'(<[^>]+>)',s); seen=set(); depth=0
+    for i,p in enumerate(parts):
+        if p.startswith('<'):
+            if re.match(r'<(span|mark|b|a)\b',p): depth+=1
+            elif re.match(r'</(span|mark|b|a)>',p): depth=max(0,depth-1)
+            continue
+        if depth: continue
+        p=KEYRE.sub(lambda m:f'<span class="u-key">{m.group(1)}{m.group(2)}</span>',p)
+        def ng(m):
+            w=m.group(0)
+            if w in seen: return w
+            seen.add(w); return f'<span class="c-neg">{w}</span>'
+        parts[i]=NEGRE.sub(ng,p)
+    s=''.join(parts)
+    s=_wrapq(s,'“','”','q-src',220); s=_wrapq(s,'「','」','q-sum',60)
+    if app:
+        m=re.match(r'((?:(?!<(?:p|ul|ol|li|br|div|table)\b)[^。！])*?[。！])',s,flags=re.S)
+        if m and _balanced(m.group(1)) and 6<len(re.sub('<[^>]+>','',m.group(1)))<120:
+            s=f'<span class="m-green">{m.group(1)}</span>'+s[m.end():]
+    return s
+def mk(s, cmp=False, app=False):
     """apply the documented marking system to commentary html (not to source texts)"""
     s=s.replace('<span class="hard">','<span class="u-err">').replace('<span class="key">','<span class="c-term">')
     out=[]; depth=0; used=set()
@@ -57,14 +101,14 @@ def mk(s, cmp=False):
                 parts=re.split(r'(<[^>]+>)',tok)
                 tok=''.join(p if p.startswith('<') else CMP.sub(lambda m:f'<span class="u-cmp">{m.group(1)}</span>' if len(m.group(1))>5 else m.group(1),p) for p in parts)
         out.append(tok)
-    return ''.join(out)
+    return _post(''.join(out),app)
 BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>'''
 MAPCSS='\n<link rel="stylesheet" href="assets/css/maps.css?v='+VERSION+'">'
 def page(fn,title,body,head='',js='',desc=''):
     nav=''.join(f'<a href="{p}" class="{"on" if p==fn else ""}"><span class="ni">{i}</span>{t}</a>' for p,i,t in PAGES)
-    sw=''.join(f'<button class="sw" data-pal="{k}" title="{n}" style="--s1:{a};--s2:{b};--s3:{c}"><i></i><span>{n}</span></button>' for k,n,a,b,c in PALETTES)
+    sw=''.join(f'<button class="sw" data-pal="{k}" title="{n}" aria-label="配色：{n}" style="--s1:{a};--s2:{b};--s3:{c};--l:{PBASE[k][0]};--d:{PBASE[k][1]}"><span class="pv" aria-hidden="true"><i class="pv-l"><em></em><u></u><u></u></i><i class="pv-d"><em></em><u></u><u></u></i></span><span class="nm">{n}</span></button>' for k,n,a,b,c in PALETTES)
     from content_v2 import LEGEND, CALLOUTS
-    lg=''.join(f'<li><span class="lgx">{a}</span><span>{b}</span></li>' for a,b in LEGEND)
+    lg=''.join((f'<li class="lgh">{b}</li>' if a is None else f'<li><span class="lgx">{a}</span><span>{b}</span></li>') for a,b in LEGEND)
     lc=''.join(f'<li><span class="lgc {k}">{i}</span><span>{n}</span></li>' for k,i,n in CALLOUTS)
     return f'''<!DOCTYPE html>
 <html lang="zh-CN" data-theme="light" data-palette="aurora">
@@ -80,7 +124,7 @@ def page(fn,title,body,head='',js='',desc=''):
 <link rel="stylesheet" href="assets/css/style.css?v={VERSION}">{MAPCSS if ('class="mapbox"' in body or 'cfchart' in body) else ''}
 {head}
 <script src="assets/js/app.js?v={VERSION}" defer></script>
-<script type="speculationrules">{{"prefetch":[{{"source":"document","where":{{"and":[{{"selector_matches":".topnav a, .navcard, .fab a, .cta a, .mapnav a"}},{{"not":{{"selector_matches":"[target=_blank]"}}}}]}},"eagerness":"moderate"}}]}}</script>
+<script type="speculationrules">{{"prerender":[{{"source":"document","where":{{"and":[{{"selector_matches":"a[href*='.html']:not([href^=http])"}},{{"not":{{"selector_matches":"[target=_blank]"}}}}]}},"eagerness":"conservative"}}],"prefetch":[{{"source":"document","where":{{"and":[{{"selector_matches":".topnav a, .navcard, .fab a, .cta a, .mapnav a, .pgnav a"}},{{"not":{{"selector_matches":"[target=_blank]"}}}}]}},"eagerness":"moderate"}}]}}</script>
 </head>
 <body>
 <div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -96,8 +140,8 @@ def page(fn,title,body,head='',js='',desc=''):
 <div class="pop" id="themePanel" role="dialog" aria-label="主题">
   <h4>🎨 配色主题</h4><div class="swatches">{sw}</div>
   <h4>🌗 明暗</h4><div class="seg" id="modeSeg"><button data-mode="light">☀️ 浅色</button><button data-mode="dark">🌙 深色</button><button data-mode="auto">🖥️ 跟随系统</button></div>
-  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="smooth">🪶 丝滑滚动</button><button data-opt="motion">✨ 动画</button></div>
-  <p class="muted small">设置保存在本机浏览器。丝滑滚动仅在电脑（鼠标滚轮）上启用，手机使用原生滚动。</p>
+  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="motion">✨ 动画效果</button></div>
+  <p class="muted small">设置保存在本机浏览器。全站使用浏览器原生滚动（手机、触控板最顺滑）。</p>
 </div>
 <div class="pop" id="legendPanel" role="dialog" aria-label="标注图例">
   <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist">{lg}</ul>
@@ -132,12 +176,25 @@ def page(fn,title,body,head='',js='',desc=''):
 {js}
 </body></html>'''
 MERMAID_JS=''   # mermaid is lazy-loaded by app.js when a diagram scrolls near the viewport
+def _chars(h):
+    t=re.sub(r'<template>.*?</template>','',h,flags=re.S)
+    t=re.sub(r'<details(?![^>]*\bopen\b)[^>]*>\s*<summary>(.*?)</summary>.*?</details>',r'\1\n',t,flags=re.S)
+    return len(re.sub(r'<[^>]+>','',t))
+def _blocks(h):
+    return len(re.findall(r'<(?:p|li|h3|h4|summary|tr|div class="(?:qa|callout|card|refs|tabs|tbar))\b',h))
+def lzb(h,f=1.0,pre=0):
+    """v3.1 lazily hydrated block: content waits in a <template> (no DOM/style cost) until it nears the viewport.
+    Size estimate is width-aware via CSS (--n chars x --pc px per char + --b px of block chrome)."""
+    return f'<div class="lz" style="--n:{int(_chars(h)*f)};--b:{_blocks(h)*26+pre}px"><template>{h}</template></div>'
+def lzd(summary,body,attrs=''):
+    """closed <details> whose body is hydrated on first open"""
+    return f'<details class="lzd"{(" "+attrs) if attrs else ""}><summary>{summary}</summary><template>{body}</template></details>'
 def h2(t,icon,id=None,toc=None):
     return f'<h2 class="h rv"{f" id={chr(34)}{id}{chr(34)}" if id else ""}{f" data-toc={chr(34)}{esc(toc)}{chr(34)}" if toc else ""}><span class="ic">{icon}</span><span>{t}</span></h2>'
 def h3(t,id=None,toc=None):
     return f'<h3 class="h"{f" id={chr(34)}{id}{chr(34)}" if id else ""}{f" data-toc={chr(34)}{esc(toc)}{chr(34)}" if toc else ""}>{t}</h3>'
 def callout(kind,label,content,raw=False):
-    return f'<div class="callout {kind}"><b class="lbl">{label}</b>{content if raw else mk(content, cmp=kind in ("eu-pt","pr-pt"))}</div>'
+    return f'<div class="callout {kind}"><b class="lbl">{label}</b>{content if raw else mk(content, cmp=kind in ("eu-pt","pr-pt"), app=kind=="app-pt")}</div>'
 def tabs(items,uid):
     """items: list of (kind,label,html) -> accessible tab panel (CSS-only fallback shows all)"""
     btns=''.join(f'<button role="tab" class="tb {k}{" on" if i==0 else ""}" aria-selected="{"true" if i==0 else "false"}" data-i="{i}">{l}</button>' for i,(k,l,h) in enumerate(items))

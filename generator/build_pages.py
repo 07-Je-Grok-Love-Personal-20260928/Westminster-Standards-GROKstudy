@@ -34,7 +34,7 @@ def build_index():
            ('memory.html','🧠','记忆训练','口诀、记忆宫殿、翻转卡片、小测验'),
            ('creeds.html','📜','信经与联合信条原文','三大普世信经 + 比利时信条 + 海德堡 + 多特（逐字取自 ccifellowship.org）')]
     b.append('<div class="grid g4">'+''.join(f'<a class="card navcard rv" href="{u}"><div class="big">{i}</div><h3>{t}</h3><p>{d}</p></a>' for u,i,t,d in cards)+'</div>')
-    b.append('<div class="grid g2">'+'<div class="card legendcard rv"><h3 style="margin-top:0">🖍️ 标注系统（全站统一，右上角 🖍️ 随时查看）</h3><ul class="lglist">'+''.join(f'<li><span class="lgx">{x}</span><span>{y}</span></li>' for x,y in LEGEND)+'</ul><ul class="lglist two">'+''.join(f'<li><span class="lgc {k}">{i}</span><span>{n}</span></li>' for k,i,n in CALLOUTS)+'</ul></div>'
+    b.append('<div class="grid g2">'+'<div class="card legendcard rv"><h3 style="margin-top:0">🖍️ 标注系统（全站统一，右上角 🖍️ 随时查看）</h3><ul class="lglist">'+''.join((f'<li class="lgh">{y}</li>' if x is None else f'<li><span class="lgx">{x}</span><span>{y}</span></li>') for x,y in LEGEND)+'</ul><ul class="lglist two">'+''.join(f'<li><span class="lgc {k}">{i}</span><span>{n}</span></li>' for k,i,n in CALLOUTS)+'</ul></div>'
       +'<div class="card rv"><h3 style="margin-top:0">📏 三份文件篇幅（正文字数，不含证明经文）</h3>'+bars([('📘 信仰告白',nw,'var(--a1)','wcf.html'),('📗 大要理问答',nl,'var(--a2)','wlc.html'),('📙 小要理问答',ns,'var(--a3)','wsc.html')],cls='rv')
       +f'<p class="muted small">按本站所用 RTF-USA 2024 简体译本统计（问+答/条文）。大要理约为小要理的 {nl/ns:.1f} 倍。</p>'
       +'<h3>🎨 主题</h3><p>点击右上角 🎨：5 套配色（晨曦 · 翡翠 · 绛红金 · 深海 · 暮光）× 浅色/深色/跟随系统，并可开关丝滑滚动与动画。</p></div></div>')

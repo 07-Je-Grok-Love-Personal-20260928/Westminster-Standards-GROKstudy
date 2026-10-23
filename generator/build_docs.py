@@ -88,16 +88,17 @@ def build_wcf():
         am=''
         if str(n) in AM:
             am=callout('pr-pt','🇺🇸 1647原文 vs 美国修订本',' '.join(f'<b>{r[0]}</b>：原文{esc(r[1])}；美国修订本（如OPC现行文本）{esc(r[2])}。' for r in AMREV if r[0].split('.')[0]==str(n))+' 详见<a href="compare.html#amrev">深度对比</a>。',raw=True)
-        tb=tabs([('bt-pt','📚 圣经神学',mk(c['bt'])),('cov-pt','🤝 圣约神学',mk(c['ct'])),('eu-pt','🇳🇱 欧陆改革宗',mk(c['eu'],cmp=True)),('pr-pt','🏴 长老会正统',mk(PR[n],cmp=True)),('hard-pt','🔍 难点',mk(c['hard'])),('app-pt','🛠️ 应用',mk(c['app']))],f'tab{n}')
-        parts.append(f'''<section class="sec" id="c{n}" data-search>
-{h2(f"第{cn(n)}章 {esc(ch['title'])}",c['icon'],None,f"{n}. {ch['title']}")}
-{cvb(f"""<div><span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span><span class="pill">📍 关键经文：<span class="u-bib" style="white-space:normal">{esc(c['verses'])}</span></span><span class="pill">📙 小要理：{qlinks(xs,'wsc')}</span><span class="pill">📗 大要理：{qlinks(xl,'wlc')}</span></div>
+        tb=tabs([('bt-pt','📚 圣经神学',mk(c['bt'])),('cov-pt','🤝 圣约神学',mk(c['ct'])),('eu-pt','🇳🇱 欧陆改革宗',mk(c['eu'],cmp=True)),('pr-pt','🏴 长老会正统',mk(PR[n],cmp=True)),('hard-pt','🔍 难点',mk(c['hard'])),('app-pt','🛠️ 应用',mk(c['app'],app=True))],f'tab{n}')
+        chap=(f'''{cvb(f"""<div><span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span><span class="pill">📍 关键经文：<span class="u-bib" style="white-space:normal">{esc(c['verses'])}</span></span><span class="pill">📙 小要理：{qlinks(xs,'wsc')}</span><span class="pill">📗 大要理：{qlinks(xl,'wlc')}</span></div>
 {callout('key-pt','🎯 核心要义',c['key'])}""")}
 {cvb(f"""<details open><summary>📜 原文（{len(ch['secs'])}节）· RTF-USA 2024 简体译本</summary><div class="dbody src">{secs}</div></details>""")}
 {cvb(tb,0.2)}
 {cvb(f"""<div class="grid g2">{callout('mem-pt','🧠 记忆钩子',c['mem'])}{callout('warn-pt','🚫 常见误解',WARN[n])}</div>
 {am}
-<details><summary>🔗 对照三项联合信条原文（ccifellowship.org）</summary><div class="dbody">{contin(c)}</div></details>""")}
+{lzd('🔗 对照三项联合信条原文（ccifellowship.org）','<div class="dbody">'+contin(c)+'</div>')}""")}''')
+        parts.append(f'''<section class="sec" id="c{n}" data-search>
+{h2(f"第{cn(n)}章 {esc(ch['title'])}",c['icon'],None,f"{n}. {ch['title']}")}
+{chap if n<=2 else lzb(chap,pre=260)}
 </section>''')
     open(OUT+'wcf.html','w').write(page('wcf.html','西敏信仰告白 · 逐章精解','\n'.join(parts)))
 # ================= Catechisms =================
@@ -140,22 +141,24 @@ def build_cat(doc):
         chunks=[]
         rng=list(range(a,b+1))
         for i in range(0,len(rng),8):
-            chunks.append('<div class="cv">'+''.join(qa_card(doc,Q[q]) for q in rng[i:i+8])+'</div>')
+            inner=''.join(qa_card(doc,Q[q]) for q in rng[i:i+8])
+            chunks.append('<div class="cv">'+inner+'</div>' if (a==groups[0]['r'][0] and i<16) else lzb(inner))
         xx=XV[(doc,a)]
-        tb=tabs([('bt-pt','📚 圣经神学',mk(g['bt'])),('cov-pt','🤝 圣约神学',mk(xx['cov'])),('eu-pt','🇳🇱 欧陆对照',mk(g['eu'],cmp=True)),('pr-pt','🏴 长老会',mk(xx['pr'])),('app-pt','🛠️ 应用',mk(xx['ap']))],f'tab{doc}{a}')
-        parts.append(f'''<section class="sec">{h2(f"第{a}–{b}问 · {g['title']}",g['icon'],f"g{a}",f"{a}–{b} {g['title']}")}
-<span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span>
+        tb=tabs([('bt-pt','📚 圣经神学',mk(g['bt'])),('cov-pt','🤝 圣约神学',mk(xx['cov'])),('eu-pt','🇳🇱 欧陆对照',mk(g['eu'],cmp=True)),('pr-pt','🏴 长老会',mk(xx['pr'])),('app-pt','🛠️ 应用',mk(xx['ap'],app=True))],f'tab{doc}{a}')
+        head=f'''<span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span>
 {callout('key-pt','🎯 核心要义',g['key'])}
-<div class="grid g2"><div>{tb}</div>{callout('mem-pt','🧠 记忆钩子',g['mem'])}</div>
+<div class="grid g2"><div>{tb}</div>{callout('mem-pt','🧠 记忆钩子',g['mem'])}</div>'''
+        parts.append(f'''<section class="sec">{h2(f"第{a}–{b}问 · {g['title']}",g['icon'],f"g{a}",f"{a}–{b} {g['title']}")}
+{head if a==groups[0]['r'][0] else lzb(head,0.6,120)}
 <details class="grp" open data-open="1"><summary>📜 原文：第{a}–{b}问（{b-a+1}问）</summary><div class="dbody">{''.join(chunks)}</div></details></section>''')
     open(OUT+f'{doc}.html','w').write(page(f'{doc}.html',title,'\n'.join(parts),js=MERMAID_JS))
 # ================= Recite =================
 def build_recite():
     W=D['wcf']
-    wcf=''.join(f'<section class="rdoc-sec" id="r-wcf-{ch["no"]}"><h3 class="h" data-toc="信条 {ch["no"]}. {esc(ch["title"])}">第{cn(ch["no"])}章 {esc(ch["title"])}</h3><div class="src cv">'+''.join(f'<div class="qa rq" data-search><button class="memo" data-k="wcf-{ch["no"]}-{i+1}">☆ 标记</button>{wcf_section(s)}</div>' for i,s in enumerate(ch['secs']))+'</div></section>' for ch in W)
+    wcf=''.join(f'<section class="rdoc-sec" id="r-wcf-{ch["no"]}"><h3 class="h" data-toc="信条 {ch["no"]}. {esc(ch["title"])}">第{cn(ch["no"])}章 {esc(ch["title"])}</h3>'+lzb('<div class="src">'+''.join(f'<div class="qa rq" data-search><button class="memo" data-k="wcf-{ch["no"]}-{i+1}">☆ 标记</button>{wcf_section(s)}</div>' for i,s in enumerate(ch['secs']))+'</div>')+'</section>' for ch in W)
     def cat(doc):
         items=[x for x in D[doc]]
-        return ''.join('<div class="cv">'+_cat(doc,items[i:i+10])+'</div>' for i in range(0,len(items),10))
+        return ''.join(f'<h3 class="h rqh" id="r-{doc}-c{i+1}" data-toc="第{i+1}–{min(i+10,len(items))}问">第{i+1}–{min(i+10,len(items))}问</h3>'+lzb(_cat(doc,items[i:i+10])) for i in range(0,len(items),10))
     def _cat(doc,items):
         return ''.join(f'<div class="qa rq" id="r-{doc}-{u["q"]}" data-search><div class="q"><span class="n">{u["q"]}</span><span style="flex:1">{fmt(u["ques"])}</span><button class="memo" data-k="{doc}-{u["q"]}">☆ 标记</button></div><div class="a ansbody">{fmt(u["ans"])}</div>{refs_html(u["refs"])}</div>' for u in items)
     wsc_groups=''.join(f'<h3 class="h" data-toc="小要理 {g["r"][0]}–{g["r"][1]} {g["title"]}">第{g["r"][0]}–{g["r"][1]}问 · {g["title"]}</h3>' for g in WSC_GROUPS)
@@ -186,18 +189,19 @@ window.__pageInit=function(){
    el.dataset.cz=t.replace(/[&<>]/g,'').replace(/([\\u4e00-\\u9fff])([\\u4e00-\\u9fff]+)/g,(m,a,b)=>a+'<span class="cl">'+b+'</span>'); }
  function apply(){ $$('.rdoc').forEach(d=>d.classList.toggle('hide',d.dataset.doc!==doc.value));
    document.body.classList.toggle('mode-hide',mode.value==='hide'); document.body.classList.toggle('mode-cloze',mode.value==='cloze');
-   $$('.ansbody').forEach(el=>{ el.classList.remove('show'); if(mode.value==='cloze'){cloze(el);el.innerHTML=el.dataset.cz} else if(el.dataset.orig){el.innerHTML=el.dataset.orig} });
+   all=false; $$('.ansbody').forEach(el=>{ el.classList.remove('show'); if(mode.value==='cloze'){cloze(el);el.innerHTML=el.dataset.cz} else if(el.dataset.orig){el.innerHTML=el.dataset.orig} });
    document.querySelector('.reading').style.setProperty('--rfs',size.value+'px');
    LSs('rdoc',doc.value);LSs('rmode',mode.value);LSs('rsize',size.value);
    // rebuild TOC for visible doc
    const toc=document.getElementById('tocList'); const vis=document.querySelector('.rdoc:not(.hide)');
-   toc.dataset.custom='1'; toc.innerHTML=[...vis.querySelectorAll('h2.h,h3.h,.rq[id]')].filter(e=>e.tagName!=='DIV'||e.id.match(/-(1|\\d*0|\\d*5)$/)).map(e=>{const t=e.tagName==='DIV'?('第'+e.id.split('-').pop()+'问'):(e.dataset.toc||e.textContent);return `<li class="${e.tagName==='H2'?'l2':'l3'}"><a href="#${e.id}">${t}</a></li>`}).join('');
+   toc.dataset.custom='1'; toc.innerHTML=[...vis.querySelectorAll('h2.h,h3.h')].map(e=>`<li class="${e.tagName==='H2'?'l2':'l3'}"><a href="#${e.id}">${e.dataset.toc||e.textContent}</a></li>`).join('');
    if(window.__rebuildToc)window.__rebuildToc();
  }
  [doc,mode,size].forEach(x=>x.addEventListener('input',apply));
- $('#rShowAll').onclick=()=>$$('.ansbody').forEach(el=>el.classList.add('show'));
+ let all=false;$('#rShowAll').onclick=()=>{all=true;$$('.ansbody').forEach(el=>el.classList.add('show'))};
  apply();
- if(location.hash.length>1){const t=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(t&&window.__goTo)requestAnimationFrame(()=>window.__goTo(t,false))}
+ window.__onHydrate=sc=>{sc.querySelectorAll('.ansbody').forEach(el=>{if(mode.value==='cloze'){cloze(el);el.innerHTML=el.dataset.cz}if(all)el.classList.add('show')})};
+ if(location.hash.length>1){const t=(window.__findId||document.getElementById.bind(document))(decodeURIComponent(location.hash.slice(1)));if(t&&window.__goTo)requestAnimationFrame(()=>window.__goTo(t,false))}
 };
 </script>'''
     open(OUT+'recite.html','w').write(page('recite.html','干净阅读版 · 背诵模式',body,js=js))
@@ -214,7 +218,7 @@ def build_creeds():
         parts.append(f'''{h3(f"✝️ {esc(cr['title'])}",cr['id'])}<div class="card rv"><p class="muted">{cr['intro']}</p><div class="bigquote ansbody creedbody">{body}</div><p class="muted">原文：<a href="{cr['url']}" target="_blank" rel="noopener">{cr['url']}</a></p></div>''')
     parts.append(h2('比利时信条（1561）','📕','bc'))
     parts.append(f'<div class="card">{C["bc_intro"]}</div>')
-    parts.append(''.join(f'<details id="bc{a["no"]}"><summary>{esc(a["title"])}</summary><div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div></details>' for a in C['bc']))
+    parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="bc{a["no"]}"') for a in C['bc']))
     parts.append(h2('海德堡要理问答（1563）','📗','hc'))
     parts.append(f'<div class="card">{C["hc_intro"]}</div>')
     sec_of=lambda ld: '引言' if ld==1 else ('第一部 论人的罪和愁苦' if ld<=4 else ('第二部 论我们的得救' if ld<=31 else '第三部 论感恩'))
@@ -223,13 +227,13 @@ def build_creeds():
         s=sec_of(x['ld'])
         if s!=cur: parts.append(h3('📘 '+s,'hc-'+str(x['ld']))); cur=s
         inner=''.join(f'<div class="qa"><div class="q"><span class="n">{i["q"]}</span><span>{esc(i["ques"])}</span></div><div class="a cbox">{i["html"]}</div></div>' for i in x['items'])
-        parts.append(f'<details id="ld{x["ld"]}"><summary>主日 {x["ld"]}（第{x["items"][0]["q"]}–{x["items"][-1]["q"]}问）· {esc(x["items"][0]["ques"])}</summary><div class="dbody">{inner}<p class="muted"><a href="{x["url"]}" target="_blank" rel="noopener">原文链接</a></p></div></details>')
+        parts.append(lzd(f'主日 {x["ld"]}（第{x["items"][0]["q"]}–{x["items"][-1]["q"]}问）· {esc(x["items"][0]["ques"])}',f'<div class="dbody">{inner}<p class="muted"><a href="{x["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="ld{x["ld"]}"'))
     parts.append(h2('多特信经（1618–1619）','📙','cd'))
     parts.append(f'<div class="card">{C["cd_intro"]}</div>')
     for s in C['cd']:
         parts.append(h3('📙 '+esc(s['title']),'cd-'+s['id']))
         if s['intro'].strip(): parts.append(f'<div class="card">{s["intro"]}</div>')
-        parts.append(''.join(f'<details><summary>{esc(a["title"])}</summary><div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div></details>' for a in s['arts']))
+        parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>') for a in s['arts']))
     js='<script>window.__pageInit=function(){const b=document.getElementById("creedHide");let on=false;b.onclick=()=>{on=!on;document.body.classList.toggle("mode-hide",on)}}</script>'
     open(OUT+'creeds.html','w').write(page('creeds.html','三大普世信经与三项联合信条（原文）','\n'.join(parts),js=js))
 if __name__=='__main__':
