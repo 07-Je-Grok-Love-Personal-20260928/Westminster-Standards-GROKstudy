@@ -3,6 +3,8 @@ import json, sys
 import os; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from common import *
 from content_more import TIMELINE, TL_CATS, MAP
+from content_atlas import MAPS, OVERVIEW, CONFESSIONS
+from atlas import mapblock, confession_chart
 OUT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs')+'/'
 D=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','standards.json')))
 CRED=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs','assets','img','credits.json')))
@@ -25,7 +27,8 @@ def build_index():
     cards=[('wcf.html','📘','信仰告白 · 逐章精解','原文 + 核心要义 + 圣经神学 + 圣约神学 + 欧陆对照 + 难点 + 应用 + 记忆钩子'),
            ('wlc.html','📗','大要理问答 · 196问','15个主题板块，牧者与成熟信徒的「讲道手册」'),
            ('wsc.html','📙','小要理问答 · 107问','10个主题板块，最适合家庭与初学者背诵'),
-           ('history.html','🗺️','历史 · 地理 · 文化','时间线、故事线、互动地图、人物与派别、文化区域'),
+           ('history.html','🗺️','历史 · 地理 · 文化','时间线、故事线、总览地图、人物与派别、文化区域'),
+           ('atlas.html','🧭','历史地图集','宗教改革传播、1640年代不列颠、西敏寺与耶路撒冷厅、全球传播、两大改革宗家族'),
            ('compare.html','⚖️','深度对比','三份文件异同、为何三份而非一份、与三项联合信条对照矩阵'),
            ('recite.html','🎙️','干净阅读版 · 背诵','遮盖答案、首字提示、字号调节、已背进度'),
            ('memory.html','🧠','记忆训练','口诀、记忆宫殿、翻转卡片、小测验'),
@@ -162,15 +165,15 @@ def build_history():
           ('第四幕 · 耶路撒冷厅的日与夜（1643–1647）','会议先修订《三十九条》，后转而起草全新的文件。长老派、独立派（「异议弟兄」）、伊拉斯都派围绕教会治理激烈辩论；外面战火未熄（马斯顿荒原、纳斯比）。《公共敬拜指南》《教会治理形式》先后完成，1646年底信仰告白完成。','🕯️'),
           ('第五幕 · 文件诞生（1646–1648）','信仰告白附经文于1647年呈交；苏格兰教会总会于1647年8月批准。大小要理问答于1647年秋呈交，1648年附经文；苏格兰总会于1648年7月批准。英格兰国会虽部分采纳，但政局巨变使其未能在英格兰长期实行。','📘'),
           ('第六幕 · 王冠落地之后（1649–今天）','1649年查理一世被处决；1660年王政复辟，1662年大批清教徒牧师被逐。西敏标准却在苏格兰扎根（1690年再获确认），经由移民传到北美（1729年采纳法案、1788年修订），最终成为全球长老会与众多改革宗教会的信仰准则，也进入华人教会。','🌍')]
-    b.append('<div class="grid g2">'+''.join(f'<div class="card rv"><h3>{i} {t}</h3><p>{d}</p></div>' for t,d,i in acts)+'</div>')
-    b.append(h2('互动地图','📍','mapsec'))
-    b.append('<div class="filters" id="mapf">'+''.join(f'<button data-k="{k}" class="{"on" if k=="all" else ""}">{v}</button>' for k,v in [('all','全部'),('wa','西敏会议'),('brit','不列颠'),('war','战场'),('cont','欧陆改革宗'),('ref','宗教改革'),('creed','普世信经'),('am','北美')])+'</div>')
-    b.append('<div id="map"></div><p class="muted">底图 © OpenStreetMap 贡献者。点击标记查看说明；可缩放到伦敦西敏区查看西敏寺、耶路撒冷厅、圣玛格丽特教堂与国会的相对位置。</p>')
+    b.append('<div class="grid g2">'+''.join(f'<div class="card rv"><h3>{i} {t}</h3><p>{mk(d)}</p></div>' for t,d,i in acts)+'</div>')
+    b.append(h2('总览地图：从尼西亚到西敏','📍','mapsec'))
+    b.append(mapblock(OVERVIEW,intro=False))
+    b.append('<p class="cta"><a class="btn" href="atlas.html">🧭 打开「历史地图集」：宗教改革传播 · 1640年代不列颠 · 伦敦西敏区 · 全球传播 · 两大改革宗家族 →</a></p>')
     b.append('<div class="grid">'+fig('abbey.jpg','西敏寺西立面（约翰·布拉克 版画）')+fig('jerusalem-chamber.jpg','耶路撒冷厅——西敏会议的主要会场（19世纪插图）')+fig('assembly.jpg','约翰·罗杰斯·赫伯特所绘：西敏会议中独立派为良心自由辩护（1644年情景的19世纪历史画）')+'</div>')
     b.append('<div class="grid">'+fig('covenant.jpg','《庄严联盟与圣约》（1643）')+fig('dort.jpg','多特大会（17世纪荷兰版画）')+fig('heidelberg1563.jpg','1563年《海德堡要理问答》扉页')+'</div>')
     b.append(h2('会议中的人物与派别','👥','people'))
     parties=[('🟦 长老派（多数）','主张由长老会议治理教会，与苏格兰立场相近；如埃德蒙·卡拉米、安东尼·塔克尼、爱德华·雷诺兹等。'),('🟩 独立派（「异议弟兄」）','主张会众自治，人数少但影响大：托马斯·古德温、菲利普·奈、耶利米·巴勒斯等，1644年发表《辩护陈述》。'),('🟨 伊拉斯都派','主张国家对教会纪律有最终权柄：约翰·塞尔登、约翰·莱特富特、托马斯·科尔曼等。WCF 30.1「在国家官员以外」设立教会治理，正是对此的回应。'),('🟥 苏格兰专员','无表决权，但影响深远：亚历山大·亨德森、塞缪尔·卢瑟福、乔治·吉莱斯皮、罗伯特·贝利（其书信是重要史料）。'),('⬜ 主持人','威廉·特威斯（William Twisse）为首任会议主持（prolocutor），1646年去世后由查尔斯·赫尔（Charles Herle）接任。'),('🟪 缺席者','大主教厄舍（James Ussher）虽被提名却未出席，但他主导的《爱尔兰信纲》（1615）深刻影响了信仰告白的结构与用语。')]
-    b.append('<div class="grid">'+''.join(f'<div class="card rv"><h3>{t}</h3><p>{d}</p></div>' for t,d in parties)+'</div>')
+    b.append('<div class="grid">'+''.join(f'<div class="card rv"><h3>{t}</h3><p>{mk(d)}</p></div>' for t,d in parties)+'</div>')
     b.append(h2('文化区域特征','🏰','culture'))
     rows=[('🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰','国教会（主教制）+ 清教运动；国会政治与普通法传统；伦敦印刷业与小册子战','清教徒「平实讲道」、守主日、家庭敬拜、良心问题（案例神学）','会议地点与召集者；信条的法律与政治处境（官员条款）'),
           ('🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰','长老制「柯克」（Kirk）、总会制度；盟约传统（1638国民圣约）','教会独立于王权的「两国论」、公开的教会纪律、要理问答教育','推动“统一”的动力；最终采纳并长期实行西敏标准'),
@@ -179,18 +182,27 @@ def build_history():
           ('🇩🇪 普法尔茨','选帝侯腓德烈三世；海德堡大学','温暖、个人化的要理问答传统（“唯一的安慰”）','圣约神学先驱（乌尔西努、俄利维亚努）'),
           ('🇨🇭 日内瓦/瑞士','加尔文、贝扎、布林格','学院与流亡者网络；圣经注释传统','英格兰/苏格兰改教者的神学母校')]
     b.append('<div class="tbl rv"><table><thead><tr><th>区域</th><th>政治与教会结构</th><th>敬虔与文化特征</th><th>与西敏标准的关系</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{x}</td>' for x in r)+'</tr>' for r in rows)+'</tbody></table></div>')
-    mapjs=''
-    pts=json.dumps([dict(lat=a,lng=b_,t=t,d=d,c=c) for a,b_,t,d,c in MAP],ensure_ascii=False)
-    js=mapjs+'''<script>window.__mapInit=function(){
- const P='''+pts+''';
- const col={wa:'#16a34a',brit:'#0891b2',war:'#dc2626',cont:'#b45309',ref:'#2563eb',creed:'#7c3aed',am:'#be185d'};
- const m=L.map('map',{scrollWheelZoom:false}).setView([52.5,3],5); window.__map=m;
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(m);
- const layers=P.map(p=>{const mk=L.circleMarker([p.lat,p.lng],{radius:9,color:'#fff',weight:2,fillColor:col[p.c],fillOpacity:.95}).bindPopup('<b>'+p.t+'</b><br>'+p.d);mk.addTo(m);mk.c=p.c;return mk});
- const f=document.getElementById('mapf');
- f.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;[...f.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');const k=b.dataset.k;const vis=[];layers.forEach(l=>{if(k==='all'||l.c===k){l.addTo(m);vis.push(l.getLatLng())}else m.removeLayer(l)});if(vis.length)m.fitBounds(L.latLngBounds(vis).pad(.3),{maxZoom:15})});
-};</script>'''
-    open(OUT+'history.html','w').write(page('history.html','历史 · 地理 · 文化','\n'.join(b),js=js))
+    open(OUT+'history.html','w').write(page('history.html','历史 · 地理 · 文化','\n'.join(b)))
+# ===================== ATLAS (v3.0) =====================
+def build_atlas():
+    b=[]
+    b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.jpg)"><div class="shine"></div><div class="floaty">🧭</div><h1>历史地图集</h1>
+<p>五幅主题地图，每幅都有<b>手绘示意图</b>（离线可用、带动画路线）和<b>可缩放的实景地图</b>（自带底图 + 在线瓦片自动切换），并配本图时间线与文化区域特征。所有日期与地点均附来源。</p></section>''')
+    n=sum(len(m['places']) for m in MAPS)
+    b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('5','主题地图'),(str(n),'标注地点'),('1517','起点：维登堡'),('1643','西敏会议开幕'),('1872','马偕抵淡水')])+'</div>')
+    b.append('<nav class="mapnav rv" aria-label="地图目录">'+''.join(f'<a href="#map-{m["id"]}"><span>{m["icon"]}</span>{esc(m["title"].split("：")[0].split("（")[0])}</a>' for m in MAPS)+'</nav>')
+    b.append(h2('信条年代图：一百多年里的告白浪潮','📊','confchart'))
+    b.append('<p>把宗教改革时期的主要信条放在同一条时间轴上，就能看见西敏标准的位置：它是这场告白运动<mark>最晚、也最系统</mark>的成果之一，吸收了此前欧陆与不列颠一百多年的神学积累。</p>')
+    b.append(confession_chart())
+    for m in MAPS:
+        b.append(h2(esc(m['title']),m['icon'],'map-'+m['id']))
+        b.append(mapblock(m))
+    b.append(h2('读图要点','🧠','takeaways'))
+    b.append('<div class="grid g2">'+callout('key-pt','🎯 一句话','西敏标准是<span class="hl-date">1517–1619</span>一百年欧陆改革的<b>下游成果</b>，又是<span class="hl-date">1640年代</span>不列颠危机的<b>直接产物</b>，再经移民与宣教走向<b>全球</b>。',raw=True)
+             +callout('mem-pt','🧠 记忆钩子','<b>四个城市串一条线</b>：日内瓦（神学）→ 爱丁堡（盟约）→ 西敏（成文）→ 费城（北美采纳）。',raw=True)
+             +callout('cov-pt','🤝 与圣约神学','从海德堡的乌尔西努、俄利维亚努，到西敏信条第7章「行为之约 / 恩典之约」，圣约神学沿着这张地图从欧陆走进不列颠。',raw=False)
+             +callout('warn-pt','🚫 常见误解','西敏会议<span class="u-err">不是</span>教会会议，而是<b>国会召集的咨询机构</b>；西敏标准在英格兰只短暂生效，真正长久采用它的是苏格兰与后来的各地长老会。',raw=True)+'</div>')
+    open(OUT+'atlas.html','w').write(page('atlas.html','历史地图集 · 宗教改革到全球传播','\n'.join(b),desc='宗教改革在欧洲的传播、1640年代不列颠、伦敦西敏寺与耶路撒冷厅、西敏标准的全球传播、欧陆改革宗与长老会的地理分布：手绘示意图 + 实景地图 + 时间线 + 文化区域。'))
 # ===================== COMPARE =====================
 def build_compare():
     b=[]
@@ -325,15 +337,18 @@ def build_sources():
       '<tr><td>“信仰告白”摘录</td><td><a href="https://www.reformedbeginner.net/statement-of-faith/" target="_blank" rel="noopener">改革宗初学者</a></td><td>逐字摘录</td></tr>'
       '<tr><td>美国修订本对照</td><td><a href="https://opc.org/wcf.html" target="_blank" rel="noopener">opc.org/wcf.html</a></td><td>正统长老会（OPC）现行英文本，用于「1647原文 vs 美国修订本」对照（中文为本站概括）</td></tr>'
       '<tr><td>历史图片</td><td>Wikimedia Commons</td><td>公有领域 / CC0，见各图片说明</td></tr>'
-      '<tr><td>地图底图</td><td>OpenStreetMap</td><td>© OpenStreetMap 贡献者</td></tr>'
+      '<tr><td>离线地图底图（手绘示意图与实景地图的矢量底图）</td><td><a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> 1:50m / 1:110m 陆地、河流、湖泊（本站合并陆地多边形，不画现代国界）</td><td>公有领域（public domain）</td></tr>'
+      '<tr><td>在线地图瓦片 ①</td><td><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 标准瓦片（遵守 <a href="https://operations.osmfoundation.org/policies/tiles/" target="_blank" rel="noopener">瓦片使用政策</a>：显示署名、不预取）</td><td>© OpenStreetMap 贡献者，ODbL</td></tr>'
+      '<tr><td>在线地图瓦片 ②（自动备用）</td><td><a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a> 托管的 Humanitarian（HOT）样式</td><td>© OpenStreetMap 贡献者；样式 HOT，托管 OSM France</td></tr>'
+      '<tr><td>在线地图瓦片 ③（自动备用）</td><td><a href="https://opentopomap.org/" target="_blank" rel="noopener">OpenTopoMap</a></td><td>Kartendaten: © OpenStreetMap-Mitwirkende, SRTM｜Kartendarstellung: © OpenTopoMap（CC-BY-SA）</td></tr>'
       '</tbody></table></div>')
     b.append(h2('延伸学习资源','🧭','more'))
     links=[('欧陆改革宗','https://canrc.org','Canadian Reformed Churches'),('欧陆改革宗','https://www.urcna.org','United Reformed Churches in North America'),('欧陆改革宗','https://heritagereformed.com','Heritage Reformed Congregations'),('欧陆改革宗','https://www.prca.org','Protestant Reformed Churches in America'),('长老会改革宗','https://opc.org','Orthodox Presbyterian Church（含西敏标准英文本）'),('神学院','https://www.wts.edu','Westminster Theological Seminary（含 WCF 英文本 wts.edu/wcf）'),('神学院','https://crts.edu','Canadian Reformed Theological Seminary'),('神学院','https://canadianreformedseminary.ca','Canadian Reformed Seminary'),('中文','https://ccifellowship.org','中国改革宗教会（敬拜手册、海德堡要理问答证道）'),('中文','https://www.ccreformed.org','洛杉矶改革宗·恩约教会'),('中文','https://www.reformedbeginner.net','改革宗初学者'),('中文','https://rtf-usa.com','RTF-USA 改革宗翻译社')]
     b.append('<div class="grid g4">'+''.join(f'<a class="card navcard" href="{u}" target="_blank" rel="noopener"><span class="pill">{k}</span><h3 style="font-size:16px">{u.replace("https://","")}</h3><p>{d}</p></a>' for k,u,d in links)+'</div>')
     b.append(h2('版本记录','🗂️','versions'))
-    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v2.1 · 2026-10-22</span>流程图与思维导图改为构建时预渲染的 SVG（页面不再运行 Mermaid，颜色随主题切换）；Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN（只有地图底图来自 OpenStreetMap）；大、小要理问答每个板块新增「圣约神学 · 长老会正统 · 生活应用」三个视角；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。v2.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021" target="_blank" rel="noopener">GitHub Release v2.0-20261021</a>。</div><div class="ev" style="--dot:#7c3aed"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
+    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v3.0 · 2026-10-23</span>聚焦「历史 · 地图 · 文化」：新增<a href="atlas.html">🧭 地图集</a>（宗教改革欧洲、1640年代不列颠群岛、伦敦西敏区与耶路撒冷厅、西敏标准的全球旅程、欧陆改革宗 vs 长老会地理），每张图都有离线可用的手绘示意图（动画路线与地标）和可缩放的实景地图（自带 Natural Earth 底图 + 三家免密钥瓦片自动切换）、本图时间线、文化特征与来源；主要信条年代图；右下角悬浮导航（首页/目录/后退/前进/顶部/底部 + 阅读进度）；页面间视图过渡与悬停预取；新增「史卷」配色；标注系统扩充（年代、地名、人物、蓝/绿底、双下划线、左色条段落）；信仰告白页渲染分块以减少长任务。v2.1 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022" target="_blank" rel="noopener">GitHub Release v2.1-20261022</a>。</div><div class="ev" style="--dot:#0891b2"><span class="y">v2.1 · 2026-10-22</span>流程图与思维导图改为构建时预渲染的 SVG（页面不再运行 Mermaid，颜色随主题切换）；Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN（只有地图底图来自 OpenStreetMap）；大、小要理问答每个板块新增「圣约神学 · 长老会正统 · 生活应用」三个视角；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。v2.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021" target="_blank" rel="noopener">GitHub Release v2.0-20261021</a>。</div><div class="ev" style="--dot:#7c3aed"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
     b.append(h2('图片署名','🖼️','credits'))
     b.append('<ul>'+''.join(f'<li><a href="{m["page"]}" target="_blank" rel="noopener">{esc(m["title"])}</a> — {esc(m["license"])}</li>' for m in CRED.values())+'</ul>')
     open(OUT+'sources.html','w').write(page('sources.html','来源 · 致谢 · 版本','\n'.join(b)))
 if __name__=='__main__':
-    build_index(); build_history(); build_compare(); build_memory(); build_sources(); print('pages ok')
+    build_index(); build_history(); build_atlas(); build_compare(); build_memory(); build_sources(); print('pages ok')

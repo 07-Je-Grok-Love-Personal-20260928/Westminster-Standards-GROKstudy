@@ -45,6 +45,12 @@ def wcf_section(s, recite=False):
         body=fmt(s['text'])+'<br><b>旧约：</b>'+'、'.join(esc(x) for x in s['ot'])+'<br><b>新约：</b>'+'、'.join(esc(x) for x in s['nt'])+'<br>'+fmt(s['tail'])
     else: body=fmt(s['text'])
     return f'<p class="ansbody">{body}</p>'+refs_html(s['refs'])
+def cvb(h,f=1.0):
+    """v3.0: smaller content-visibility blocks with a size estimate (cuts the long layout task when a big chapter scrolls in)"""
+    txt=re.sub(r'<details(?![^>]*open)[^>]*>.*?</summary>.*?</details>','',h,flags=re.S)
+    txt=re.sub(r'<[^>]+>','',txt)
+    est=max(160,min(2400,int(len(txt)*f/42*30)+120))
+    return f'<div class="cv" style="contain-intrinsic-size:auto {est}px">{h}</div>'
 def build_wcf():
     from content_v2 import PR, WARN, ORDO, AMREV
     W=D['wcf']; parts=[]
@@ -85,15 +91,13 @@ def build_wcf():
         tb=tabs([('bt-pt','📚 圣经神学',mk(c['bt'])),('cov-pt','🤝 圣约神学',mk(c['ct'])),('eu-pt','🇳🇱 欧陆改革宗',mk(c['eu'],cmp=True)),('pr-pt','🏴 长老会正统',mk(PR[n],cmp=True)),('hard-pt','🔍 难点',mk(c['hard'])),('app-pt','🛠️ 应用',mk(c['app']))],f'tab{n}')
         parts.append(f'''<section class="sec" id="c{n}" data-search>
 {h2(f"第{cn(n)}章 {esc(ch['title'])}",c['icon'],None,f"{n}. {ch['title']}")}
-<div class="cv">
-<div><span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span><span class="pill">📍 关键经文：<span class="u-bib" style="white-space:normal">{esc(c['verses'])}</span></span><span class="pill">📙 小要理：{qlinks(xs,'wsc')}</span><span class="pill">📗 大要理：{qlinks(xl,'wlc')}</span></div>
-{callout('key-pt','🎯 核心要义',c['key'])}
-<details open><summary>📜 原文（{len(ch['secs'])}节）· RTF-USA 2024 简体译本</summary><div class="dbody src">{secs}</div></details>
-{tb}
-<div class="grid g2">{callout('mem-pt','🧠 记忆钩子',c['mem'])}{callout('warn-pt','🚫 常见误解',WARN[n])}</div>
+{cvb(f"""<div><span class="tag t-{cat}">{CATS[cat][1]} {CATS[cat][0]}</span><span class="pill">📍 关键经文：<span class="u-bib" style="white-space:normal">{esc(c['verses'])}</span></span><span class="pill">📙 小要理：{qlinks(xs,'wsc')}</span><span class="pill">📗 大要理：{qlinks(xl,'wlc')}</span></div>
+{callout('key-pt','🎯 核心要义',c['key'])}""")}
+{cvb(f"""<details open><summary>📜 原文（{len(ch['secs'])}节）· RTF-USA 2024 简体译本</summary><div class="dbody src">{secs}</div></details>""")}
+{cvb(tb,0.2)}
+{cvb(f"""<div class="grid g2">{callout('mem-pt','🧠 记忆钩子',c['mem'])}{callout('warn-pt','🚫 常见误解',WARN[n])}</div>
 {am}
-<details><summary>🔗 对照三项联合信条原文（ccifellowship.org）</summary><div class="dbody">{contin(c)}</div></details>
-</div>
+<details><summary>🔗 对照三项联合信条原文（ccifellowship.org）</summary><div class="dbody">{contin(c)}</div></details>""")}
 </section>''')
     open(OUT+'wcf.html','w').write(page('wcf.html','西敏信仰告白 · 逐章精解','\n'.join(parts)))
 # ================= Catechisms =================

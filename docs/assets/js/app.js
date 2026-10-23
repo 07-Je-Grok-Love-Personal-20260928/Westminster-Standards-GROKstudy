@@ -1,4 +1,4 @@
-/* Westminster Standards GROKstudy v2 — interactions (deferred, rAF-throttled, lazy libs) */
+/* Westminster Standards GROKstudy v3 — interactions (deferred, rAF-throttled, lazy libs) */
 (function(){
 'use strict';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -17,7 +17,8 @@ function applyMode(){const m=LS.get('mode','auto');root.dataset.theme=m==='auto'
 function applyPalette(p){root.dataset.palette=p;$$('.sw').forEach(b=>b.classList.toggle('on',b.dataset.pal===p));
   const c=getComputedStyle(root).getPropertyValue('--a1').trim();const tm=$('meta[name=theme-color]');if(tm&&c)tm.content=c;}
 mq.addEventListener&&mq.addEventListener('change',()=>{if(LS.get('mode','auto')==='auto'){applyMode();themeChanged()}});
-let themeTimer;function themeChanged(){clearTimeout(themeTimer);themeTimer=setTimeout(()=>{reMermaid()},120)}
+let themeTimer;function themeChanged(){clearTimeout(themeTimer);themeTimer=setTimeout(()=>{reMermaid();LMAPS.forEach(m=>m.restyle())},120)}
+const LMAPS=[];
 applyMode();applyPalette(LS.get('palette','aurora'));
 $$('.sw').forEach(b=>b.addEventListener('click',()=>{LS.set('palette',b.dataset.pal);applyPalette(b.dataset.pal);themeChanged()}));
 $$('#modeSeg button').forEach(b=>b.addEventListener('click',()=>{LS.set('mode',b.dataset.mode);applyMode();themeChanged()}));
@@ -39,7 +40,7 @@ function buildToc(){const hs=$$('h2.h, h3.h',main);hs.forEach((h,i)=>{if(!h.id)h
   if(toc&&!toc.dataset.custom)toc.innerHTML=hs.map(h=>`<li class="${h.tagName==='H3'?'l3':'l2'}"><a href="#${h.id}">${h.dataset.toc||h.textContent.trim()}</a></li>`).join('');return hs}
 let hs=buildToc();
 if(!isMobile()&&LS.get('tocoff',false))body.classList.add('toc-off');
-$('#tocBtn')?.addEventListener('click',()=>{if(isMobile())body.classList.toggle('toc-open');else{body.classList.toggle('toc-off');LS.set('tocoff',body.classList.contains('toc-off'))}setTimeout(()=>window.__map&&window.__map.invalidateSize(),400)});
+$('#tocBtn')?.addEventListener('click',()=>{if(isMobile())body.classList.toggle('toc-open');else{body.classList.toggle('toc-off');LS.set('tocoff',body.classList.contains('toc-off'))}setTimeout(()=>LMAPS.forEach(m=>m.map.invalidateSize()),400)});
 $('.scrim')?.addEventListener('click',()=>body.classList.remove('toc-open'));
 toc?.addEventListener('click',e=>{if(e.target.tagName==='A'&&isMobile())body.classList.remove('toc-open')});
 const tf=$('#tocFilter');if(tf)tf.addEventListener('input',()=>{const v=tf.value.trim();$$('li',toc).forEach(li=>li.style.display=!v||li.textContent.includes(v)?'':'none')});
@@ -55,12 +56,25 @@ function watchActive(){activeIO&&activeIO.disconnect();const links=new Map($$('a
 watchActive();
 window.__rebuildToc=()=>{watchActive()};
 
-/* ---------- scroll: progress + to-top (one rAF per frame max) ---------- */
-const pg=$('.progress i'), tt=$('.totop');let ticking=false,lastTop=-1;
-function onFrame(){ticking=false;const h=root;const y=h.scrollTop||window.scrollY;if(y===lastTop)return;lastTop=y;const max=h.scrollHeight-h.clientHeight||1;
-  if(pg)pg.style.transform='scaleX('+Math.min(1,y/max).toFixed(4)+')';if(tt)tt.classList.toggle('show',y>600)}
+/* ---------- scroll: progress + floating nav cluster (one rAF per frame max) ---------- */
+const pg=$('.progress i'), fab=$('.fab'), fr=$('.fab .fr1'), fm=$('.fab-main');let ticking=false,lastTop=-1,dirY=0;
+function onFrame(){ticking=false;const h=root;const y=h.scrollTop||window.scrollY;if(y===lastTop)return;const dy=y-lastTop;lastTop=y;const max=h.scrollHeight-h.clientHeight||1,p=Math.min(1,y/max);
+  if(pg)pg.style.transform='scaleX('+p.toFixed(4)+')';if(fr)fr.style.strokeDashoffset=(100-p*100).toFixed(1);
+  if(fab){dirY=dy>0?Math.min(dirY+dy,400):Math.max(dirY+dy,-400);if(dirY>160&&y>500){fab.classList.add('hide');dirY=0}else if(dirY<-60||y<200||p>.985){fab.classList.remove('hide');dirY=Math.min(dirY,0)}}}
 addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onFrame)}},{passive:true});onFrame();
-tt?.addEventListener('click',()=>{lenis?lenis.scrollTo(0):scrollTo({top:0,behavior:RM?'auto':'smooth'})});
+if(fab){const setOpen=o=>{fab.classList.toggle('open',o);fm.setAttribute('aria-expanded',o)};
+  fm.addEventListener('click',e=>{e.stopPropagation();setOpen(!fab.classList.contains('open'))});
+  document.addEventListener('click',e=>{if(!fab.contains(e.target))setOpen(false)});
+  fab.addEventListener('keydown',e=>{if(e.key==='Escape'){setOpen(false);fm.focus()}});
+  const nav=window.navigation, bk=$('[data-act=back]',fab), fw=$('[data-act=fwd]',fab);
+  const syncNav=()=>{if(nav&&'canGoBack' in nav){bk.disabled=!nav.canGoBack;fw.disabled=!nav.canGoForward}else bk.disabled=history.length<2};syncNav();nav&&nav.addEventListener&&nav.addEventListener('currententrychange',syncNav);
+  if(!$('#tocList'))$('[data-act=toc]',fab).hidden=true;
+  fab.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const k=b.dataset.act;
+    if(k==='back')history.back();else if(k==='fwd')history.forward();
+    else if(k==='top'){lenis?lenis.scrollTo(0):scrollTo({top:0,behavior:RM?'auto':'smooth'});fab.classList.remove('hide')}
+    else if(k==='bottom'){const f=$('footer.foot')||main.lastElementChild;goTo(f,true)}
+    else if(k==='toc'){if(isMobile())body.classList.add('toc-open');else{body.classList.remove('toc-off');LS.set('tocoff',false)}setTimeout(()=>{const a=$('#tocList a.active')||$('#tocList a');a&&a.focus({preventScroll:false})},isMobile()?320:60)}
+    if(k!=='toc')setOpen(false)})}
 
 /* ---------- reveal + stagger + counters + charts ---------- */
 $$('.grid,.stats,.flow,.chain,.rings').forEach(g=>{let i=0;[...g.children].forEach(c=>{if(c.classList.contains('rv')){c.style.setProperty('--d',Math.min(i,6)*0.06+'s');i++}})});
@@ -109,13 +123,92 @@ function reMermaid(){if(!mm)return;mm.initialize(mmConfig());mmDone.forEach(el=>
 /* v2.1: diagrams are pre-rendered to SVG at build time; runtime Mermaid is only a fallback for un-rendered blocks */
 const mEls=$$('.mermaid:not([data-done])');if(mEls.length){mEls.forEach(el=>mmSrc.set(el,el.textContent));const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mio.unobserve(e.target);renderMermaid(e.target)}}),{rootMargin:'1400px 0px'});mEls.forEach(el=>mio.observe(el))}
 
-/* ---------- lazy Leaflet ---------- */
-const mapEl=$('#map');if(mapEl&&window.__mapInit){mapEl.textContent='🗺️ 地图加载中…';const lio=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;lio.disconnect();loadCSS('assets/vendor/leaflet/leaflet.css');
-  loadScript('assets/vendor/leaflet/leaflet.js').then(whenCalm).then(()=>{mapEl.textContent='';mapEl.style.display='block';window.__mapInit();mapEl.setAttribute('data-lenis-prevent','')}).catch(()=>{mapEl.innerHTML='<p style="padding:20px">地图组件加载失败（可能是网络限制），请刷新重试。</p>'})},{rootMargin:'600px 0px'});lio.observe(mapEl)}
+/* ---------- v3.0 maps: hand-drawn concept maps + live Leaflet maps with tile failover ---------- */
+const NM=()=>RM||root.classList.contains('no-motion');
+const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* keyless providers only (terms checked 2026-10): OSM standard, OSM France HOT, OpenTopoMap. No tile prefetching. */
+const TILES=[
+ {id:'osm',n:'OpenStreetMap',u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',o:{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'}},
+ {id:'hot',n:'OSM France · HOT',u:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · 风格 <a href="https://www.hotosm.org/" target="_blank" rel="noopener">HOT</a> · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
+ {id:'topo',n:'OpenTopoMap',u:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',o:{maxZoom:17,subdomains:'abc',attribution:'Kartendaten: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC-BY-SA</a>)'}}];
+window.__tileLog=[];
+let leafletP=null;const getLeaflet=()=>leafletP||(leafletP=(loadCSS('assets/vendor/leaflet/leaflet.css'),loadScript('assets/vendor/leaflet/leaflet.js').then(()=>window.L)));
+const geoP={};const getGeo=b=>geoP[b]||(geoP[b]=fetch('assets/geo/'+b+'.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}));
+const yearOf=w=>{const m=String(w).match(/\d{3,4}/);return m?+m[0]:9999};
+function curve(a,b,bend){const n=24,mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],cx=mx-dy*bend,cy=my+dx*bend,pts=[];for(let i=0;i<=n;i++){const t=i/n,u=1-t;pts.push([u*u*a[0]+2*u*t*cx+t*t*b[0],u*u*a[1]+2*u*t*cy+t*t*b[1]])}return pts}
+function liveMap(box,data,onPick){
+  const el=$('.lmap',box);el.textContent='🗺️ 地图加载中…';
+  return getLeaflet().then(L=>{el.textContent='';const coarse=matchMedia('(pointer:coarse)').matches;
+    const map=L.map(el,{zoomSnap:.5,scrollWheelZoom:false,dragging:!coarse,tap:false,worldCopyJump:true,preferCanvas:false});
+    map.createPane('basePane').style.zIndex=150;const rend=L.canvas({pane:'basePane',padding:.3});
+    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
+    map.attributionControl.addAttribution('底图 <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>（公有领域）');
+    const st={map,base:null,layer:null,idx:-1,ok:0,err:0,timer:0};
+    /* self-hosted vector base (never fails): Natural Earth land/rivers/lakes, or the Thames for the London map */
+    function baseStyle(f){const k=f&&f.properties&&f.properties.k;const land=probe('var(--geo-land)'),coast=probe('var(--geo-coast)'),riv=probe('var(--geo-river)');
+      return k==='river'?{color:riv,weight:1.2,opacity:.8,fill:false}:k==='lake'?{color:riv,weight:.6,fillColor:probe('var(--geo-sea)'),fillOpacity:1}:k==='thames'?{color:riv,weight:22,opacity:.55,lineCap:'round'}:{color:coast,weight:1,fillColor:land,fillOpacity:1}}
+    el.style.background=probe('var(--geo-sea)');
+    const addBase=gj=>{st.base=L.geoJSON(gj,{renderer:rend,pane:'basePane',interactive:false,style:baseStyle}).addTo(map)};
+    if(data.base==='london'){addBase({type:'Feature',properties:{k:'thames'},geometry:{type:'LineString',coordinates:(data.thames||[]).map(p=>[p[1],p[0]])}})}
+    else getGeo(data.base).then(addBase).catch(e=>console.warn('geo base',e));
+    st.restyle=()=>{el.style.background=probe('var(--geo-sea)');st.base&&st.base.setStyle(baseStyle);drawRoutes()};
+    /* places + routes */
+    const P=new Map(data.places.map((p,i)=>[p.k,Object.assign({i},p)]));
+    const mk=data.places.map((p,i)=>L.marker([p.lat,p.lng],{title:p.n,riseOnHover:true,icon:L.divIcon({className:'',html:`<div class="lpin" style="--c:${p.c}">${p.i}</div>`,iconSize:[28,28],iconAnchor:[14,14]})})
+      .bindTooltip(escH(p.n),{className:'ltip',direction:'right',offset:[12,0]})
+      .bindPopup(`<b>${p.i} ${escH(p.n)}</b><br><span class="hl-date">${escH(p.w)}</span><p style="margin:.4em 0 0">${escH(p.d)}</p>`,{maxWidth:260})
+      .on('click',()=>onPick(i,true)).addTo(map));
+    let rl=null;function drawRoutes(){rl&&map.removeLayer(rl);const cs=getComputedStyle(root),c1=cs.getPropertyValue('--a1').trim(),c2=cs.getPropertyValue('--a2').trim(),cb=cs.getPropertyValue('--bad').trim();
+      rl=L.layerGroup(data.routes.map(r=>{const a=P.get(r.a),b=P.get(r.b);if(!a||!b)return null;const col=r.k==='march'?cb:r.k==='flow'?c1:c2;
+        return L.polyline(curve([a.lat,a.lng],[b.lat,b.lng],r.k==='sea'?.22:.16),{color:col,weight:3,opacity:.85,dashArray:r.k==='sea'?'6 7':null,interactive:!!r.l}).bindTooltip(escH(r.l||''),{sticky:true,className:'ltip'})}).filter(Boolean)).addTo(map)}
+    drawRoutes();
+    const b=L.latLngBounds(data.places.map(p=>[p.lat,p.lng]));map.fitBounds(b,{padding:[30,30],maxZoom:data.base==='london'?17:7});
+    /* control: provider select + live status */
+    const Ctl=L.Control.extend({onAdd(){const d=L.DomUtil.create('div','mctl');d.innerHTML='<span class="mst wait">⏳ 准备瓦片…</span><select aria-label="在线瓦片来源"><option value="auto">自动（失败时切换）</option>'+TILES.map(t=>`<option value="${t.id}">${t.n}</option>`).join('')+'<option value="none">仅离线底图</option></select>';L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d}});
+    const ctl=new Ctl({position:'topright'}).addTo(map),cd=ctl.getContainer(),stEl=$('.mst',cd),sel=$('select',cd);
+    const status=(c,t)=>{stEl.className='mst '+c;stEl.textContent=t;box.dataset.tiles=c+':'+(st.idx>=0?TILES[st.idx].id:'none')};
+    const T=()=>window.__tileTimeout||6000;
+    function clear(){clearTimeout(st.timer);if(st.layer){const ly=st.layer;st.layer=null;map.removeLayer(ly);ly.off('tileload tileerror')}}
+    function use(i){clear();const mode=sel.value;
+      if(i<0||i>=TILES.length){st.idx=-1;status('off',mode==='none'?'🧭 仅离线底图（已手动选择）':'🧭 离线底图（在线瓦片均不可用）');window.__tileLog.push([data.base,'offline']);return}
+      st.idx=i;st.ok=0;st.err=0;const t=TILES[i];status('wait','⏳ 正在连接 '+t.n+'…');
+      const ly=L.tileLayer(t.u,Object.assign({updateWhenIdle:true,keepBuffer:1,referrerPolicy:'strict-origin-when-cross-origin'},t.o));st.layer=ly;
+      ly.on('tileload',()=>{if(st.layer!==ly)return;st.ok++;if(st.ok===1){clearTimeout(st.timer);status('on','✅ 在线瓦片：'+t.n);window.__tileLog.push([data.base,t.id,'ok'])}});
+      ly.on('tileerror',()=>{if(st.layer!==ly)return;st.err++;if((st.ok===0&&st.err>=3)||st.err-st.ok>=8)fail('error')});
+      st.timer=setTimeout(()=>{if(st.layer===ly&&st.ok===0)fail('timeout')},T());ly.addTo(map)}
+    function fail(why){const t=TILES[st.idx];window.__tileLog.push([data.base,t&&t.id,why]);
+      if(sel.value==='auto')use(st.idx+1);else{clear();st.idx=-1;status('off','❌ '+(t?t.n:'')+' 不可用，已保留离线底图')}}
+    function apply(){const v=sel.value;v==='auto'?use(0):v==='none'?use(-1):use(TILES.findIndex(t=>t.id===v))}
+    sel.value=LS.get('tiles','auto');if(![...sel.options].some(o=>o.value===sel.value))sel.value='auto';
+    sel.addEventListener('change',()=>{LS.set('tiles',sel.value);apply()});apply();
+    /* wheel zoom / drag only after the user engages the map (no scroll-jacking) */
+    if(coarse){const h=L.DomUtil.create('div','lhint',el);h.textContent='👆 点按地图以启用拖动；双指缩放';map.once('click',()=>{map.dragging.enable();h.remove()})}
+    map.on('focus click',()=>map.scrollWheelZoom.enable());map.on('blur',()=>map.scrollWheelZoom.disable());
+    st.focus=(i,pan)=>{const m=mk[i];if(!m)return;if(pan)map.panTo(m.getLatLng(),{animate:!NM()});m.openPopup()};
+    LMAPS.push(st);return st})
+   .catch(e=>{console.warn(e);el.innerHTML='<p style="padding:20px">交互地图组件加载失败；请使用「🎨 手绘示意图」（离线可用）。</p>'})}
+function initMapbox(box){
+  let data;try{data=JSON.parse($('.mdata',box).textContent)}catch(e){return}
+  const cm=$('.cmap',box),pins=$$('.pin',box),info=$('.minfo',box),lis=$$('.mplaces li',box),tabs=$$('.mtabs [data-v]',box),views={c:$('.mv-c',box),l:$('.mv-l',box)},play=$('.mplay',box);
+  let live=null,liveP=null,cur=-1,timer=0;
+  function show(i,fromMap){const p=data.places[i];if(!p)return;cur=i;pins.forEach((x,j)=>x.classList.toggle('on',j===i));lis.forEach((x,j)=>x.classList.toggle('on',j===i));
+    info.style.setProperty('--c',p.c);info.innerHTML=`<div class="mi-h"><b>${p.i} ${escH(p.n)}</b><span class="hl-date">${escH(p.w)}</span><span class="muted small">${i+1} / ${data.places.length}</span></div><div>${escH(p.d)}</div>`;
+    if(live&&!fromMap&&views.l.classList.contains('on'))live.focus(i,true)}
+  function view(v){tabs.forEach(t=>{const on=t.dataset.v===v;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});views.c.classList.toggle('on',v==='c');views.l.classList.toggle('on',v==='l');
+    if(v==='l'){if(!liveP)liveP=liveMap(box,data,(i,fm)=>show(i,fm)).then(s=>{live=s||null;if(live&&cur>=0)live.focus(cur,false)});else live&&live.map.invalidateSize()}}
+  tabs.forEach(t=>t.addEventListener('click',()=>view(t.dataset.v)));
+  pins.forEach(p=>p.addEventListener('click',()=>{stop();show(+p.dataset.i)}));
+  lis.forEach(li=>li.addEventListener('click',()=>{stop();show(+li.dataset.i);const r=box.getBoundingClientRect();if(r.top<0)goTo(box,true)}));
+  const order=data.places.map((p,i)=>i).sort((a,b)=>yearOf(data.places[a].w)-yearOf(data.places[b].w)||a-b);
+  function stop(){clearTimeout(timer);timer=0;if(play){play.classList.remove('on');play.textContent='▶ 按时间播放'}}
+  play&&play.addEventListener('click',()=>{if(timer){stop();return}play.classList.add('on');play.textContent='⏸ 暂停';let k=0;const step=()=>{show(order[k]);k++;timer=k<order.length?setTimeout(step,NM()?2600:2000):0;if(!timer)setTimeout(stop,2000)};step()});
+  if(cm){const io=new IntersectionObserver(es=>es.forEach(e=>{cm.classList.toggle('play',e.isIntersecting);if(e.isIntersecting)cm.classList.add('seen')}),{rootMargin:'0px 0px -10% 0px'});io.observe(cm)}
+}
+$$('.mapbox').forEach(initMapbox);
 
 /* ---------- silky smooth wheel scrolling (desktop only, Lenis) ---------- */
 let lenis=null;
-const PREVENT='.toc,.tbl,.mermaid,#map,.pop,.leaflet-container,.flash .face,.topnav,.tbar,select,textarea';
+const PREVENT='.toc,.tbl,.mermaid,.lmap,.hscroll,.pop,.leaflet-container,.flash .face,.topnav,.tbar,select,textarea';
 function startLenis(){if(lenis||RM||!matchMedia('(pointer:fine)').matches||!LS.get('smooth',true))return;
   loadScript('assets/vendor/lenis/lenis.min.js').then(()=>{if(lenis||!window.Lenis)return;
     $$(PREVENT).forEach(n=>n.setAttribute('data-lenis-prevent',''));

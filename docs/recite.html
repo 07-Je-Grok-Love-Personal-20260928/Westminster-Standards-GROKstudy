@@ -9,29 +9,30 @@
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
 <script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>
-<link rel="stylesheet" href="assets/css/style.css?v=v2.1">
+<link rel="stylesheet" href="assets/css/style.css?v=v3.0">
 
-<script src="assets/js/app.js?v=v2.1" defer></script>
+<script src="assets/js/app.js?v=v3.0" defer></script>
+<script type="speculationrules">{"prefetch":[{"source":"document","where":{"and":[{"selector_matches":".topnav a, .navcard, .fab a, .cta a, .mapnav a"},{"not":{"selector_matches":"[target=_blank]"}}]},"eagerness":"moderate"}]}</script>
 </head>
 <body>
 <div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
 <header class="topbar">
   <button class="iconbtn" id="tocBtn" title="显示/隐藏目录" aria-label="目录">☰</button>
   <a class="brand" href="index.html"><span class="logo">W</span><span class="t">西敏标准·GROKstudy</span></a>
-  <nav class="topnav"><a href="index.html" class=""><span class="ni">🏠</span>总览</a><a href="history.html" class=""><span class="ni">🗺️</span>历史·地理</a><a href="wcf.html" class=""><span class="ni">📘</span>信仰告白</a><a href="wlc.html" class=""><span class="ni">📗</span>大要理问答</a><a href="wsc.html" class=""><span class="ni">📙</span>小要理问答</a><a href="compare.html" class=""><span class="ni">⚖️</span>深度对比</a><a href="recite.html" class="on"><span class="ni">🎙️</span>背诵版</a><a href="memory.html" class=""><span class="ni">🧠</span>记忆训练</a><a href="creeds.html" class=""><span class="ni">📜</span>信经与联合信条</a><a href="sources.html" class=""><span class="ni">🔗</span>来源</a></nav>
+  <nav class="topnav"><a href="index.html" class=""><span class="ni">🏠</span>总览</a><a href="history.html" class=""><span class="ni">🗺️</span>历史·地理</a><a href="atlas.html" class=""><span class="ni">🧭</span>地图集</a><a href="wcf.html" class=""><span class="ni">📘</span>信仰告白</a><a href="wlc.html" class=""><span class="ni">📗</span>大要理问答</a><a href="wsc.html" class=""><span class="ni">📙</span>小要理问答</a><a href="compare.html" class=""><span class="ni">⚖️</span>深度对比</a><a href="recite.html" class="on"><span class="ni">🎙️</span>背诵版</a><a href="memory.html" class=""><span class="ni">🧠</span>记忆训练</a><a href="creeds.html" class=""><span class="ni">📜</span>信经与联合信条</a><a href="sources.html" class=""><span class="ni">🔗</span>来源</a></nav>
   <button class="iconbtn" id="legendBtn" title="标注图例" aria-label="标注图例">🖍️</button>
   <button class="iconbtn" id="themeBtn" title="主题与显示" aria-label="主题">🎨</button>
 </header>
 <div class="progress"><i></i></div>
 <div class="scrim"></div>
 <div class="pop" id="themePanel" role="dialog" aria-label="主题">
-  <h4>🎨 配色主题</h4><div class="swatches"><button class="sw" data-pal="aurora" title="晨曦" style="--s1:#4f46e5;--s2:#9333ea;--s3:#f59e0b"><i></i><span>晨曦</span></button><button class="sw" data-pal="jade" title="翡翠" style="--s1:#059669;--s2:#0d9488;--s3:#84cc16"><i></i><span>翡翠</span></button><button class="sw" data-pal="crimson" title="绛红金" style="--s1:#b91c1c;--s2:#9a3412;--s3:#ca8a04"><i></i><span>绛红金</span></button><button class="sw" data-pal="ocean" title="深海" style="--s1:#0369a1;--s2:#4338ca;--s3:#06b6d4"><i></i><span>深海</span></button><button class="sw" data-pal="sunset" title="暮光" style="--s1:#e11d48;--s2:#f97316;--s3:#a855f7"><i></i><span>暮光</span></button></div>
+  <h4>🎨 配色主题</h4><div class="swatches"><button class="sw" data-pal="aurora" title="晨曦" style="--s1:#4f46e5;--s2:#9333ea;--s3:#f59e0b"><i></i><span>晨曦</span></button><button class="sw" data-pal="jade" title="翡翠" style="--s1:#059669;--s2:#0d9488;--s3:#84cc16"><i></i><span>翡翠</span></button><button class="sw" data-pal="crimson" title="绛红金" style="--s1:#b91c1c;--s2:#9a3412;--s3:#ca8a04"><i></i><span>绛红金</span></button><button class="sw" data-pal="ocean" title="深海" style="--s1:#0369a1;--s2:#4338ca;--s3:#06b6d4"><i></i><span>深海</span></button><button class="sw" data-pal="sunset" title="暮光" style="--s1:#e11d48;--s2:#f97316;--s3:#a855f7"><i></i><span>暮光</span></button><button class="sw" data-pal="parchment" title="史卷" style="--s1:#8a5a2b;--s2:#9f1239;--s3:#0f766e"><i></i><span>史卷</span></button></div>
   <h4>🌗 明暗</h4><div class="seg" id="modeSeg"><button data-mode="light">☀️ 浅色</button><button data-mode="dark">🌙 深色</button><button data-mode="auto">🖥️ 跟随系统</button></div>
   <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="smooth">🪶 丝滑滚动</button><button data-opt="motion">✨ 动画</button></div>
   <p class="muted small">设置保存在本机浏览器。丝滑滚动仅在电脑（鼠标滚轮）上启用，手机使用原生滚动。</p>
 </div>
 <div class="pop" id="legendPanel" role="dialog" aria-label="标注图例">
-  <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist"><li><span class="lgx"><b>粗体</b></span><span>关键词</span></li><li><span class="lgx"><span class="c-term">彩色字</span></span><span>神学术语</span></li><li><span class="lgx"><mark>荧光底</mark></span><span>必背金句 / 核心结论</span></li><li><span class="lgx"><span class="u-bib">实线下划线</span></span><span>圣经出处</span></li><li><span class="lgx"><span class="u-cmp">虚线下划线</span></span><span>对比 / 区别</span></li><li><span class="lgx"><span class="u-err">波浪线</span></span><span>难点 / 易错 / 争议</span></li><li><span class="lgx"><span class="c-ref">WLC 31</span></span><span>文献交叉索引</span></li><li><span class="lgx">“ ”</span><span>原文逐字引用</span></li><li><span class="lgx">「 」</span><span>术语 / 口诀 / 概括（非原文）</span></li></ul>
+  <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist"><li><span class="lgx"><b>粗体</b></span><span>关键词</span></li><li><span class="lgx"><span class="c-term">彩色字</span></span><span>神学术语</span></li><li><span class="lgx"><mark>黄色荧光</mark></span><span>必背金句 / 核心结论</span></li><li><span class="lgx"><span class="m-blue">蓝色底</span></span><span>定义 / 概念说明</span></li><li><span class="lgx"><span class="m-green">绿色底</span></span><span>应用 / 实践要点</span></li><li><span class="lgx"><span class="u-key">双下划线</span></span><span>关键论证 / 转折</span></li><li><span class="lgx"><span class="u-bib">实线下划线</span></span><span>圣经出处</span></li><li><span class="lgx"><span class="u-cmp">虚线下划线</span></span><span>对比 / 区别</span></li><li><span class="lgx"><span class="u-err">波浪线</span></span><span>难点 / 易错 / 争议</span></li><li><span class="lgx"><span class="hl-date">1643年</span></span><span>年代 / 日期</span></li><li><span class="lgx"><span class="hl-place">日内瓦</span></span><span>地名（点线）</span></li><li><span class="lgx"><span class="hl-person">加尔文</span></span><span>人物</span></li><li><span class="lgx"><span class="c-ref">WLC 31</span></span><span>文献交叉索引</span></li><li><span class="lgx"><span class="lgblk">▍</span></span><span>左色条段落：导读 / 本节概要</span></li><li><span class="lgx">“ ”</span><span>原文逐字引用</span></li><li><span class="lgx">「 」</span><span>术语 / 口诀 / 概括（非原文）</span></li></ul>
   <h4>🧩 提示框</h4><ul class="lglist two"><li><span class="lgc key-pt">🎯</span><span>核心要义</span></li><li><span class="lgc hard-pt">🔍</span><span>难点辨析</span></li><li><span class="lgc mem-pt">🧠</span><span>记忆钩子</span></li><li><span class="lgc warn-pt">🚫</span><span>常见误解</span></li><li><span class="lgc app-pt">🛠️</span><span>生活应用</span></li><li><span class="lgc bt-pt">📚</span><span>圣经神学</span></li><li><span class="lgc cov-pt">🤝</span><span>圣约神学</span></li><li><span class="lgc eu-pt">🇳🇱</span><span>欧陆改革宗</span></li><li><span class="lgc pr-pt">🏴</span><span>长老会正统</span></li></ul>
 </div>
 <div class="layout">
@@ -59,13 +60,23 @@
 </div>
 <p class="muted">正文来源：RTF-USA《威斯敏斯特标准》简体中文新版（贾少彬 译，© 2024，免费分发，非卖品）。</p>
 <footer class="foot">
-  <div><b>西敏标准 · 深度学习站</b>（威斯敏斯特标准-20261022-v2.1-GROKstudy）</div>
+  <div><b>西敏标准 · 深度学习站</b>（威斯敏斯特标准-20261023-v3.0-GROKstudy）</div>
   <div>西敏三份文件中文正文：RTF-USA《威斯敏斯特标准》简体中文新版（贾少彬 译，© 2024 RTF-USA，免费分发）。三大普世信经与三项联合信条原文：<a href="https://ccifellowship.org" target="_blank" rel="noopener">ccifellowship.org</a>（中国改革宗教会《敬拜手册》）。解读、图表、记忆法为本站学习整理，仅供学习，不代表任何教会的官方解释。</div>
-  <div class="muted">版本 v2.1 · 更新于 2026-10-22（台北时间） · <a href="sources.html">来源与致谢</a> · <a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy" target="_blank" rel="noopener">源码</a></div>
+  <div class="muted">版本 v3.0 · 更新于 2026-10-23（台北时间） · <a href="sources.html">来源与致谢</a> · <a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy" target="_blank" rel="noopener">源码</a></div>
 </footer>
   </div></main>
 </div>
-<button class="iconbtn totop" title="回到顶部" aria-label="回到顶部">⬆️</button>
+<nav class="fab" aria-label="快捷导航">
+  <div class="fab-items" id="fabItems">
+    <a href="index.html" class="fab-b" title="首页" aria-label="首页"><span aria-hidden="true">🏠</span></a>
+    <button type="button" class="fab-b" data-act="toc" title="本页目录" aria-label="本页目录"><span aria-hidden="true">☰</span></button>
+    <button type="button" class="fab-b" data-act="back" title="后退" aria-label="后退"><span aria-hidden="true">←</span></button>
+    <button type="button" class="fab-b" data-act="fwd" title="前进" aria-label="前进"><span aria-hidden="true">→</span></button>
+    <button type="button" class="fab-b" data-act="top" title="回到顶部" aria-label="回到顶部"><span aria-hidden="true">↑</span></button>
+    <button type="button" class="fab-b" data-act="bottom" title="到页面底部" aria-label="到页面底部"><span aria-hidden="true">↓</span></button>
+  </div>
+  <button type="button" class="fab-main" aria-expanded="false" aria-controls="fabItems" title="快捷导航" aria-label="快捷导航（阅读进度）"><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="fr0" cx="22" cy="22" r="19"/><circle class="fr1" cx="22" cy="22" r="19" pathLength="100"/></svg><span class="fab-ic" aria-hidden="true">✦</span></button>
+</nav>
 <script>
 window.__pageInit=function(){
  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];

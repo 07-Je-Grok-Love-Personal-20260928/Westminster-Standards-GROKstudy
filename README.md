@@ -1,34 +1,36 @@
-# 威斯敏斯特标准-20261022-v2.1-GROKstudy
+# 威斯敏斯特标准-20261023-v3.0-GROKstudy
 
-**Westminster-Standards-20261022-v2.1-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。
+**Westminster-Standards-20261023-v3.0-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.0 聚焦 **历史 · 地图 · 文化**。
 
-## 🌐 在线访问（v2.1，当前版本）
+## 🌐 在线访问（v3.0，当前版本）
 
 | 平台 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-grok-love-personal-20260928.github.io/Westminster-Standards-GROKstudy/ |
-| Surge | https://westminster-standards-20261022-v2-1-grokser.surge.sh |
-| Netlify | https://westminster-standards-20261022-v2-1-grokser.netlify.app |
+| Surge | https://westminster-standards-20261023-v3-grokser.surge.sh |
+| Netlify | https://westminster-standards-20261023-v3-grokser.netlify.app |
 
-GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022
+GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.0-20261023
+
+源码仓库：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy
 
 ### 🗄️ 历史版本存档（仍可访问）
 
 | 版本 | Git 标签 / Release（含整站 zip） | Surge | Netlify |
 |---|---|---|---|
+| v2.1（2026-10-22） | [v2.1-20261022](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022) | https://westminster-standards-20261022-v2-1-grokser.surge.sh | https://westminster-standards-20261022-v2-1-grokser.netlify.app |
 | v2.0（2026-10-21） | [v2.0-20261021](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021) | https://westminster-standards-20261021-v2-grokser.surge.sh | https://westminster-standards-20261021-v2-grokser.netlify.app |
 | v1.0（2026-10-20） | [v1.0-20261020](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020) | https://westminster-standards-20261020-v1-grokser.surge.sh | https://westminster-standards-20261020-v1-grokser.netlify.app |
 
-GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.0-20261021` 或 `git checkout v1.0-20261020`（静态站点在 `docs/`），或下载对应 Release 中的 zip。
-
-源码仓库：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy
+GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.1-20261022`（或 `v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
 
 ## 📚 内容
 
 | 页面 | 内容 |
 |---|---|
 | `index.html` 总览 | 为什么写/写了什么/怎样用；整本圣经救赎历史主线与西敏标准、三项联合信条对照表；圣约神学结构图；三份文件思维导图；欧陆改革宗阅读视角；八种解读视角 |
-| `history.html` 历史·地理 | 可筛选时间线（325–2024）、六幕故事线、Leaflet 互动地图（西敏寺、耶路撒冷厅、爱丁堡、海德堡、多特等）、历史图片、人物与派别、文化区域特征表 |
+| `history.html` 历史·地理 | 可筛选时间线（325–2024）、六幕故事线、总览地图（尼西亚 → 西敏，手绘示意图 + 实景地图）、历史图片、人物与派别、文化区域特征表 |
+| `atlas.html` 🧭 地图集（v3.0 新增） | 信条年代图（1530–1647）；五幅主题地图：宗教改革在欧洲的传播（1517–1619）、1640 年代的不列颠群岛（盟约 · 内战 · 会议）、伦敦西敏区（西敏寺 · 亨利七世礼拜堂 · 耶路撒冷厅）、西敏标准的全球旅程（苏格兰 → 北美 1706/1729/1788 → 中国、台湾、朝鲜）、欧陆改革宗 vs 长老会的地理；每幅图都有手绘示意图、实景地图、按时间播放、地点说明、本图时间线、文化特征表和事实来源 |
 | `wcf.html` 信仰告白 | 33 章全文（172 节，附证明经文）＋逐章：核心要义、圣经神学、圣约神学、欧陆改革宗视角、难点、应用、记忆钩子、三项联合信条原文对照 |
 | `wlc.html` 大要理问答 | 196 问全文，分 15 个主题板块；每个板块有核心要义，以及圣经神学 / 圣约神学 / 欧陆对照 / 长老会正统 / 应用五个视角，另附记忆钩子 |
 | `wsc.html` 小要理问答 | 107 问全文，分 10 个主题板块，各板块的视角与大要理相同 |
@@ -49,6 +51,12 @@ GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.0-202610
 | 虚线下划线 | 对比 / 区别 |
 | 波浪线 | 难点 / 易错 / 争议 |
 | 小标签 `WLC 31` | 文献交叉索引 |
+| 蓝色底 / 绿色底 | 定义、概念说明 / 应用、实践要点（v3.0） |
+| 双下划线 | 关键论证 / 转折（v3.0） |
+| 年代标签 `1643年` | 年代 / 日期（自动标注，v3.0） |
+| 点线下划线 | 地名（v3.0） |
+| 加粗彩色 + 底线 | 人物（v3.0） |
+| 左色条段落 | 导读 / 本节概要（v3.0） |
 | “ ” | 原文逐字引用 |
 | 「 」 | 术语 / 口诀 / 概括（非原文） |
 
@@ -56,9 +64,36 @@ GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v2.0-202610
 
 ## 🎨 主题
 
-5 套配色（晨曦 · 翡翠 · 绛红金 · 深海 · 暮光）× 浅色 / 深色 / 跟随系统；设置保存在 localStorage，页面加载前即应用（无闪烁）。
+6 套配色（晨曦 · 翡翠 · 绛红金 · 深海 · 暮光 · 史卷〔v3.0 新增〕）× 浅色 / 深色 / 跟随系统；设置保存在 localStorage，页面加载前即应用（无闪烁）。
+
+## 🧭 地图（v3.0）
+
+- **手绘示意图**：海岸线取自 Natural Earth（公有领域）并合并陆地，不画现代国界；手绘质感滤镜只绘制一次（单独的合成层）；路线描线动画、地标弹出与脉冲只用 transform / opacity / stroke-dashoffset，离开视口即暂停，遵守「减少动态效果」。窄屏自动改为编号 + 地点列表。完全离线可用。
+- **实景地图**（点「🛰️ 实景地图」才加载 Leaflet）：底层是本站自带的 Natural Earth 矢量底图（`docs/assets/geo/*.json`，永不失效）；上层在线瓦片只用免密钥、条款允许的提供方，按 **OpenStreetMap → OSM France（HOT）→ OpenTopoMap** 自动切换：同一提供方 3 次失败且无成功、或失败比成功多 8 次、或 6 秒内一张都没加载，就换下一家；全部失败时保留离线底图并显示「🧭 离线底图（在线瓦片均不可用）」。右上角可手动选择提供方或「仅离线底图」（本机记住）。不预取瓦片；署名显示在右下角。CARTO（2026 年 9 月起需要 API 密钥）、Esri、高德、天地图需要密钥或注册，未使用。
+- **悬浮导航**：每页右下角，半透明小圆钮（含阅读进度环）；悬停或点按展开：首页、本页目录、后退、前进、顶部、底部；向下滚动时自动收起，Esc 关闭，支持键盘与 iPhone 安全区。
 
 ## ⚡ 性能
+
+### v2.1 → v3.0（同一台机器、同一脚本，先后各测一次）
+
+| 滚动测试（5 秒连续滚动） | v2.1 | v3.0 |
+|---|---|---|
+| 手机 390px（CPU 降速 4 倍）index / recite / compare | 60.1 / 60.2 / 60.1 fps，长任务 0 | 60.2 / 60.1 / 60.1 fps，长任务 0（index 首轮出现一次 53 fps / 115 ms 的离群值，重测两次均为 60.2 fps、0 ms） |
+| 手机 390px wcf（3 次中位数） | 59.7 fps，长任务 62 ms | 59.6 fps，长任务 **53 ms** |
+| 手机 390px history（3 次） | 59.4–59.7 fps，长任务 0–58 ms | 60.1–60.2 fps，长任务 **0 ms** |
+| 手机 390px atlas（新页面，3 次） | — | 58.5–60.1 fps，长任务 0 ms |
+| 电脑 1440px（6 页） | 58.4–60.2 fps | 60.1–60.3 fps，长任务 0 ms |
+
+| Lighthouse 移动端（本地 gzip 服务器，接近线上） | v2.1 | v3.0 |
+|---|---|---|
+| index | 99（FCP 1.4 s / LCP 2.0 s） | 99（1.1 s / 2.0 s） |
+| wcf | 94（1.7 s / 3.0 s） | 94（1.7 s / 3.0 s） |
+| recite | 100（1.5 s / 1.5 s） | 99（1.5 s / 1.6 s） |
+| history | 99（1.0 s / 2.3 s） | 97（1.5 s / 2.6 s；多了总览地图） |
+| atlas | — | 99（1.3 s / 2.1 s） |
+
+TBT 均为 0–30 ms，CLS 均为 0。v3.0 的做法：信仰告白每章拆成 4 个带尺寸估计的 `content-visibility` 块（原来是 1 个，最大 28 KB），减少新内容进入视口时的整页布局；地图与图表的 CSS 拆到 `maps.css`，只在有地图的页面加载；页面间切换用 View Transitions（`@view-transition`）；导航链接用 Speculation Rules 悬停预取（只预取本站页面，不预取地图瓦片）；所有动画只用 transform / opacity。在不开 gzip 的本地测试中（拆分 CSS 之前），v3.0 的 FCP 慢约 0.3–0.6 s，原因是未压缩的 style.css 变大（47 KB；拆分后 37 KB + 只在地图页加载的 maps.css 10 KB）；线上 GitHub Pages / Netlify / Surge 都会 gzip 压缩，上表即按压缩条件测得。
+
 
 ### v2.0 → v2.1（Google Chrome 155 headless，本地服务器未开 gzip）
 
@@ -105,8 +140,9 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 - 三大普世信经、三项联合信条：https://ccifellowship.org （中国改革宗教会《敬拜手册》），逐字照录。
 - 摘录：https://www.ccreformed.org/our-belief/ 、https://www.reformedbeginner.net/statement-of-faith/
 - 美国修订本对照：https://opc.org/wcf.html （OPC 现行英文本）
-- 图片：Wikimedia Commons（公有领域 / CC0）；地图：© OpenStreetMap 贡献者。
-- 第三方库（均自托管于 `docs/assets/vendor/`，附各自 LICENSE）：Mermaid 10.9.1（只在构建时使用，页面中作为备用）、Leaflet 1.9.4、Lenis 1.1.20。只有地图底图从 OpenStreetMap 在线加载。
+- 图片：Wikimedia Commons（公有领域 / CC0）。
+- 地图：离线底图 Natural Earth（公有领域）；在线瓦片 © OpenStreetMap 贡献者（ODbL）、HOT 样式 / OSM France 托管、OpenTopoMap（CC-BY-SA）。地图上的地点、日期均附来源链接（主要为 Wikipedia 与西敏寺官网）。
+- 第三方库（均自托管于 `docs/assets/vendor/`，附各自 LICENSE）：Mermaid 10.9.1（只在构建时使用，页面中作为备用）、Leaflet 1.9.4、Lenis 1.1.20。只有实景地图的在线瓦片来自外部（失败时自动退回本站离线底图）。
 - 讲解、图表、口诀为学习整理，不代表任何教会的官方解释。
 
 ## 🛠️ 目录结构与构建
@@ -120,30 +156,34 @@ generator/           # 生成器（Python 3）
   content_more.py       # 大小要理分组解读、时间线、地图数据
   content_v2.py         # v2：长老会正统视角、常见误解、美国修订对照、图例
   content_v21.py        # v2.1：大小要理各板块的圣约神学 / 长老会正统 / 应用
+  content_atlas.py      # v3.0：五幅主题地图的地点、路线、时间线、文化特征与来源；信条年代
+  geo.py                # v3.0：下载 Natural Earth，合并陆地，导出 docs/assets/geo/*.json 与手绘底图路径
+  atlas.py              # v3.0：手绘示意图（标签避让）、地图组件、信条年代图
   prerender_mermaid.py  # v2.1：构建时把 Mermaid 渲染为 SVG（颜色替换为 CSS 变量，可随主题切换；结果缓存在 data/mermaid_cache.json）
-  build_all.sh          # 一键构建：生成页面 → 预渲染图表 → 引文核对
+  build_all.sh          # 一键构建：导出地理数据 → 生成页面 → 预渲染图表 → 引文核对
   audit.py / fixquotes.py # 引文核对：“ ”内文字须与原文语料逐字一致
-  perf/                 # 性能与布局检查脚本（Lighthouse、滚动帧率、3 宽度 × 10 主题检查）
+  perf/                 # 性能与布局检查脚本（Lighthouse、滚动帧率、宽度 × 主题检查、瓦片封锁测试 perf/v3/tiles.py）
   build_docs.py         # 生成 wcf/wlc/wsc/recite/creeds 页面
-  build_pages.py        # 生成 index/history/compare/memory/sources 页面
+  build_pages.py        # 生成 index/history/atlas/compare/memory/sources 页面
 ```
 
 重新生成：`generator/build_all.sh`（只有图表源码改动时才需要 Playwright + Chrome）
 
 部署：
 ```bash
-npx -y surge docs westminster-standards-20261022-v2-1-grokser.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
-npx -y netlify-cli deploy --prod --dir docs --site <site-id>
+npx -y surge docs westminster-standards-20261023-v3-grokser.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
+env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --site <site-id>
 ```
 
 ## 🗂️ 版本说明
 
 | 版本 | 日期（台北时间） | 说明 |
 |---|---|---|
+| v3.0 | 2026-10-23 | **历史 · 地图 · 文化**：新增「🧭 地图集」页——信条年代图与五幅主题地图（宗教改革欧洲、1640 年代不列颠群岛、伦敦西敏区与耶路撒冷厅、全球传播：费城 1706/1729/1788 · 厦门/台南/淡水 · 朝鲜、欧陆改革宗 vs 长老会）；每幅图都有离线手绘示意图（动画路线、地标）和实景地图（Natural Earth 自带底图 + OSM → OSM France HOT → OpenTopoMap 自动切换，有错误与超时检测，懒加载），配本图时间线、文化特征和来源。历史页的旧 Leaflet 地图换成同一组件。**界面**：右下角悬浮导航（首页/目录/后退/前进/顶部/底部 + 阅读进度环）；新配色「史卷」；标注系统新增年代、地名、人物、蓝/绿底、双下划线、左色条段落，图例同步。**流畅度**：View Transitions、悬停预取、信仰告白分块渲染、地图 CSS 按需加载。**检查**：11 页 × 3 种宽度 × 12 种主题组合；瓦片封锁测试（单家/两家/全部失败、超时）全部按预期切换或退回离线底图；引文核对通过。 |
 | v2.1 | 2026-10-22 | **性能**：Mermaid 图表改为构建时预渲染的 SVG，颜色用 CSS 变量，随 5 套配色和浅/深色切换；页面不再运行 Mermaid，滚动到图表时的长任务消失；宽图在手机上可横向滑动。Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN。地图在滚动停下后才初始化。**内容**：大、小要理问答 25 个板块各新增「圣约神学 · 长老会正统 · 生活应用」三个标签页；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。**检查**：10 页 × 3 种宽度 × 10 种主题组合，无溢出、无重叠、无 JS 错误；引文核对通过。 |
 | v2.0 | 2026-10-21 | **性能**：移除大面积 backdrop-filter 与模糊动画（仅顶栏保留轻度毛玻璃）；Mermaid（ESM 分包）与 Leaflet 改为进入视口才加载；长内容 `content-visibility:auto`；滚动处理 rAF 节流 + passive；脚本 defer；去掉阻塞渲染的网络字体；电脑端 Lenis 丝滑滚动（手机原生）；尊重“减少动态效果”。**主题**：5 套配色 × 浅/深/跟随系统，无闪烁。**标注系统**：统一图例（粗体/彩色术语/荧光/实线·虚线·波浪下划线/交叉索引/提示框）。**内容**：每章新增「长老会正统」与「常见误解」，解读改为标签页以精简篇幅；1647原文 vs 美国修订本对照；救恩次序链；篇幅统计、环形图、韦恩图、问题→文件流程图、两大传统谱系图、背诵进度环。**引文规范**：“ ”只用于逐字原文（程序核对 RTF 译本与 ccifellowship 语料，圣经引文按和合本核对），其余改用「 」。 |
 | v1.0 | 2026-10-20 | 首次发布：10 个页面；三份西敏文件全文与证明经文；逐章/分组解读；时间线、故事线、互动地图；Mermaid 流程图与思维导图；深度对比；背诵模式与记忆训练；三大普世信经与三项联合信条原文；毛玻璃 UI、深浅色主题、可隐藏目录、手机/平板/电脑自适应。 |
 
-归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`，每个都有对应的 GitHub Release（含整站 zip）。
+归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`、`v3.0-20261023`，每个都有对应的 GitHub Release（含整站 zip）。
 
 后续版本请按 `主题-日期-版本号-GROKser` 规则更新 Surge / Netlify 域名，并在此表追加记录。

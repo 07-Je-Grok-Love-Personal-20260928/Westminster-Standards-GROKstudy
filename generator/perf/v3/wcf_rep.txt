@@ -1,0 +1,15 @@
+v21 390 wcf {"fps": 59.3, "jank": 0.3, "p95": 16.7, "longtask": 80, "Layout_ms": 98, "RecalcStyle_ms": 189, "Script_ms": 83, "Task_ms": 1236}
+v21 390 history {"fps": 59.6, "jank": 0.7, "p95": 16.7, "longtask": 58, "Layout_ms": 49, "RecalcStyle_ms": 196, "Script_ms": 128, "Task_ms": 1059}
+v30 390 wcf {"fps": 60, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 95, "RecalcStyle_ms": 152, "Script_ms": 90, "Task_ms": 1289}
+v30 390 history {"fps": 60.1, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 22, "RecalcStyle_ms": 204, "Script_ms": 74, "Task_ms": 1181}
+v30 390 atlas {"fps": 60.1, "jank": 0.3, "p95": 16.7, "longtask": 0, "Layout_ms": 55, "RecalcStyle_ms": 265, "Script_ms": 103, "Task_ms": 2823}
+v21 390 wcf {"fps": 59.8, "jank": 0.3, "p95": 16.8, "longtask": 62, "Layout_ms": 87, "RecalcStyle_ms": 159, "Script_ms": 87, "Task_ms": 1161}
+v21 390 history {"fps": 59.4, "jank": 0.7, "p95": 16.7, "longtask": 58, "Layout_ms": 42, "RecalcStyle_ms": 202, "Script_ms": 125, "Task_ms": 1060}
+v30 390 wcf {"fps": 59, "jank": 0.3, "p95": 16.8, "longtask": 65, "Layout_ms": 125, "RecalcStyle_ms": 186, "Script_ms": 141, "Task_ms": 1762}
+v30 390 history {"fps": 60.1, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 22, "RecalcStyle_ms": 264, "Script_ms": 108, "Task_ms": 1433}
+v30 390 atlas {"fps": 59.9, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 46, "RecalcStyle_ms": 271, "Script_ms": 117, "Task_ms": 2857}
+v21 390 wcf {"fps": 59.7, "jank": 0.3, "p95": 16.7, "longtask": 59, "Layout_ms": 93, "RecalcStyle_ms": 147, "Script_ms": 97, "Task_ms": 1271}
+v21 390 history {"fps": 59.7, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 42, "RecalcStyle_ms": 207, "Script_ms": 133, "Task_ms": 1064}
+v30 390 wcf {"fps": 59.6, "jank": 0.3, "p95": 16.8, "longtask": 53, "Layout_ms": 100, "RecalcStyle_ms": 204, "Script_ms": 115, "Task_ms": 1519}
+v30 390 history {"fps": 60.2, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 20, "RecalcStyle_ms": 259, "Script_ms": 84, "Task_ms": 1376}
+v30 390 atlas {"fps": 58.5, "jank": 0.3, "p95": 16.8, "longtask": 0, "Layout_ms": 70, "RecalcStyle_ms": 349, "Script_ms": 145, "Task_ms": 3458}

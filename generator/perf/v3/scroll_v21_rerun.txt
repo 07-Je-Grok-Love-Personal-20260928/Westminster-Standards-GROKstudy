@@ -1,0 +1,10 @@
+v21 390 index {"fps": 60.1, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 29, "RecalcStyle_ms": 171, "Script_ms": 79, "Task_ms": 1239}
+v21 390 wcf {"fps": 59.5, "jank": 0.7, "p95": 16.8, "longtask": 54, "Layout_ms": 72, "RecalcStyle_ms": 135, "Script_ms": 93, "Task_ms": 1201}
+v21 390 recite {"fps": 60.2, "jank": 0, "p95": 16.8, "longtask": 0, "Layout_ms": 39, "RecalcStyle_ms": 46, "Script_ms": 66, "Task_ms": 572}
+v21 390 history {"fps": 59.7, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 34, "RecalcStyle_ms": 180, "Script_ms": 135, "Task_ms": 980}
+v21 390 compare {"fps": 60.1, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 17, "RecalcStyle_ms": 70, "Script_ms": 57, "Task_ms": 707}
+v21 1440 index {"fps": 60.1, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 7, "RecalcStyle_ms": 54, "Script_ms": 26, "Task_ms": 264}
+v21 1440 wcf {"fps": 60.1, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 54, "RecalcStyle_ms": 76, "Script_ms": 32, "Task_ms": 452}
+v21 1440 recite {"fps": 60.2, "jank": 0, "p95": 16.7, "longtask": 0, "Layout_ms": 20, "RecalcStyle_ms": 38, "Script_ms": 34, "Task_ms": 269}
+v21 1440 history {"fps": 59, "jank": 0.7, "p95": 16.7, "longtask": 0, "Layout_ms": 18, "RecalcStyle_ms": 68, "Script_ms": 52, "Task_ms": 398}
+v21 1440 compare {"fps": 58.4, "jank": 0.7, "p95": 16.8, "longtask": 0, "Layout_ms": 5, "RecalcStyle_ms": 35, "Script_ms": 19, "Task_ms": 211}

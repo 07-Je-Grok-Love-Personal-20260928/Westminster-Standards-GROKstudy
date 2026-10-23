@@ -1,0 +1,93 @@
+/* v3.0 maps, atlas & charts — loaded only on pages that contain maps */
+/* atlas: map box */
+.mapnav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.mapnav a{display:inline-flex;gap:6px;align-items:center;padding:7px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:14px}
+.mapnav a:hover{background:var(--grad);color:#fff;text-decoration:none}
+.mapbox{margin:8px 0 30px}
+.mtabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.mtabs button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:650;font-size:14px;cursor:pointer}
+.mtabs button.on{background:var(--grad);color:#fff;border-color:transparent}
+.mtabs .mplay{margin-left:auto;background:color-mix(in srgb,var(--a3) 16%,var(--card))}
+.mtabs .mplay.on{background:var(--a3);color:#111}
+.mview{display:none}.mview.on{display:block}
+.cmap{margin:0}
+.cm-stage{position:relative;aspect-ratio:var(--ar);container-type:inline-size;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--geo-sea)}
+.cm-base,.cm-over{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cm-base{will-change:transform}
+.cm-seaf{fill:var(--geo-sea)}.cm-paper{fill:var(--geo-land)}
+.cm-wave{fill:none;stroke:color-mix(in srgb,var(--geo-coast) 16%,transparent);stroke-width:1.2}
+.cm-land{fill:var(--geo-land);stroke:var(--geo-coast);stroke-width:1.5;stroke-linejoin:round}
+.cm-shadow{fill:color-mix(in srgb,var(--geo-coast) 20%,transparent)}
+.cm-river{fill:none;stroke:var(--geo-river);stroke-width:1.5;opacity:.75;stroke-linecap:round}
+.cm-river.big{stroke-width:30;opacity:.4}
+.cm-sea{font-size:20px;font-style:italic;fill:var(--geo-river);font-weight:600}
+.cm-bld path{fill:color-mix(in srgb,var(--a1) 22%,transparent);stroke:var(--a1);stroke-width:1.5}
+.cm-rose circle{fill:none;stroke:var(--geo-coast);opacity:.45}.cm-rose path{fill:var(--geo-coast);opacity:.45}.cm-rose .n{fill:var(--a1);opacity:.95}
+.cm-rose text{font:700 18px var(--serif);text-anchor:middle;fill:var(--geo-coast)}
+.rt{fill:none;stroke:var(--a1);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.rt-march{stroke:var(--bad)}.rt-walk{stroke:var(--a2)}
+.rt-sea{stroke:var(--a2);stroke-dasharray:.014 .01;stroke-dashoffset:0;opacity:0}
+.ah{fill:var(--a1)}
+.rtl{font-size:16px;font-weight:650;fill:var(--ink2);text-anchor:middle;paint-order:stroke;stroke:var(--geo-land);stroke-width:5px;stroke-linejoin:round;opacity:0}
+.cmap.seen .rt{animation:rtdraw 1.5s ease-out var(--rd) forwards}
+.cmap.seen .rt-sea{animation:rtfade 1s ease-out var(--rd) forwards}
+.cmap.seen .rtl{animation:rtfade .6s ease-out 1.2s forwards}
+@keyframes rtdraw{to{stroke-dashoffset:0}}@keyframes rtfade{to{opacity:1}}
+.cm-pins{position:absolute;inset:0}
+.pin{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;padding:0;border-radius:50%;border:2px solid #fff;background:var(--c);display:grid;place-items:center;font-size:14px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.28);color:#fff;transition:transform .45s cubic-bezier(.3,1.6,.5,1) var(--pd),opacity .3s var(--pd)}
+.cmap:not(.seen) .pin{opacity:0;transform:scale(.3)}
+.pin::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--c);opacity:0;pointer-events:none}
+.cmap.play .pin::after{animation:pinpulse 2.8s ease-out var(--pd) infinite}
+@keyframes pinpulse{0%{transform:scale(.7);opacity:.75}100%{transform:scale(1.8);opacity:0}}
+.pin:hover,.pin:focus-visible,.pin.on{transform:scale(1.22);z-index:3}
+.pin.on{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 45%,transparent),0 4px 14px rgba(0,0,0,.35)}
+.pd{pointer-events:none}
+.pn{display:none;position:absolute;right:-7px;top:-7px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:var(--ink);color:var(--bg);font:700 10px/15px var(--sans);place-items:center}
+.pl{position:absolute;white-space:nowrap;pointer-events:none;font-size:max(10.5px,1.3cqw);line-height:1.22;color:var(--ink);text-align:left;padding:2px 6px;border-radius:7px;background:color-mix(in srgb,var(--geo-land) 82%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.pl b{display:block;font-weight:700}.pl small{display:block;font-size:.84em;color:var(--date);font-weight:650;font-variant-numeric:tabular-nums}
+.pl-r{left:calc(100% + 4px);top:50%;transform:translateY(-50%)}.pl-l{right:calc(100% + 4px);top:50%;transform:translateY(-50%);text-align:right}
+.pl-t{bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);text-align:center}.pl-b{top:calc(100% + 4px);left:50%;transform:translateX(-50%);text-align:center}
+.pl-tr{bottom:70%;left:70%}.pl-br{top:70%;left:70%}.pl-tl{bottom:70%;right:70%;text-align:right}.pl-bl{top:70%;right:70%;text-align:right}
+@container (max-width:760px){.pl,.rtl{display:none}.pn{display:grid}.pin{width:24px;height:24px;margin:-12px 0 0 -12px;font-size:12px}.pin.on .pl{display:block;z-index:4}}
+.cmap figcaption{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;margin-top:8px}
+.cm-leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px}.cm-leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:0}
+.minfo{margin:10px 0;padding:10px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));min-height:52px;font-size:15px}
+.minfo .mi-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.minfo .mi-h b{font-size:16px}
+.mside{margin-top:12px}.mside h4,.mcul{margin:4px 0 8px}
+.mplaces,.mtl{margin:0;padding:0;list-style:none;font-size:14px}
+.mplaces li{padding:6px 4px;border-bottom:1px dashed var(--line);cursor:pointer;line-height:1.6}.mplaces li:hover,.mplaces li.on{background:color-mix(in srgb,var(--a1) 7%,transparent)}
+.mplaces .pn{display:inline-grid;position:static;background:var(--c);color:#fff;margin-right:6px}.mplaces .pe{margin-right:4px}
+.mtl{position:relative;padding-left:16px;border-left:2px solid color-mix(in srgb,var(--a1) 35%,transparent)}
+.mtl li{position:relative;padding:4px 0 6px}.mtl li::before{content:"";position:absolute;left:-22px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--a1);box-shadow:0 0 0 3px var(--bg)}
+.mtl b{display:inline-block;min-width:5.5em;color:var(--date);font-variant-numeric:tabular-nums}
+.msrc{margin-top:10px;font-size:14px}.msrc ul{columns:2 260px;margin:6px 0}
+.cta{margin:14px 0}.cta .btn{display:inline-block;padding:10px 16px;border-radius:14px;background:var(--grad);color:#fff!important;font-weight:700;box-shadow:var(--shadow)}
+.cta .btn:hover{text-decoration:none;filter:brightness(1.08)}
+/* live map */
+.lmap{height:clamp(320px,56vh,500px);border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--geo-sea);display:grid;place-items:center;color:var(--muted);font-size:14px}
+.lmap.leaflet-container{display:block;font-family:var(--sans)}
+.lpin{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c);border:2px solid #fff;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.leaflet-tooltip.ltip{background:color-mix(in srgb,var(--card2) 92%,transparent);color:var(--ink);border:1px solid var(--line);box-shadow:none;font-weight:650;font-size:12px;padding:1px 6px}
+.leaflet-tooltip.ltip::before{display:none}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--card2);color:var(--ink)}
+.mctl{background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:6px 8px;font-size:12.5px;box-shadow:var(--shadow);max-width:230px}
+.mctl select{width:100%;margin-top:4px;font-size:12.5px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:3px}
+.mst{display:block;font-weight:650}.mst.on{color:var(--ok)}.mst.off{color:var(--bad)}.mst.wait{color:var(--muted)}
+.lhint{position:absolute;inset:auto 0 8px 0;margin:auto;width:max-content;max-width:90%;z-index:500;background:color-mix(in srgb,var(--ink) 75%,transparent);color:var(--bg);padding:4px 10px;border-radius:10px;font-size:12.5px;pointer-events:none}
+/* confession chart */
+.cfchart{margin:6px 0 18px}.hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cfchart svg{display:block;min-width:720px;width:100%}
+.cfchart .ax{stroke:var(--line);stroke-width:3}
+.cfchart .tk line{stroke:var(--muted)}.cfchart .tk text{font-size:13px;fill:var(--muted)}
+.cfchart .cf line{stroke:var(--c);stroke-width:1.5;opacity:.7}.cfchart .cf circle{fill:var(--c);stroke:#fff;stroke-width:2}
+.cfchart .cf text{font-size:15px;font-weight:700;fill:var(--ink)}.cfchart .cf .cy{font-size:12.5px;fill:var(--c);font-weight:700}
+.cfchart.rv .cf{opacity:0;transform:translateY(8px);transition:opacity .5s var(--cd),transform .5s var(--cd)}.cfchart.rv.in .cf{opacity:1;transform:none}
+.no-motion .cmap .pin,.no-motion .cfchart .cf{transition:none!important;opacity:1!important;transform:none!important}
+.no-motion .rt{animation:none!important;stroke-dashoffset:0!important}.no-motion .rt-sea,.no-motion .rtl{animation:none!important;opacity:1!important}.no-motion .pin::after{animation:none!important}
+@media (prefers-reduced-motion:reduce){.cmap .pin,.cfchart .cf{transition:none!important;opacity:1!important;transform:none!important}.rt{animation:none!important;stroke-dashoffset:0!important}.rt-sea,.rtl{animation:none!important;opacity:1!important}.pin::after{animation:none!important}}
+@media print{.mtabs,.mv-l{display:none!important}.rt{stroke-dashoffset:0}.rt-sea,.rtl,.cmap .pin{opacity:1}}
+.cm-rvl{font-size:18px;font-weight:700;fill:#fff;text-anchor:middle;letter-spacing:.06em;opacity:.95}
+.cm-wide{border-radius:18px}.cm-wide .cm-stage{min-width:760px}
+.pl-x{display:none;left:calc(100% + 4px);top:50%;transform:translateY(-50%)}.pin.nolbl .pn{display:grid}
+.pin.on .pl-x,.pin:hover .pl-x,.pin:focus-visible .pl-x{display:block}.pin:hover,.pin:focus-visible{z-index:4}
+.leaflet-container canvas,.leaflet-container svg{max-width:none!important;max-height:none!important}

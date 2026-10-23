@@ -1,0 +1,140 @@
+[
+ {
+  "case": "none blocked",
+  "status": "on:osm",
+  "text": "✅ 在线瓦片：OpenStreetMap",
+  "tilesLoaded": 12,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "ok"
+   ]
+  ],
+  "errs": []
+ },
+ {
+  "case": "OSM blocked",
+  "status": "on:hot",
+  "text": "✅ 在线瓦片：OSM France · HOT",
+  "tilesLoaded": 12,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "error"
+   ],
+   [
+    "eu",
+    "hot",
+    "ok"
+   ]
+  ],
+  "errs": []
+ },
+ {
+  "case": "OSM+HOT blocked",
+  "status": "on:topo",
+  "text": "✅ 在线瓦片：OpenTopoMap",
+  "tilesLoaded": 12,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "error"
+   ],
+   [
+    "eu",
+    "hot",
+    "error"
+   ],
+   [
+    "eu",
+    "topo",
+    "ok"
+   ]
+  ],
+  "errs": []
+ },
+ {
+  "case": "all blocked",
+  "status": "off:none",
+  "text": "🧭 离线底图（在线瓦片均不可用）",
+  "tilesLoaded": 0,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "error"
+   ],
+   [
+    "eu",
+    "hot",
+    "error"
+   ],
+   [
+    "eu",
+    "topo",
+    "error"
+   ],
+   [
+    "eu",
+    "offline"
+   ]
+  ],
+  "errs": []
+ },
+ {
+  "case": "OSM hangs (timeout)",
+  "status": "on:hot",
+  "text": "✅ 在线瓦片：OSM France · HOT",
+  "tilesLoaded": 12,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "timeout"
+   ],
+   [
+    "eu",
+    "hot",
+    "ok"
+   ]
+  ],
+  "errs": []
+ },
+ {
+  "case": "all hang (timeout)",
+  "status": "off:none",
+  "text": "🧭 离线底图（在线瓦片均不可用）",
+  "tilesLoaded": 0,
+  "baseCanvas": 1,
+  "log": [
+   [
+    "eu",
+    "osm",
+    "timeout"
+   ],
+   [
+    "eu",
+    "hot",
+    "timeout"
+   ],
+   [
+    "eu",
+    "topo",
+    "timeout"
+   ],
+   [
+    "eu",
+    "offline"
+   ]
+  ],
+  "errs": []
+ }
+]

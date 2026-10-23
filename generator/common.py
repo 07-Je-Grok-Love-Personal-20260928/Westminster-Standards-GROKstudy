@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import html, re, json
-VERSION='v2.1'; DATE='2026-10-22'
+VERSION='v3.0'; DATE='2026-10-23'
 SITE_TITLE='威斯敏斯特标准 · 深度学习站'
-PAGES=[('index.html','🏠','总览'),('history.html','🗺️','历史·地理'),('wcf.html','📘','信仰告白'),('wlc.html','📗','大要理问答'),('wsc.html','📙','小要理问答'),('compare.html','⚖️','深度对比'),('recite.html','🎙️','背诵版'),('memory.html','🧠','记忆训练'),('creeds.html','📜','信经与联合信条'),('sources.html','🔗','来源')]
+PAGES=[('index.html','🏠','总览'),('history.html','🗺️','历史·地理'),('atlas.html','🧭','地图集'),('wcf.html','📘','信仰告白'),('wlc.html','📗','大要理问答'),('wsc.html','📙','小要理问答'),('compare.html','⚖️','深度对比'),('recite.html','🎙️','背诵版'),('memory.html','🧠','记忆训练'),('creeds.html','📜','信经与联合信条'),('sources.html','🔗','来源')]
 CATS={'rev':('启示论','📖'),'god':('神论','✨'),'man':('人论·罪','💔'),'cov':('圣约','🤝'),'chr':('基督论','✝️'),'sal':('救恩论','🌱'),'law':('律法·伦理·敬拜','📜'),'chu':('教会·圣礼','⛪'),'end':('末世论','🌅')}
-PALETTES=[('aurora','晨曦','#4f46e5','#9333ea','#f59e0b'),('jade','翡翠','#059669','#0d9488','#84cc16'),('crimson','绛红金','#b91c1c','#9a3412','#ca8a04'),('ocean','深海','#0369a1','#4338ca','#06b6d4'),('sunset','暮光','#e11d48','#f97316','#a855f7')]
+PALETTES=[('aurora','晨曦','#4f46e5','#9333ea','#f59e0b'),('jade','翡翠','#059669','#0d9488','#84cc16'),('crimson','绛红金','#b91c1c','#9a3412','#ca8a04'),('ocean','深海','#0369a1','#4338ca','#06b6d4'),('sunset','暮光','#e11d48','#f97316','#a855f7'),('parchment','史卷','#8a5a2b','#9f1239','#0f766e')]
 esc=lambda s: html.escape(str(s),quote=True)
 def fmt(t):
     t=esc(t)
@@ -21,6 +21,10 @@ TERMS.sort(key=len,reverse=True)
 BOOKS='创出利民申书士得撒王代拉尼斯伯诗箴传歌赛耶哀结但何珥摩俄拿弥鸿哈番该亚玛太可路约徒罗林加弗腓西帖提多门来雅彼犹启'
 BIB=re.compile(r'(?<![\u4e00-\u9fff])((?:撒[上下]|王[上下]|代[上下]|林[前后]|帖[前后]|提[前后]|彼[前后]|约[壹贰叁一二三]|['+BOOKS+r'])\d+(?::\d+(?:[-–]\d+)?(?:,\d+)?)?(?:[-–]\d+)?(?:[；;，,]\s*\d+:\d+(?:[-–]\d+)?)*)(?=[^\d:]|$)')
 REF=re.compile(r'((?:WCF|WLC|WSC|HC|BC|CD)\s?[0-9IV][0-9IV./–\-, ]*[0-9IV])')
+PLACES=['耶路撒冷厅','西敏寺','日内瓦','爱丁堡','海德堡','费城','苏黎世','维登堡','都柏林','阿尔斯特','淡水','台南','普林斯顿','巴塞尔','德布勒森']
+PERSONS=['加尔文','诺克斯','慈运理','布林格','乌尔西努','俄利维亚努','厄舍','德布利','卢瑟福','吉莱斯皮','亨德森','特威斯','马偕','马雅各','宾惠廉','克伦威尔','查理一世','腓德烈三世','马克米','路德']
+DATERE=re.compile(r'(?<![\d:.\-–])((?:1[0-9]{3}|20[0-2][0-9])(?:[–-](?:1[0-9]{3}|20[0-2][0-9]))?年(?:\d{1,2}月(?:\d{1,2}日)?)?)')
+PPRE=re.compile('(?:'+'|'.join(map(re.escape,sorted(PLACES+PERSONS,key=len,reverse=True)))+')(?!宗)')
 CMP=re.compile(r'([^。；<>]*(?:侧重|不同|差异|区别|相比|而西敏|更突出|更强调|更系统|更个人)[^。；<>]*)')
 def mk(s, cmp=False):
     """apply the documented marking system to commentary html (not to source texts)"""
@@ -42,12 +46,20 @@ def mk(s, cmp=False):
             # only in plain segments (avoid inside newly inserted spans)
             parts=re.split(r'(<span class="(?:u-bib|c-ref)">.*?</span>)',tok)
             tok=''.join(p if p.startswith('<span') else re.sub('|'.join(map(re.escape,TERMS)),term,p) for p in parts)
+            # v3.0: dates (every occurrence), places & persons (first occurrence per block)
+            parts=re.split(r'(<[^>]+>[^<]*</span>)',tok)
+            def pp(m):
+                w=m.group(0)
+                if w in used: return w
+                used.add(w); return f'<span class="{"hl-place" if w in PLACES else "hl-person"}">{w}</span>'
+            tok=''.join(p if p.startswith('<') else PPRE.sub(pp,DATERE.sub(r'<span class="hl-date">\1</span>',p)) for p in parts)
             if cmp:
                 parts=re.split(r'(<[^>]+>)',tok)
                 tok=''.join(p if p.startswith('<') else CMP.sub(lambda m:f'<span class="u-cmp">{m.group(1)}</span>' if len(m.group(1))>5 else m.group(1),p) for p in parts)
         out.append(tok)
     return ''.join(out)
 BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>'''
+MAPCSS='\n<link rel="stylesheet" href="assets/css/maps.css?v='+VERSION+'">'
 def page(fn,title,body,head='',js='',desc=''):
     nav=''.join(f'<a href="{p}" class="{"on" if p==fn else ""}"><span class="ni">{i}</span>{t}</a>' for p,i,t in PAGES)
     sw=''.join(f'<button class="sw" data-pal="{k}" title="{n}" style="--s1:{a};--s2:{b};--s3:{c}"><i></i><span>{n}</span></button>' for k,n,a,b,c in PALETTES)
@@ -65,9 +77,10 @@ def page(fn,title,body,head='',js='',desc=''):
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
 {BOOT}
-<link rel="stylesheet" href="assets/css/style.css?v={VERSION}">
+<link rel="stylesheet" href="assets/css/style.css?v={VERSION}">{MAPCSS if ('class="mapbox"' in body or 'cfchart' in body) else ''}
 {head}
 <script src="assets/js/app.js?v={VERSION}" defer></script>
+<script type="speculationrules">{{"prefetch":[{{"source":"document","where":{{"and":[{{"selector_matches":".topnav a, .navcard, .fab a, .cta a, .mapnav a"}},{{"not":{{"selector_matches":"[target=_blank]"}}}}]}},"eagerness":"moderate"}}]}}</script>
 </head>
 <body>
 <div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -105,7 +118,17 @@ def page(fn,title,body,head='',js='',desc=''):
 </footer>
   </div></main>
 </div>
-<button class="iconbtn totop" title="回到顶部" aria-label="回到顶部">⬆️</button>
+<nav class="fab" aria-label="快捷导航">
+  <div class="fab-items" id="fabItems">
+    <a href="index.html" class="fab-b" title="首页" aria-label="首页"><span aria-hidden="true">🏠</span></a>
+    <button type="button" class="fab-b" data-act="toc" title="本页目录" aria-label="本页目录"><span aria-hidden="true">☰</span></button>
+    <button type="button" class="fab-b" data-act="back" title="后退" aria-label="后退"><span aria-hidden="true">←</span></button>
+    <button type="button" class="fab-b" data-act="fwd" title="前进" aria-label="前进"><span aria-hidden="true">→</span></button>
+    <button type="button" class="fab-b" data-act="top" title="回到顶部" aria-label="回到顶部"><span aria-hidden="true">↑</span></button>
+    <button type="button" class="fab-b" data-act="bottom" title="到页面底部" aria-label="到页面底部"><span aria-hidden="true">↓</span></button>
+  </div>
+  <button type="button" class="fab-main" aria-expanded="false" aria-controls="fabItems" title="快捷导航" aria-label="快捷导航（阅读进度）"><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="fr0" cx="22" cy="22" r="19"/><circle class="fr1" cx="22" cy="22" r="19" pathLength="100"/></svg><span class="fab-ic" aria-hidden="true">✦</span></button>
+</nav>
 {js}
 </body></html>'''
 MERMAID_JS=''   # mermaid is lazy-loaded by app.js when a diagram scrolls near the viewport
