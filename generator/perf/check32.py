@@ -18,11 +18,16 @@ PANEL='''()=>{const W=innerWidth,H=innerHeight,o=[];for(const s of ['#themePanel
  const t=document.querySelector('.toc');if(t){const r=t.getBoundingClientRect();if(r.width&&getComputedStyle(t).visibility!=='hidden'&&(r.right>W+1))o.push('toc '+Math.round(r.right))}
  const f=document.querySelector('.fab');if(f){const r=f.getBoundingClientRect();if(r.right>W+1||r.bottom>H+1)o.push('fab')}return o}'''
 out=[]
+DONE=set()
+if os.path.exists(f'/workspace/perf/v32/qa_{tag}.jsonl'):
+    for l in open(f'/workspace/perf/v32/qa_{tag}.jsonl'):
+        r=json.loads(l); out.append(r); DONE.add((r['w'],r['pal'],r['mode']))
 with sync_playwright() as p:
     b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
     for w in WS:
         for pal in PALS:
             for md in ('light','dark'):
+                if (w,pal,md) in DONE: continue
                 ctx=b.new_context(viewport={'width':w,'height':844 if w<500 else 900},has_touch=w<500,is_mobile=w<500)
                 ctx.route(re.compile(r'openstreetmap|arcgisonline|opentopomap|autonavi|earthdata|cyclosm'),lambda r:r.abort())
                 ctx.add_init_script(f"localStorage.setItem('wsg_palette',JSON.stringify('{pal}'));localStorage.setItem('wsg_mode',JSON.stringify('{md}'))")
@@ -64,6 +69,8 @@ with sync_playwright() as p:
                     r['errs']=errs; r.update(page=n,w=w,pal=pal,mode=md)
                     out.append(r); x.close()
                 ctx.close()
+                with open(f'/workspace/perf/v32/qa_{tag}.jsonl','a') as f:
+                    for r in out[-len(PAGES):]: f.write(json.dumps(r,ensure_ascii=False)+'\n')
                 print(tag,w,pal,md,'done',len(out),flush=True)
     b.close()
 json.dump(out,open(f'/workspace/perf/v32/qa_{tag}.json','w'),ensure_ascii=False)
