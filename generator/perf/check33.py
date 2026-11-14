@@ -18,7 +18,7 @@ PANEL='''()=>{const W=innerWidth,H=innerHeight,o=[];for(const s of ['#themePanel
  const t=document.querySelector('.toc');if(t){const r=t.getBoundingClientRect();if(r.width&&getComputedStyle(t).visibility!=='hidden'&&(r.right>W+1))o.push('toc '+Math.round(r.right))}
  const f=document.querySelector('.fab');if(f){const r=f.getBoundingClientRect();if(r.right>W+1||r.bottom>H+1)o.push('fab')}return o}'''
 TOCJS='''async(nav)=>{const o=[];const sl=ms=>new Promise(r=>setTimeout(r,ms));const box=document.querySelector('.toc');if(!box)return {o:['no-toc'],n:0};const mob=matchMedia('(max-width:980px)').matches;
- if(mob)document.body.classList.add('toc-open');else document.body.classList.remove('toc-off');await sl(420);
+ if(mob)document.body.classList.add('toc-open');else document.body.classList.remove('toc-off');await sl(420);for(let k=0;k<12&&box.getBoundingClientRect().left<-1;k++)await sl(150);
  const chk=tag=>{const t=box.getBoundingClientRect(),m=document.querySelector('main').getBoundingClientRect();
   if(t.right>innerWidth+1||t.left<-1)o.push(tag+' toc-out '+Math.round(t.left)+','+Math.round(t.right));
   if(!mob&&t.right>m.left+1)o.push(tag+' toc-overlaps-main '+Math.round(t.right)+'>'+Math.round(m.left));

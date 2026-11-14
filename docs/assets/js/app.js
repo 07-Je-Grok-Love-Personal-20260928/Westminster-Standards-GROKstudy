@@ -60,7 +60,9 @@ toc?.addEventListener('click',e=>{const tg=e.target.closest('.tg');if(tg){e.prev
   if(e.target.closest('a')&&isMobile())body.classList.remove('toc-open')});
 /* tooltip only when the single-line title is actually cut off */
 toc?.addEventListener('pointerover',e=>{const a=e.target.closest('a');if(!a)return;const t=a.querySelector('.tt');if(!t)return;if(t.scrollWidth>t.clientWidth+1)a.title=t.textContent;else a.removeAttribute('title')});
-tocBox?.addEventListener('click',e=>{const b=e.target.closest('[data-tc]');if(!b)return;const o=b.dataset.tc==='open';NODES.forEach(n=>n.open=o?n.kids.length>0:false);if(!o&&actN){}renderToc()});
+/* expand / collapse all; after "collapse all" the scroll-spy stops re-opening branches until the reader scrolls again */
+let holdOpen=false;['wheel','touchmove','keydown'].forEach(ev=>addEventListener(ev,e=>{if(holdOpen&&!(tocBox&&tocBox.contains(e.target)))holdOpen=false},{passive:true}));
+tocBox?.addEventListener('click',e=>{const b=e.target.closest('[data-tc]');if(!b)return;const o=b.dataset.tc==='open';NODES.forEach(n=>n.open=o?n.kids.length>0:false);holdOpen=!o;renderToc()});
 const tf=$('#tocFilter');if(tf)tf.addEventListener('input',()=>{const v=tf.value.trim().toLowerCase();if(!v){renderToc();return}
   const hit=NODES.filter(n=>n.t.toLowerCase().includes(v)&&shownRoot(rootOf(n))).slice(0,150);
   toc.innerHTML=hit.length?hit.map(n=>`<li class="t${Math.min(n.d+1,3)} flat"><div class="tr"><span class="tg0"></span><a href="#${n.id}">${n.num?`<span class="tn">${n.num}</span>`:''}<span class="tt">${tEsc(n.t)}</span>${n.par?`<small class="tp">${tEsc(n.par.t)}</small>`:''}</a></div></li>`).join(''):'<li class="none">没有匹配的条目</li>'});
@@ -72,7 +74,7 @@ function tocVisible(){return tocBox&&(isMobile()?body.classList.contains('toc-op
 function spy(force){if(!toc||!NODES.length||(!force&&!tocVisible()))return;if(tDirty)collect();if(!targets.length)return;const lim=innerHeight*0.28;let lo=0,hi=targets.length-1,ans=0;
   while(lo<=hi){const m=(lo+hi)>>1;if(targets[m].el.getBoundingClientRect().top<=lim){ans=m;lo=m+1}else hi=m-1}
   setAct(targets[ans].n)}
-function setAct(n){if(n===actN)return;actN=n;let need=null;for(let p=n.par;p;p=p.par)if(!p.open){p.open=true;need=p}
+function setAct(n){if(n===actN)return;actN=n;let need=null;if(!holdOpen)for(let p=n.par;p;p=p.par)if(!p.open){p.open=true;need=p}
   if(need){let top=need;while(top.par&&!top.par.open)top=top.par;rerenderNode(rootOf(n))}
   $$('a.active',toc).forEach(a=>{a.classList.remove('active');a.removeAttribute('aria-current')});$$('li.path',toc).forEach(l=>l.classList.remove('path'));
   const li=toc.querySelector(`li[data-i="${n.i}"]`);if(!li)return;const a=li.querySelector(':scope>.tr>a');a.classList.add('active');a.setAttribute('aria-current','location');
