@@ -449,8 +449,7 @@ html.glass .fab-b:hover{background:var(--grad)}
 html.glass .toc h4{border-bottom-color:var(--line)}
 /* ===== v3.2 reading/memory modes ===== */
 html.skim main .wrap :is(p,li,td,th,dd,.a,.st-t,.callout,.tp,figcaption){color:color-mix(in srgb,var(--ink) 34%,var(--bg))}
-html.skim main .wrap :is(mark,b,strong,.c-term,.c-neg,.m-blue,.m-green,.u-key,.u-err,.u-cmp,.u-bib,.hl-date,.hl-person,.hl-place,.q-src,.c-ref,h1,h2,h3,h4,.lbl,summary){color:var(--ink)}
-html.skim main .wrap .c-term{color:var(--term,var(--a1))}
+html.skim main .wrap :is(mark,b,strong,.m-blue,.m-green,.u-key,.u-err,.u-cmp,.u-bib,.hl-place,.q-src,h1,h2,h3,h4,.lbl,summary){color:var(--ink)}
 html.skim main .wrap mark{background:linear-gradient(transparent 30%,var(--hl) 30%,var(--hl) 94%,transparent 94%)}
 html.skim main .wrap :is(img,.cmap,.lmap){opacity:.55}
 html.cloze main .wrap :is(mark,.u-key,.m-blue,.m-green,.hl-date):not(.rev){color:transparent!important;background:color-mix(in srgb,var(--a1) 16%,var(--card2))!important;border-radius:5px;text-decoration-color:transparent;cursor:pointer;box-shadow:inset 0 -2px 0 var(--a1)}
@@ -475,3 +474,36 @@ main h2.h:nth-of-type(3n) .ic{background:linear-gradient(135deg,var(--a3),var(--
 @media (hover:hover){.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px color-mix(in srgb,var(--a1) 55%,transparent)}}
 .no-motion .card:hover{transform:none}
 @media (max-width:420px){.lgmodes{grid-template-columns:1fr}html.skim body::after,html.cloze body::after{font-size:11.5px}}
+/* ===== v3.2 救赎历史之河 (animated: one transform-only glow) ===== */
+.rvx{position:relative;margin:10px 0 22px;padding:16px 10px 10px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--a2) 7%,var(--card)),var(--card));overflow:hidden}
+.rvx ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:22px 8px;position:relative;z-index:1}
+.rvx li{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;min-width:0;opacity:0;transform:translateY(10px);transition:opacity .5s calc(var(--i)*.07s),transform .5s calc(var(--i)*.07s)}
+.rvx.in li,.no-motion .rvx li{opacity:1;transform:none}
+.rvx-ic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--card2);border:2px solid color-mix(in srgb,var(--a1) 40%,var(--line));box-shadow:0 6px 16px -8px var(--a1)}
+.rvx li:nth-child(-n+9) .rvx-ic{border-color:color-mix(in srgb,#0284c7 55%,var(--line))}
+.rvx li:nth-child(n+10) .rvx-ic{border-color:color-mix(in srgb,#16a34a 60%,var(--line))}
+.rvx li:nth-child(-n+3) .rvx-ic{border-color:color-mix(in srgb,#7c3aed 55%,var(--line))}
+.rvx li.hub .rvx-ic{width:58px;height:58px;font-size:28px;background:var(--grad);border-color:transparent;box-shadow:0 0 0 5px color-mix(in srgb,var(--a3) 35%,transparent),0 10px 24px -8px var(--a1)}
+.rvx-y{font:700 12px/1.3 var(--sans);color:var(--date);font-variant-numeric:tabular-nums;margin-top:4px}
+.rvx b{font-size:15px;line-height:1.3}.rvx small{font-size:12.5px;color:var(--ink2);line-height:1.4;overflow-wrap:anywhere}
+.rvx-line{position:absolute;left:4%;right:4%;top:40px;height:6px;border-radius:6px;background:linear-gradient(90deg,#7c3aed,#0284c7 25%,#0284c7 72%,var(--a3) 76%,#16a34a);opacity:.35;overflow:hidden;z-index:0}
+.rvx-line i{position:absolute;top:0;left:0;width:16%;height:100%;border-radius:6px;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.9;transform:translateX(-100%);will-change:transform}
+.rvx.run .rvx-line i{animation:rvflow 5.5s linear infinite}
+@keyframes rvflow{to{transform:translateX(650%)}}
+.rvx figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:14px;font-size:13px}
+.rvx-k i{display:inline-block;width:22px;height:6px;border-radius:4px;margin-right:6px;vertical-align:2px}.rvx-k .k1{background:#0284c7}.rvx-k .k2{background:#16a34a}
+@media (min-width:1100px){.rvx ol{grid-template-columns:repeat(12,minmax(0,1fr))}.rvx-line{top:40px}}
+@media (max-width:1099px){.rvx-line{display:none}.rvx ol{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}}
+@media (max-width:420px){.rvx ol{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.no-motion .rvx-line i{animation:none}
+@media (prefers-reduced-motion:reduce){.rvx li{opacity:1;transform:none;transition:none}.rvx-line i{animation:none}}
+/* ===== v3.2 同一真理 · 三种密度 ===== */
+.dens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin-top:6px}
+.dn{min-width:0;padding:12px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c)}
+.dn-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.dn-h b{font-size:15px}
+.dn-bar{position:relative;height:18px;margin:8px 0 6px;border-radius:9px;background:color-mix(in srgb,var(--c) 12%,transparent);overflow:hidden}
+.dn-bar i{position:absolute;inset:0;background:var(--c);opacity:.75;border-radius:9px;transform-origin:left;transform:scaleX(var(--w));transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.dn-bar em{position:relative;font:700 12px/18px var(--sans);font-style:normal;padding-left:8px;color:var(--ink)}
+.dn-q{margin:4px 0;font-weight:700;font-size:14px;color:var(--ink2)}
+.dn-t{margin:4px 0 8px;font-size:15px;line-height:1.8}
+.dn-n{margin:0;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.65;color:var(--ink2)}

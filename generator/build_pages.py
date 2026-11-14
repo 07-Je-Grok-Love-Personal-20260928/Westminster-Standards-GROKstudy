@@ -5,6 +5,7 @@ from common import *
 from content_more import TIMELINE, TL_CATS, MAP
 from content_atlas import MAPS, OVERVIEW, CONFESSIONS
 from atlas import mapblock, confession_chart
+from viz32 import river, density, acts_reel
 OUT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs')+'/'
 D=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data','standards.json')))
 CRED=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','docs','assets','img','credits.json')))
@@ -106,6 +107,8 @@ def build_index():
   C["🌳 创造"] --> F["🍎 堕落"] --> P["🐍 应许 创3:15"] --> N["🌈 挪亚"] --> A["⭐ 亚伯拉罕"] --> M["⛰️ 摩西"] --> D["👑 大卫"] --> J["📜 新约应许"] --> X(("✝️ 基督"))
   X --> CH["🔥 教会"] --> NC["🌅 新天新地"]
   style X fill:#fde68a,stroke:#b45309,stroke-width:3px''')+'</div>')
+    b.append(h3('🌊 动态图：救赎历史之河',id='river'))
+    b.append(river())
     # covenant theology
     b.append(proof_section())
     b.append(h2('第二层：神学核心——圣约神学','🤝','covenant'))
@@ -201,6 +204,7 @@ def build_history():
           ('第四幕 · 耶路撒冷厅的日与夜（1643–1647）','会议先修订《三十九条》，后转而起草全新的文件。长老派、独立派（「异议弟兄」）、伊拉斯都派围绕教会治理激烈辩论；外面战火未熄（马斯顿荒原、纳斯比）。《公共敬拜指南》《教会治理形式》先后完成，1646年底信仰告白完成。','🕯️'),
           ('第五幕 · 文件诞生（1646–1648）','信仰告白附经文于1647年呈交；苏格兰教会总会于1647年8月批准。大小要理问答于1647年秋呈交，1648年附经文；苏格兰总会于1648年7月批准。英格兰国会虽部分采纳，但政局巨变使其未能在英格兰长期实行。','📘'),
           ('第六幕 · 王冠落地之后（1649–今天）','1649年查理一世被处决；1660年王政复辟，1662年大批清教徒牧师被逐。西敏标准却在苏格兰扎根（1690年再获确认），经由移民传到北美（1729年采纳法案、1788年修订），最终成为全球长老会与众多改革宗教会的信仰准则，也进入华人教会。','🌍')]
+    b.append(acts_reel())
     b.append('<div class="grid g2">'+''.join(f'<div class="card rv"><h3>{i} {t}</h3><p>{mk(d)}</p></div>' for t,d,i in acts)+'</div>')
     b.append(h2('总览地图：从尼西亚到西敏','📍','mapsec'))
     b.append(mapblock(OVERVIEW,intro=False))
@@ -265,6 +269,9 @@ def build_compare():
       ('4️⃣ 改教传统','改教时期普遍「信条 + 要理问答」并行：如加尔文的日内瓦要理问答与法国信条；欧陆的《比利时信条》与《海德堡要理问答》。','bl-chr'),
       ('5️⃣ 教学阶梯','曼顿的建议：先小要理、再大要理、最后信仰告白——由浅入深、由记忆到理解再到体系。','bl-law'),
       ('6️⃣ 互相保护','三份文件同一体系、互相印证：要理问答的简洁表述受信条的精确定义保护，信条的抽象表述因要理问答而落地为生活。','bl-chu')])+'</div>')
+    b.append(h2('同一真理 · 三种密度：逐字对照','🔬','density'))
+    b.append('<p class="lead">「为什么要三份」最直接的证据，是把同一教义在三份文件里的原文<b>并排</b>：信仰告白负责<span class="u-key">划界与精确</span>，大要理负责<span class="u-key">展开与教导</span>，小要理负责<span class="u-key">浓缩与背诵</span>。彩条长度＝原文字数。</p>')
+    b.append(density())
     b.append(h2('各自要解决的问题','🎯','problems'))
     probs=[('📘 信仰告白','三国教会的教义统一；回应罗马天主教（圣经与传统、弥撒、炼狱）、阿米念主义（预定、恩典、坚忍）、反律主义（律法与成圣）、索西尼主义（三一、补赎）、重洗派（婴儿洗礼、官员）、伊拉斯都主义（教会治理权）'),
            ('📗 大要理问答','为讲台提供系统而详尽的教义大纲；尤其为伦理生活（十诫）与蒙恩之道（道、礼、祷告）提供牧养细节'),
