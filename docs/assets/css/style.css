@@ -107,7 +107,7 @@ html[data-theme=dark] .backdrop i{opacity:.45}
 .lgx{min-width:118px;font-size:14px}
 .lgc{display:inline-grid;place-items:center;width:30px;height:26px;border-radius:8px;border-left:4px solid var(--k);background:color-mix(in srgb,var(--k) 12%,var(--card))}
 /* layout */
-.layout{display:grid;grid-template-columns:var(--toc-w) minmax(0,1fr);padding-top:var(--top-h)}
+.layout{display:grid;grid-template-columns:min(var(--toc-w),60vw) minmax(0,1fr);padding-top:var(--top-h)}
 body.toc-off .layout{grid-template-columns:0 minmax(0,1fr)}
 .toc{position:sticky;top:var(--top-h);height:calc(100vh - var(--top-h));overflow:auto;overscroll-behavior:contain;padding:16px 10px 40px 14px;border-right:1px solid var(--line);background:color-mix(in srgb,var(--bg) 82%,transparent);transition:transform .35s ease,opacity .3s;contain:layout paint}
 body.toc-off .toc{transform:translateX(-100%);opacity:0;pointer-events:none}
@@ -323,7 +323,7 @@ footer.foot{margin-top:60px;padding:24px;border-radius:20px;background:var(--car
 /* mobile */
 @media (max-width:980px){
   .layout{grid-template-columns:minmax(0,1fr)!important}
-  .toc{position:fixed;left:0;top:var(--top-h);bottom:0;width:min(86vw,330px);z-index:45;height:auto;box-shadow:0 20px 50px -10px rgba(0,0,0,.45);background:var(--bg)}
+  .toc{position:fixed;left:0;top:var(--top-h);bottom:0;width:min(90vw,max(var(--toc-w),300px));z-index:45;height:auto;box-shadow:0 20px 50px -10px rgba(0,0,0,.45);background:var(--bg)}
   body:not(.toc-open) .toc{transform:translateX(-105%);opacity:0;pointer-events:none}
   body.toc-open .toc{transform:none;opacity:1;pointer-events:auto}
   .scrim{position:fixed;inset:var(--top-h) 0 0 0;background:rgba(0,0,0,.35);z-index:44;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -437,16 +437,17 @@ html[data-palette=nord][data-theme=dark]{--muted:#b4bdcf;--ink2:#d8dee9;--card:r
 html[data-palette=nord][data-theme=dark] .callout b.lbl{color:color-mix(in srgb,var(--k) 38%,#fff)}
 /* ===== v3.2 glass: ONLY small fixed/sticky elements (nav cluster, TOC header, popovers, map control). html.glass is set only when
    backdrop-filter is supported, motion is on, prefers-reduced-motion is off and the device has >=4 cores / >=4 GB. ===== */
-html.glass .fab-b,html.glass .fab-main,html.glass .pop,html.glass .toc h4,html.glass .mctl{
+html.glass .fab-b,html.glass .fab-main,html.glass .pop,html.glass .toc-hd,html.glass .mctl{
   background:color-mix(in srgb,var(--card2) 58%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.7);backdrop-filter:blur(14px) saturate(1.7);
   border-color:color-mix(in srgb,#fff 38%,var(--line));box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 45%,transparent),0 10px 28px -12px rgba(15,23,42,.35)}
-html.glass[data-theme=dark] .fab-b,html.glass[data-theme=dark] .fab-main,html.glass[data-theme=dark] .pop,html.glass[data-theme=dark] .toc h4,html.glass[data-theme=dark] .mctl{
+html.glass[data-theme=dark] .fab-b,html.glass[data-theme=dark] .fab-main,html.glass[data-theme=dark] .pop,html.glass[data-theme=dark] .toc-hd,html.glass[data-theme=dark] .mctl{
   background:color-mix(in srgb,var(--card2) 55%,transparent);border-color:color-mix(in srgb,#fff 12%,var(--line));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 30px -12px rgba(0,0,0,.6)}
 html.glass .pop{background:color-mix(in srgb,var(--bg) 72%,transparent)}
 html.glass .fab-main{opacity:.85}
 html.glass .fab-b:hover{background:var(--grad)}
-.toc h4{position:sticky;top:-16px;z-index:2;margin:-16px -10px 10px -14px;padding:14px 16px 10px;border-bottom:1px solid transparent}
-html.glass .toc h4{border-bottom-color:var(--line)}
+.toc-hd{position:sticky;top:-16px;z-index:2;margin:-16px -10px 10px -14px;padding:12px 10px 8px 16px;border-bottom:1px solid transparent;display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--bg) 92%,transparent)}
+.toc-hd h4{margin:0;flex:1;min-width:0}
+html.glass .toc-hd{border-bottom-color:var(--line)}
 /* ===== v3.2 reading/memory modes ===== */
 html.skim main .wrap :is(p,li,td,th,dd,.a,.st-t,.callout,.tp,figcaption){color:color-mix(in srgb,var(--ink) 34%,var(--bg))}
 html.skim main .wrap :is(mark,b,strong,.m-blue,.m-green,.u-key,.u-err,.u-cmp,.u-bib,.hl-place,.q-src,h1,h2,h3,h4,.lbl,summary){color:var(--ink)}
@@ -512,3 +513,50 @@ main h2.h:nth-of-type(3n) .ic{background:linear-gradient(135deg,var(--a3),var(--
 .dn-q{margin:4px 0;font-weight:700;font-size:14px;color:var(--ink2)}
 .dn-t{margin:4px 0 8px;font-size:15px;line-height:1.8}
 .dn-n{margin:0;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.65;color:var(--ink2)}
+
+/* ===== v3.3 TOC: 3-level collapsible tree · drag-resizable · scroll-spy ===== */
+.toc-ctl{display:flex;gap:4px;flex:none}
+.tc-b{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--ink2);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.tc-b:hover{color:var(--a1);border-color:var(--a1)}
+.toc ol.tree,.toc ol.tree ol{list-style:none;margin:0;padding:0}
+.toc ol.tree ol{margin-left:13px;padding-left:6px;border-left:1px dashed color-mix(in srgb,var(--line) 80%,transparent)}
+.toc .tr{display:flex;align-items:center;gap:2px;min-width:0}
+.toc .tg,.toc .tg0{flex:none;width:20px;height:24px}
+.toc .tg{border:0;background:none;padding:0;cursor:pointer;color:var(--muted);border-radius:6px;display:grid;place-items:center}
+.toc .tg::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+.toc li.open>.tr>.tg::before{transform:rotate(45deg) translate(-1px,-1px)}
+.toc .tg:hover{color:var(--a1);background:var(--card2)}
+.toc ol.tree a{flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:9px;color:var(--ink2);font-size:14px;line-height:1.45;border-left:3px solid transparent;transition:background-color .2s,color .2s}
+.toc ol.tree a:hover{background:var(--card2);text-decoration:none}
+.toc .tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toc .tn{flex:none;font-size:11.5px;font-weight:700;color:var(--a1);font-variant-numeric:tabular-nums}
+.toc li.t1>.tr>a{font-weight:650;color:var(--ink)}
+.toc li.t1>.tr>a .tn{min-width:22px;height:22px;border-radius:7px;display:inline-grid;place-items:center;background:var(--grad);color:#fff;font-size:12px}
+.toc li.t1+li.t1{margin-top:4px}
+.toc li.t2>.tr>a .tn::after{content:"."}
+.toc li.t3>.tr>a{font-size:13px;color:var(--muted);padding-top:3px;padding-bottom:3px}
+.toc ol.tree a.active{border-left-color:var(--a1);background:var(--card2);color:var(--ink);font-weight:650}
+.toc li.path>.tr>a{color:var(--a1)}
+.toc li.flat .tp{flex:none;max-width:40%;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toc li.none{padding:8px 12px;color:var(--muted);font-size:13px}
+/* resize handle on the TOC's right edge */
+.toc-rs{position:absolute;top:0;right:-5px;bottom:0;width:11px;cursor:col-resize;z-index:3;touch-action:none;display:flex;align-items:center;justify-content:center}
+.toc-rs i{width:3px;height:44px;border-radius:3px;background:var(--line);opacity:0;transition:opacity .2s,background-color .2s}
+.toc:hover .toc-rs i,.toc-rs:focus-visible i,body.toc-drag .toc-rs i{opacity:1}
+.toc-rs:hover i,body.toc-drag .toc-rs i,.toc-rs:focus-visible i{background:var(--a1)}
+.toc-rs:focus-visible{outline:none}
+body.toc-drag{cursor:col-resize;user-select:none;-webkit-user-select:none}
+body.toc-drag .toc{transition:none}
+body.toc-drag main{pointer-events:none}
+body.toc-off .toc-rs{display:none}
+@media (max-width:980px){.toc-rs{right:0;width:18px}.toc-rs i{opacity:.7;height:56px;width:4px}}
+@media (pointer:coarse){.toc ol.tree a{padding-top:7px;padding-bottom:7px}.toc .tg{width:30px;height:34px}}
+/* level-1 numbering in the page itself */
+.hn{flex:none;display:inline-grid;place-items:center;min-width:1.7em;height:1.7em;padding:0 .3em;border-radius:.5em;font-size:.62em;font-weight:800;letter-spacing:0;color:var(--a1);background:color-mix(in srgb,var(--a1) 12%,transparent);border:1px solid color-mix(in srgb,var(--a1) 30%,transparent);font-family:var(--sans)}
+.part{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin:clamp(40px,6vw,64px) 0 4px;padding:14px 18px;border-radius:16px;background:linear-gradient(110deg,color-mix(in srgb,var(--a1) 14%,var(--card)),color-mix(in srgb,var(--a2) 10%,var(--card)) 60%,color-mix(in srgb,var(--a3) 12%,var(--card)));border:1px solid color-mix(in srgb,var(--a1) 22%,var(--line));scroll-margin-top:calc(var(--top-h) + 14px)}
+.part .hn{font-size:16px;min-width:34px;height:34px;color:#fff;background:var(--grad);border:0;box-shadow:0 6px 16px -8px var(--a2)}
+.part .pi{font-size:22px;line-height:1}
+.part .pt{font-family:var(--serif);font-size:clamp(19px,2.3vw,25px);font-weight:700;color:var(--ink);min-width:0}
+.part .ps{flex-basis:100%;font-size:13px;color:var(--muted);padding-left:2px}
+@media (min-width:700px){.part .ps{flex-basis:auto;margin-left:auto}}
+.part+h2.h,.part+.sec>h2.h:first-child{margin-top:18px}

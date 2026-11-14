@@ -41,27 +41,66 @@ pops.forEach(([b,p])=>{const bt=$('#'+b),pn=$('#'+p);if(!bt||!pn)return;bt.addEv
 document.addEventListener('click',()=>closePops());
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePops();body.classList.remove('toc-open')}});
 
-/* ---------- TOC ---------- */
-const toc=$('#tocList'), main=$('main');
-function buildToc(){const hs=$$('h2.h, h3.h',main);hs.forEach((h,i)=>{if(!h.id)h.id='s'+i});
-  if(toc&&!toc.dataset.custom)toc.innerHTML=hs.map(h=>`<li class="${h.tagName==='H3'?'l3':'l2'}"><a href="#${h.id}">${h.dataset.toc||h.textContent.trim()}</a></li>`).join('');return hs}
-let hs=buildToc();
+/* ---------- v3.3 TOC: build-time 3-level outline → collapsible tree · resizable · scroll-spy ---------- */
+const tocBox=$('.toc'), toc=$('#tocList'), main=$('main');
+const tEsc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TD=(()=>{try{return JSON.parse($('#tocData').textContent)}catch(e){return[]}})();
+const NODES=[],ROOTS=[];{const st=[];TD.forEach((r,i)=>{const n={lv:r[0],id:r[1],t:r[2],num:r[3]||'',kids:[],par:null,i,d:0,open:false};
+  while(st.length&&st[st.length-1].lv>=n.lv)st.pop();if(st.length){n.par=st[st.length-1];n.par.kids.push(n);n.d=n.par.d+1}else ROOTS.push(n);st.push(n);NODES.push(n)})}
+ROOTS.forEach(n=>n.open=true);
+let actN=null;
+const shownRoot=n=>{const el=document.getElementById(n.id);return !(el&&el.closest('.hide'))};
+function liH(n){const has=n.kids.length>0,on=actN&&(actN===n),path=actN&&isAnc(n,actN);
+  return `<li class="t${Math.min(n.d+1,3)}${has?' has':''}${n.open?' open':''}${path?' path':''}" data-i="${n.i}"><div class="tr">${has?`<button type="button" class="tg" aria-expanded="${n.open}" aria-label="${n.open?'折叠':'展开'}：${tEsc(n.t)}"></button>`:'<span class="tg0"></span>'}<a href="#${n.id}"${on?' class="active" aria-current="location"':''}>${n.num?`<span class="tn">${n.num}</span>`:''}<span class="tt">${tEsc(n.t)}</span></a></div>${has&&n.open?`<ol>${n.kids.map(liH).join('')}</ol>`:''}</li>`}
+const isAnc=(a,n)=>{for(let p=n.par;p;p=p.par)if(p===a)return true;return false};
+function renderToc(){if(!toc)return;toc.innerHTML=ROOTS.filter(shownRoot).map(liH).join('')}
+function rerenderNode(n){const li=toc&&toc.querySelector(`li[data-i="${n.i}"]`);if(li)li.outerHTML=liH(n);else renderToc()}
+renderToc();
+toc?.addEventListener('click',e=>{const tg=e.target.closest('.tg');if(tg){e.preventDefault();const n=NODES[+tg.closest('li').dataset.i];n.open=!n.open;rerenderNode(n);return}
+  if(e.target.closest('a')&&isMobile())body.classList.remove('toc-open')});
+/* tooltip only when the single-line title is actually cut off */
+toc?.addEventListener('pointerover',e=>{const a=e.target.closest('a');if(!a)return;const t=a.querySelector('.tt');if(!t)return;if(t.scrollWidth>t.clientWidth+1)a.title=t.textContent;else a.removeAttribute('title')});
+tocBox?.addEventListener('click',e=>{const b=e.target.closest('[data-tc]');if(!b)return;const o=b.dataset.tc==='open';NODES.forEach(n=>n.open=o?n.kids.length>0:false);if(!o&&actN){}renderToc()});
+const tf=$('#tocFilter');if(tf)tf.addEventListener('input',()=>{const v=tf.value.trim().toLowerCase();if(!v){renderToc();return}
+  const hit=NODES.filter(n=>n.t.toLowerCase().includes(v)&&shownRoot(rootOf(n))).slice(0,150);
+  toc.innerHTML=hit.length?hit.map(n=>`<li class="t${Math.min(n.d+1,3)} flat"><div class="tr"><span class="tg0"></span><a href="#${n.id}">${n.num?`<span class="tn">${n.num}</span>`:''}<span class="tt">${tEsc(n.t)}</span>${n.par?`<small class="tp">${tEsc(n.par.t)}</small>`:''}</a></div></li>`).join(''):'<li class="none">没有匹配的条目</li>'});
+const rootOf=n=>{while(n.par)n=n.par;return n};
+/* scroll-spy: binary search over the outline targets that are currently in the DOM (hydrated, visible) */
+let targets=[],tDirty=true;
+function collect(){targets=[];NODES.forEach(n=>{const el=document.getElementById(n.id);if(el&&el.getClientRects().length)targets.push({n,el})});tDirty=false}
+function tocVisible(){return tocBox&&(isMobile()?body.classList.contains('toc-open'):!body.classList.contains('toc-off'))}
+function spy(force){if(!toc||!NODES.length||(!force&&!tocVisible()))return;if(tDirty)collect();if(!targets.length)return;const lim=innerHeight*0.28;let lo=0,hi=targets.length-1,ans=0;
+  while(lo<=hi){const m=(lo+hi)>>1;if(targets[m].el.getBoundingClientRect().top<=lim){ans=m;lo=m+1}else hi=m-1}
+  setAct(targets[ans].n)}
+function setAct(n){if(n===actN)return;actN=n;let need=null;for(let p=n.par;p;p=p.par)if(!p.open){p.open=true;need=p}
+  if(need){let top=need;while(top.par&&!top.par.open)top=top.par;rerenderNode(rootOf(n))}
+  $$('a.active',toc).forEach(a=>{a.classList.remove('active');a.removeAttribute('aria-current')});$$('li.path',toc).forEach(l=>l.classList.remove('path'));
+  const li=toc.querySelector(`li[data-i="${n.i}"]`);if(!li)return;const a=li.querySelector(':scope>.tr>a');a.classList.add('active');a.setAttribute('aria-current','location');
+  for(let p=li.parentElement.closest('li');p;p=p.parentElement.closest('li'))p.classList.add('path');
+  if(tocBox.matches(':hover'))return;const br=tocBox.getBoundingClientRect(),ar=a.getBoundingClientRect();
+  if(ar.top<br.top+70||ar.bottom>br.bottom-24)tocBox.scrollTop+=ar.top-br.top-br.height*0.4}
+let spyT=0;addEventListener('scroll',()=>{if(!spyT)spyT=setTimeout(()=>{spyT=0;spy()},140)},{passive:true});
+addEventListener('scrollend',()=>spy());addEventListener('resize',()=>{tDirty=true},{passive:true});
+let tdT;function tocDirty(){clearTimeout(tdT);tdT=setTimeout(()=>{tDirty=true;spy()},250)}
+setTimeout(()=>spy(true),700);
+window.__rebuildToc=()=>{actN=null;renderToc();tDirty=true;spy(true)};
+window.__tocSpy=()=>spy(true);
+/* show / hide */
 if(!isMobile()&&LS.get('tocoff',false))body.classList.add('toc-off');
-$('#tocBtn')?.addEventListener('click',()=>{if(isMobile())body.classList.toggle('toc-open');else{body.classList.toggle('toc-off');LS.set('tocoff',body.classList.contains('toc-off'))}setTimeout(()=>LMAPS.forEach(m=>m.map.invalidateSize()),400)});
+$('#tocBtn')?.addEventListener('click',()=>{if(isMobile())body.classList.toggle('toc-open');else{body.classList.toggle('toc-off');LS.set('tocoff',body.classList.contains('toc-off'))}setTimeout(()=>{LMAPS.forEach(m=>m.map.invalidateSize());spy()},400)});
 $('.scrim')?.addEventListener('click',()=>body.classList.remove('toc-open'));
-toc?.addEventListener('click',e=>{if(e.target.tagName==='A'&&isMobile())body.classList.remove('toc-open')});
-const tf=$('#tocFilter');if(tf)tf.addEventListener('input',()=>{const v=tf.value.trim();$$('li',toc).forEach(li=>li.style.display=!v||li.textContent.includes(v)?'':'none')});
-let activeIO;
-function watchActive(){activeIO&&activeIO.disconnect();const links=new Map($$('a',toc||document.createElement('div')).map(a=>[a.getAttribute('href').slice(1),a]));const box=$('.toc');
-  activeIO=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const a=links.get(e.target.id);if(!a)return;links.forEach(x=>x.classList.remove('active'));a.classList.add('active');
-    if(box&&!isMobile()){const top=a.offsetTop-box.clientHeight/2;if(Math.abs(box.scrollTop-top)>box.clientHeight/3)box.scrollTo({top,behavior:RM?'auto':'smooth'})}})},{rootMargin:'-12% 0px -78% 0px'});
-  const obs=$$('h2.h, h3.h, .rq[id]',main).filter(h=>links.has(h.id));obs.forEach(h=>activeIO.observe(h));
-  /* exact fix-up after scrolling settles (binary search over heading positions; layout is clean so this is cheap) */
-  let st;const settleActive=()=>{const lim=innerHeight*0.25;let lo=0,hi=obs.length-1,ans=-1;while(lo<=hi){const m=(lo+hi)>>1;const t=obs[m].getBoundingClientRect().top;if(t<=lim){ans=m;lo=m+1}else hi=m-1}
-    const el=obs[Math.max(0,ans)];const a=el&&links.get(el.id);if(a&&!a.classList.contains('active')){links.forEach(x=>x.classList.remove('active'));a.classList.add('active');if(box&&!isMobile()){const top=a.offsetTop-box.clientHeight/2;box.scrollTo({top,behavior:'auto'})}}};
-  window.__settleActive=settleActive;removeEventListener('scroll',window.__stH||(()=>{}));window.__stH=()=>{clearTimeout(st);st=setTimeout(settleActive,140)};addEventListener('scroll',window.__stH,{passive:true});setTimeout(settleActive,900)}
-watchActive();
-window.__rebuildToc=()=>{watchActive()};
+/* drag to resize (mouse, pen, touch): edge handle · ←/→ keys · double-click resets */
+if(tocBox){const rs=document.createElement('div');rs.className='toc-rs';rs.tabIndex=0;rs.setAttribute('role','separator');rs.setAttribute('aria-orientation','vertical');rs.setAttribute('aria-label','调整目录宽度');rs.title='拖动调整目录宽度 · 双击恢复默认';rs.innerHTML='<i></i>';tocBox.appendChild(rs);
+  const MINW=220,maxW=()=>Math.round(innerWidth*(isMobile()?0.92:0.6));
+  const setW=(w,save)=>{w=Math.round(Math.max(MINW,Math.min(w,maxW())));root.style.setProperty('--toc-w',w+'px');rs.setAttribute('aria-valuenow',w);if(save)LS.set('tocw',w);return w};
+  const done=()=>{LMAPS.forEach(m=>m.map.invalidateSize());tDirty=true};
+  rs.addEventListener('pointerdown',e=>{if(e.button>0)return;e.preventDefault();try{rs.setPointerCapture(e.pointerId)}catch(_){}const x0=e.clientX,w0=tocBox.getBoundingClientRect().width;let w=w0,raf=0;body.classList.add('toc-drag');
+    const mv=ev=>{w=w0+ev.clientX-x0;if(!raf)raf=requestAnimationFrame(()=>{raf=0;setW(w)})};
+    const up=()=>{rs.removeEventListener('pointermove',mv);rs.removeEventListener('pointerup',up);rs.removeEventListener('pointercancel',up);cancelAnimationFrame(raf);body.classList.remove('toc-drag');if(Math.abs(w-w0)>2)setW(w,true);done()};
+    rs.addEventListener('pointermove',mv);rs.addEventListener('pointerup',up);rs.addEventListener('pointercancel',up)});
+  rs.addEventListener('dblclick',()=>{LS.set('tocw',0);root.style.removeProperty('--toc-w');rs.removeAttribute('aria-valuenow');done()});
+  rs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();setW(tocBox.getBoundingClientRect().width+(e.key==='ArrowRight'?24:-24),true);done()});
+  window.__tocSetW=w=>{setW(w,true);done()}}
 
 /* ---------- scroll: progress + floating nav cluster (one rAF per frame max) ---------- */
 const pg=$('.progress i'), fab=$('.fab'), fr=$('.fab .fr1'), fm=$('.fab-main');let ticking=false,lastTop=-1,dirY=0;
@@ -89,7 +128,7 @@ if(fab){const setOpen=o=>{fab.classList.toggle('open',o);fm.setAttribute('aria-e
 const hyq=[];let hyBusy=false;
 function hydrate(el){const t=el&&el.querySelector(':scope>template');if(!t){el&&el.classList.add('hy');return}
   t.replaceWith(t.content);el.classList.add('hy');initScope(el)}
-function initScope(sc){watchLz(sc);initTabs(sc);paintMemos(sc);stagger(sc);$$('.rv,.bars,.stats',sc).forEach(x=>rio.observe(x));initViz(sc);if(window.__onHydrate)window.__onHydrate(sc)}
+function initScope(sc){watchLz(sc);tocDirty();initTabs(sc);paintMemos(sc);stagger(sc);$$('.rv,.bars,.stats',sc).forEach(x=>rio.observe(x));initViz(sc);if(window.__onHydrate)window.__onHydrate(sc)}
 function hydrateAll(){let n;do{n=$$('.lz:not(.hy),details.lzd:not(.hy)');n.forEach(hydrate)}while(n.length)}
 function pump(){hyBusy=false;const t0=performance.now();while(hyq.length&&performance.now()-t0<8)hydrate(hyq.shift());if(hyq.length){hyBusy=true;requestAnimationFrame(pump)}}
 const lzio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){lzio.unobserve(e.target);hyq.push(e.target);if(!hyBusy){hyBusy=true;requestAnimationFrame(pump)}}}),{rootMargin:'1600px 0px'});

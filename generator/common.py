@@ -102,9 +102,11 @@ def mk(s, cmp=False, app=False):
                 tok=''.join(p if p.startswith('<') else CMP.sub(lambda m:f'<span class="u-cmp">{m.group(1)}</span>' if len(m.group(1))>5 else m.group(1),p) for p in parts)
         out.append(tok)
     return _post(''.join(out),app)
-BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');var R=matchMedia('(prefers-reduced-motion: reduce)').matches,C=window.CSS&&CSS.supports;if(g('glass')!=='off'&&g('motion')!=='off'&&!R&&(navigator.deviceMemory||8)>=4&&(navigator.hardwareConcurrency||8)>=4&&C&&(CSS.supports('backdrop-filter','blur(2px)')||CSS.supports('-webkit-backdrop-filter','blur(2px)')))d.classList.add('glass');}catch(e){}})();</script>'''
+BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');var w=g('tocw');if(w>=220)d.style.setProperty('--toc-w',w+'px');var R=matchMedia('(prefers-reduced-motion: reduce)').matches,C=window.CSS&&CSS.supports;if(g('glass')!=='off'&&g('motion')!=='off'&&!R&&(navigator.deviceMemory||8)>=4&&(navigator.hardwareConcurrency||8)>=4&&C&&(CSS.supports('backdrop-filter','blur(2px)')||CSS.supports('-webkit-backdrop-filter','blur(2px)')))d.classList.add('glass');}catch(e){}})();</script>'''
 MAPCSS='\n<link rel="stylesheet" href="assets/css/maps.css?v='+VERSION+'">'
 def page(fn,title,body,head='',js='',desc=''):
+    from toc import outline
+    body,tocdata=outline(fn,body)
     nav=''.join(f'<a href="{p}" class="{"on" if p==fn else ""}"><span class="ni">{i}</span>{t}</a>' for p,i,t in PAGES)
     sw=''.join(f'<button class="sw" data-pal="{k}" title="{n}" aria-label="配色：{n}" style="--s1:{a};--s2:{b};--s3:{c};--l:{PBASE[k][0]};--d:{PBASE[k][1]}"><span class="pv" aria-hidden="true"><i class="pv-l"><em></em><u></u><u></u></i><i class="pv-d"><em></em><u></u><u></u></i></span><span class="nm">{n}</span></button>' for k,n,a,b,c in PALETTES)
     from content_v2 import LEGEND, CALLOUTS
@@ -151,9 +153,10 @@ def page(fn,title,body,head='',js='',desc=''):
 </div>
 <div class="layout">
   <aside class="toc" aria-label="目录">
-    <h4>📑 本页目录</h4>
-    <input id="tocFilter" type="search" placeholder="筛选目录…">
-    <ol id="tocList"></ol>
+    <div class="toc-hd"><h4>📑 本页目录</h4><span class="toc-ctl"><button type="button" class="tc-b" data-tc="open" title="全部展开" aria-label="全部展开">⊞</button><button type="button" class="tc-b" data-tc="close" title="全部折叠" aria-label="全部折叠">⊟</button></span></div>
+    <input id="tocFilter" type="search" placeholder="筛选目录…" aria-label="筛选目录">
+    <ol id="tocList" class="tree"></ol>
+    <script type="application/json" id="tocData">{tocdata}</script>
   </aside>
   <main><div class="wrap">
 {body}
@@ -193,6 +196,9 @@ def lzd(summary,body,attrs=''):
     return f'<details class="lzd"{(" "+attrs) if attrs else ""}><summary>{summary}</summary><template>{body}</template></details>'
 def h2(t,icon,id=None,toc=None):
     return f'<h2 class="h rv"{f" id={chr(34)}{id}{chr(34)}" if id else ""}{f" data-toc={chr(34)}{esc(toc)}{chr(34)}" if toc else ""}><span class="ic">{icon}</span><span>{t}</span></h2>'
+def part(title,icon,id,sub=''):
+    """v3.3: level-1 outline band (numbered 一、二… by toc.outline)"""
+    return f'<div class="part rv" id="{id}" data-lv="1" data-toc="{esc(icon+' '+title)}"><span class="pi">{icon}</span><span class="pt">{title}</span>{f'<span class="ps">{sub}</span>' if sub else ''}</div>'
 def h3(t,id=None,toc=None):
     return f'<h3 class="h"{f" id={chr(34)}{id}{chr(34)}" if id else ""}{f" data-toc={chr(34)}{esc(toc)}{chr(34)}" if toc else ""}>{t}</h3>'
 def callout(kind,label,content,raw=False):
