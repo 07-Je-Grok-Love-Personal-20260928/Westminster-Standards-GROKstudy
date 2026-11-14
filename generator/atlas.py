@@ -181,18 +181,18 @@ def scene_london():
     return f'<figure class="scene sc-london"><div class="sc-wrap hscroll" tabindex="0" aria-label="情景图（窄屏可横向滑动）"><svg viewBox="0 0 640 250" role="img" aria-label="西敏文件的产生流程：委员会起草、全体辩论、附经文、呈交国会、苏格兰总会批准">{_t(320,34,"一份文件是怎样诞生的（1643–1648）","sc-title")}{g}<g class="sc-mv">{doc}</g></svg></div><figcaption class="muted small">📄 动画：文件从起草一路走到苏格兰总会批准。信仰告白1646年12月完成、1647年附经文；苏格兰总会1647年8月批准；大小要理问答1648年批准。</figcaption></figure>'
 def scene_dortwm():
     """两个会议的结构：国际 vs 三国"""
-    L=[('英格兰',-90),('苏格兰',-52),('普法尔茨',-14),('黑森',24),('拿骚',62),('不来梅',100),('瑞士',138),('日内瓦',176),('法国（缺席）',214)]
-    cx,cy,R=165,230,128; g=''
+    L=[('英格兰',-90),('苏格兰',-52),('普法尔茨',-14),('黑森',24),('拿骚',62),('不来梅',100),('瑞士',138),('日内瓦',176),('法国 ✕',214)]
+    cx,cy,R=168,236,100; g=''
     for i,(n,a) in enumerate(L):
         import math as _m
-        x=cx+R*_m.cos(_m.radians(a)); y=cy+R*_m.sin(_m.radians(a)); miss='缺席' in n
+        x=cx+R*_m.cos(_m.radians(a)); y=cy+R*_m.sin(_m.radians(a)); miss='✕' in n
         g+=f'<path class="sc-sp{" miss" if miss else ""}" pathLength="1" style="--i:{i}" d="M{x:.0f} {y:.0f}L{cx} {cy}"/><g class="sc-nd{" miss" if miss else ""}" style="--i:{i}"><circle cx="{x:.0f}" cy="{y:.0f}" r="9"/>{_t(round(x+(14 if x>=cx else -14)),round(y+6),n,"sc-s3","start" if x>=cx else "end")}</g>'
     left=f'<g>{g}<circle class="sc-hub" cx="{cx}" cy="{cy}" r="44"/>{_t(cx,cy-4,"⚖️ 多特","sc-h2")}{_t(cx,cy+20,"1618–1619","sc-s")}</g>'
-    rx=480
+    rx=482
     right=(f'<g class="sc-r"><circle class="sc-hub wa" cx="{rx}" cy="230" r="50"/>{_t(rx,226,"🏛️ 西敏","sc-h2")}{_t(rx,250,"1643–1649","sc-s")}'
            f'<g class="sc-box b1"><rect x="{rx-90}" y="66" width="180" height="56" rx="12"/>{_t(rx,92,"英格兰神学家","sc-h3")}{_t(rx,113,"最多121位牧师（投票）","sc-s")}</g><path class="sc-sp2" pathLength="1" d="M{rx} 122V180"/>'
            f'<g class="sc-box b2"><rect x="{rx-90}" y="338" width="180" height="56" rx="12"/>{_t(rx,364,"国会议员 30 位","sc-h3")}{_t(rx,385,"上院10 · 下院20（列席）","sc-s")}</g><path class="sc-sp2" pathLength="1" d="M{rx} 338V280"/>'
-                      f'<path class="sc-sp2 sco" pathLength="1" d="M{rx+130} 150Q{rx+90} 190 {rx+48} 214"/><g class="sc-box b4"><rect x="{rx+70}" y="112" width="96" height="44" rx="12"/>{_t(rx+118,140,"苏格兰专员","sc-s3")}</g></g>')
-    mid=f'<line class="sc-div" x1="330" y1="40" x2="330" y2="420"/>{_t(165,40,"国际性：各国教会来「会诊」","sc-title")}{_t(480,40,"三国性：国会召集、苏格兰参与","sc-title")}'
-    return f'<figure class="scene sc-dortwm"><div class="sc-wrap hscroll" tabindex="0" aria-label="情景图（窄屏可横向滑动）"><svg viewBox="0 0 640 430" role="img" aria-label="多特大会与西敏会议的组成对比">{mid}{left}{right}</svg></div><figcaption class="muted small">🧩 结构图：多特的外国代表来自英格兰、苏格兰、普法尔茨、黑森、拿骚、不来梅、瑞士各城与日内瓦；法国代表被国王禁止出境。西敏的苏格兰专员不投票，以本国教会专员身份参与。</figcaption></figure>'
+                      f'<path class="sc-sp2 sco" pathLength="1" d="M{rx+100} 196Q{rx+80} 214 {rx+50} 222"/><g class="sc-box b4"><rect x="{rx+52}" y="152" width="96" height="44" rx="12"/>{_t(rx+100,180,"苏格兰专员","sc-s3")}</g></g>')
+    mid=f'<line class="sc-div" x1="345" y1="56" x2="345" y2="420"/>{_t(172,40,"国际性：各国教会来「会诊」","sc-title")}{_t(490,40,"三国性：国会召集、苏格兰参与","sc-title")}'
+    return f'<figure class="scene sc-dortwm"><div class="sc-wrap sc-panels"><svg viewBox="0 18 345 412" role="img" aria-label="多特大会的组成：各国代表">{_t(172,40,"国际性：各国教会来「会诊」","sc-title")}{left}</svg><svg viewBox="345 18 295 412" role="img" aria-label="西敏会议的组成：英格兰神学家、国会议员、苏格兰专员">{_t(490,40,"三国性：国会召集、苏格兰参与","sc-title")}{right}</svg></div><figcaption class="muted small">🧩 结构图：多特的外国代表来自英格兰、苏格兰、普法尔茨、黑森、拿骚、不来梅、瑞士各城与日内瓦；法国代表被国王禁止出境。西敏的苏格兰专员不投票，以本国教会专员身份参与。</figcaption></figure>'
 SCENES={'brit':scene_brit,'london':scene_london,'dortwm':scene_dortwm}
