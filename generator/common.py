@@ -102,7 +102,7 @@ def mk(s, cmp=False, app=False):
                 tok=''.join(p if p.startswith('<') else CMP.sub(lambda m:f'<span class="u-cmp">{m.group(1)}</span>' if len(m.group(1))>5 else m.group(1),p) for p in parts)
         out.append(tok)
     return _post(''.join(out),app)
-BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');}catch(e){}})();</script>'''
+BOOT='''<script>(function(){try{var d=document.documentElement,g=function(k){var v=localStorage.getItem('wsg_'+k);return v?JSON.parse(v):null};var m=g('mode')||'auto';var t=m==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):m;d.dataset.theme=t;d.dataset.palette=g('palette')||'aurora';if(g('motion')==='off')d.classList.add('no-motion');var R=matchMedia('(prefers-reduced-motion: reduce)').matches,C=window.CSS&&CSS.supports;if(g('glass')!=='off'&&g('motion')!=='off'&&!R&&(navigator.deviceMemory||8)>=4&&(navigator.hardwareConcurrency||8)>=4&&C&&(CSS.supports('backdrop-filter','blur(2px)')||CSS.supports('-webkit-backdrop-filter','blur(2px)')))d.classList.add('glass');}catch(e){}})();</script>'''
 MAPCSS='\n<link rel="stylesheet" href="assets/css/maps.css?v='+VERSION+'">'
 def page(fn,title,body,head='',js='',desc=''):
     nav=''.join(f'<a href="{p}" class="{"on" if p==fn else ""}"><span class="ni">{i}</span>{t}</a>' for p,i,t in PAGES)
@@ -140,11 +140,13 @@ def page(fn,title,body,head='',js='',desc=''):
 <div class="pop" id="themePanel" role="dialog" aria-label="主题">
   <h4>🎨 配色主题</h4><div class="swatches">{sw}</div>
   <h4>🌗 明暗</h4><div class="seg" id="modeSeg"><button data-mode="light">☀️ 浅色</button><button data-mode="dark">🌙 深色</button><button data-mode="auto">🖥️ 跟随系统</button></div>
-  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="motion">✨ 动画效果</button></div>
-  <p class="muted small">设置保存在本机浏览器。全站使用浏览器原生滚动（手机、触控板最顺滑）。</p>
+  <h4>⚙️ 体验</h4><div class="seg" id="optSeg"><button data-opt="motion">✨ 动画效果</button><button data-opt="glass">🧊 毛玻璃</button></div>
+  <h4>🖍️ 读与背</h4><div class="seg"><button data-opt="skim">🔦 重点模式</button><button data-opt="cloze">🙈 遮挡背诵</button></div>
+  <p class="muted small">设置保存在本机浏览器。全站使用浏览器原生滚动（手机、触控板最顺滑）；毛玻璃只用于导航按钮、目录标题和面板等小元素，低配设备或「减少动态效果」时自动关闭。</p>
 </div>
 <div class="pop" id="legendPanel" role="dialog" aria-label="标注图例">
-  <h4>🖍️ 标注系统（全站统一）</h4><ul class="lglist">{lg}</ul>
+  <h4>🖍️ 标注系统（全站统一）</h4><div class="lgmodes"><button data-opt="skim">🔦 重点模式<small>只亮标注，快速复习</small></button><button data-opt="cloze">🙈 遮挡背诵<small>荧光/定义/日期变空格，点一下揭晓</small></button></div><ul class="lglist">{lg}</ul>
+  <h4>🧠 用标注记忆：三遍法</h4><ol class="lgsteps"><li><b>读</b>：先只看<mark>黄色荧光</mark>与<span class="u-key">双下划线</span>，抓结论与论证。</li><li><b>扫</b>：开「🔦 重点模式」，只读彩色标注，30 秒复述本节。</li><li><b>背</b>：开「🙈 遮挡背诵」，先说出空格内容，再点开核对。</li></ol>
   <h4>🧩 提示框</h4><ul class="lglist two">{lc}</ul>
 </div>
 <div class="layout">

@@ -22,9 +22,17 @@ const LMAPS=[];
 applyMode();applyPalette(LS.get('palette','aurora'));
 $$('.sw').forEach(b=>b.addEventListener('click',()=>{LS.set('palette',b.dataset.pal);applyPalette(b.dataset.pal);themeChanged()}));
 $$('#modeSeg button').forEach(b=>b.addEventListener('click',()=>{LS.set('mode',b.dataset.mode);applyMode();themeChanged()}));
-function syncOpts(){$$('#optSeg button').forEach(b=>{const k=b.dataset.opt;b.classList.toggle('on',LS.get('motion','on')!=='off')})}
-$$('#optSeg button').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.opt;
-  {const off=LS.get('motion','on')!=='off';LS.set('motion',off?'off':'on');root.classList.toggle('no-motion',off)}syncOpts()}));
+/* v3.2 options: motion · glass (small fixed elements only; off on low-end / reduced-motion) · skim (重点模式) · cloze (遮挡背诵) */
+const GLASS_OK=()=>!RM&&(CSS.supports('backdrop-filter','blur(2px)')||CSS.supports('-webkit-backdrop-filter','blur(2px)'))&&(navigator.deviceMemory||8)>=4&&(navigator.hardwareConcurrency||8)>=4;
+const OPTS={motion:{get:()=>LS.get('motion','on')!=='off',set:v=>{LS.set('motion',v?'on':'off');root.classList.toggle('no-motion',!v);applyGlass()}},
+  glass:{get:()=>LS.get('glass','on')!=='off',set:v=>{LS.set('glass',v?'on':'off');applyGlass()}},
+  skim:{get:()=>root.classList.contains('skim'),set:v=>{root.classList.toggle('skim',v);v&&OPTS.cloze.get()&&OPTS.cloze.set(false)}},
+  cloze:{get:()=>root.classList.contains('cloze'),set:v=>{root.classList.toggle('cloze',v);if(!v)$$('.rev').forEach(e=>e.classList.remove('rev'));v&&OPTS.skim.get()&&OPTS.skim.set(false)}}};
+function applyGlass(){root.classList.toggle('glass',GLASS_OK()&&OPTS.glass.get()&&OPTS.motion.get())}
+function syncOpts(){$$('[data-opt]').forEach(b=>{const o=OPTS[b.dataset.opt];if(o){const on=o.get();b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)}})}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-opt]');if(b&&OPTS[b.dataset.opt]){const o=OPTS[b.dataset.opt];o.set(!o.get());syncOpts();return}
+  if(root.classList.contains('cloze')){const m=e.target.closest('main :is(mark,.u-key,.m-blue,.m-green,.hl-date)');if(m){m.classList.toggle('rev');e.preventDefault()}}});
+applyGlass();
 syncOpts();
 /* popovers */
 const pops=[['themeBtn','themePanel'],['legendBtn','legendPanel']];
