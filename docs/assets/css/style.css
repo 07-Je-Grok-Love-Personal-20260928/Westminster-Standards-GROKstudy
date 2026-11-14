@@ -564,3 +564,6 @@ body.toc-off .toc-rs{display:none}
 .toc .tn,.toc li.path>.tr>a{color:color-mix(in srgb,var(--a1) 62%,var(--ink))}
 html[data-theme=dark] .toc .tn,html[data-theme=dark] .toc li.path>.tr>a{color:color-mix(in srgb,var(--a1) 42%,#fff)}
 .toc li.t1>.tr>a .tn{color:#fff}
+/* v3.3: a very wide TOC (up to 60vw) can make main narrow — grid cells may shrink and long words (URLs) wrap instead of overflowing */
+.grid>*{min-width:0}
+.card{overflow-wrap:break-word}
