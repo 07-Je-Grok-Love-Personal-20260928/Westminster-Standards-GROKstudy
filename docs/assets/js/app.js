@@ -81,7 +81,7 @@ if(fab){const setOpen=o=>{fab.classList.toggle('open',o);fm.setAttribute('aria-e
 const hyq=[];let hyBusy=false;
 function hydrate(el){const t=el&&el.querySelector(':scope>template');if(!t){el&&el.classList.add('hy');return}
   t.replaceWith(t.content);el.classList.add('hy');initScope(el)}
-function initScope(sc){watchLz(sc);initTabs(sc);paintMemos(sc);stagger(sc);$$('.rv,.bars,.stats',sc).forEach(x=>rio.observe(x));if(window.__onHydrate)window.__onHydrate(sc)}
+function initScope(sc){watchLz(sc);initTabs(sc);paintMemos(sc);stagger(sc);$$('.rv,.bars,.stats',sc).forEach(x=>rio.observe(x));initViz(sc);if(window.__onHydrate)window.__onHydrate(sc)}
 function hydrateAll(){let n;do{n=$$('.lz:not(.hy),details.lzd:not(.hy)');n.forEach(hydrate)}while(n.length)}
 function pump(){hyBusy=false;const t0=performance.now();while(hyq.length&&performance.now()-t0<8)hydrate(hyq.shift());if(hyq.length){hyBusy=true;requestAnimationFrame(pump)}}
 const lzio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){lzio.unobserve(e.target);hyq.push(e.target);if(!hyBusy){hyBusy=true;requestAnimationFrame(pump)}}}),{rootMargin:'1600px 0px'});
@@ -144,75 +144,128 @@ const mEls=$$('.mermaid:not([data-done])');if(mEls.length){mEls.forEach(el=>mmSr
 /* ---------- v3.0 maps: hand-drawn concept maps + live Leaflet maps with tile failover ---------- */
 const NM=()=>RM||root.classList.contains('no-motion');
 const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-/* keyless providers only (terms checked 2026-10): OSM standard, OSM France HOT, OpenTopoMap. No tile prefetching. */
+/* v3.2: 13 keyless providers in 4 groups. Auto mode races one probe tile per provider (fastest reachable first, cached per session),
+   then fails over down that ranking; the self-hosted Natural Earth layer is always underneath. Gaode uses GCJ-02: markers are shifted to match. */
+const OSMA='© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
+const CARTOA=OSMA+' © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>';
+const ESRIA=t=>'Tiles © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>'+(t?' — '+t:'');
+const GDA='© <a href="https://www.amap.com/" target="_blank" rel="noopener">高德地图 AutoNavi</a>';
 const TILES=[
- {id:'osm',n:'OpenStreetMap',u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',o:{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'}},
- {id:'hot',n:'OSM France · HOT',u:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · 风格 <a href="https://www.hotosm.org/" target="_blank" rel="noopener">HOT</a> · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
- {id:'topo',n:'OpenTopoMap',u:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',o:{maxZoom:17,subdomains:'abc',attribution:'Kartendaten: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC-BY-SA</a>)'}}];
+ {id:'carto',g:'w',n:'CARTO Voyager（彩色）',u:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
+ {id:'esri',g:'w',n:'Esri World Street',u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Source: Esri, HERE, Garmin, USGS, NGA, OpenStreetMap contributors')}},
+ {id:'osm',g:'w',n:'OpenStreetMap',u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',o:{maxZoom:19,attribution:OSMA}},
+ {id:'osmde',g:'w',n:'OpenStreetMap 德国',u:'https://tile.openstreetmap.de/{z}/{x}/{y}.png',o:{maxZoom:18,attribution:OSMA}},
+ {id:'hot',g:'w',n:'OSM France · HOT',u:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · 风格 <a href="https://www.hotosm.org/" target="_blank" rel="noopener">HOT</a> · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
+ {id:'cyclosm',g:'w',n:'CyclOSM',u:'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · <a href="https://www.cyclosm.org" target="_blank" rel="noopener">CyclOSM</a>'}},
+ {id:'cartolight',g:'w',n:'CARTO Positron（浅色）',u:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
+ {id:'cartodark',g:'w',n:'CARTO Dark Matter（深色）',u:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
+ {id:'natgeo',g:'t',n:'Esri 国家地理风格',u:'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:16,attribution:ESRIA('National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')}},
+ {id:'topo',g:'t',n:'OpenTopoMap（地形）',u:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',o:{maxZoom:17,subdomains:'abc',attribution:'Kartendaten: '+OSMA+', SRTM | Kartendarstellung: © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC-BY-SA</a>)'}},
+ {id:'esrisat',g:'t',n:'Esri 卫星影像',u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community')}},
+ {id:'gaode',g:'c',gcj:1,n:'高德地图（中文标注）',u:'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',o:{maxZoom:18,minZoom:3,subdomains:'1234',attribution:GDA}},
+ {id:'gaodesat',g:'c',gcj:1,n:'高德卫星影像',u:'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',o:{maxZoom:18,minZoom:3,subdomains:'1234',attribution:GDA}}];
+const TGROUP={w:'🌍 全球街道图',t:'🏔️ 地形 · 卫星',c:'🇨🇳 中国大陆友好（GCJ-02，已自动校正标记）'};
+const AUTO_IDS=['carto','esri','osm','osmde','hot','gaode','natgeo','topo','cyclosm'];
 window.__tileLog=[];
+/* WGS-84 -> GCJ-02 (only inside mainland China; elsewhere the two are identical) */
+function wgs2gcj(lat,lng){const out=lng<72.004||lng>137.8347||lat<0.8293||lat>55.8271;if(out)return [lat,lng];
+  const a=6378245,ee=.00669342162296594323,PI=Math.PI,x=lng-105,y=lat-35;
+  let dLat=-100+2*x+3*y+.2*y*y+.1*x*y+.2*Math.sqrt(Math.abs(x))+(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3+(20*Math.sin(y*PI)+40*Math.sin(y/3*PI))*2/3+(160*Math.sin(y/12*PI)+320*Math.sin(y*PI/30))*2/3;
+  let dLng=300+x+2*y+.1*x*x+.1*x*y+.1*Math.sqrt(Math.abs(x))+(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3+(20*Math.sin(x*PI)+40*Math.sin(x/3*PI))*2/3+(150*Math.sin(x/12*PI)+300*Math.sin(x/30*PI))*2/3;
+  const r=lat/180*PI;let m=Math.sin(r);m=1-ee*m*m;const s=Math.sqrt(m);dLat=dLat*180/((a*(1-ee))/(m*s)*PI);dLng=dLng*180/(a/s*Math.cos(r)*PI);return [lat+dLat,lng+dLng]}
+/* one probe tile per provider, in parallel; fastest reachable first. Cached for the session. */
+let rankP=null;
+function tileRank(lat,lng){if(rankP)return rankP;
+  try{const c=JSON.parse(sessionStorage.getItem('wsg_tilerank')||'null');if(c&&c.t>Date.now()-30*60e3)return rankP=Promise.resolve(c.r)}catch(e){}
+  const z=4,n=1<<z,x=Math.floor((lng+180)/360*n),la=lat*Math.PI/180,y=Math.floor((1-Math.log(Math.tan(la)+1/Math.cos(la))/Math.PI)/2*n);
+  const T0=performance.now(),cand=TILES.filter(t=>AUTO_IDS.includes(t.id));
+  rankP=new Promise(res=>{const got=[];let done=0,fin=false;
+    const finish=()=>{if(fin)return;fin=true;const ok=got.sort((a,b)=>a[1]-b[1]).map(g=>g[0]);const rest=AUTO_IDS.filter(i=>!ok.includes(i));const r={ok,rest,ms:got.map(g=>[g[0],Math.round(g[1])])};
+      window.__tileLog.push(['rank',JSON.stringify(r.ms)]);if(ok.length)try{sessionStorage.setItem('wsg_tilerank',JSON.stringify({t:Date.now(),r}))}catch(e){}res(r)};
+    cand.forEach(t=>{const im=new Image();im.referrerPolicy='strict-origin-when-cross-origin';const sd=(t.o.subdomains||'a')[0];
+      const tm=setTimeout(()=>{im.src='';end()},window.__probeTimeout||4000);
+      function end(){clearTimeout(tm);done++;if(done===cand.length)finish();else if(got.length>=3)setTimeout(finish,250)}
+      im.onload=()=>{got.push([t.id,performance.now()-T0]);end()};im.onerror=end;
+      im.src=t.u.replace('{s}',sd).replace('{z}',z).replace('{x}',x).replace('{y}',y).replace('{r}','')})});
+  return rankP}
+
 let leafletP=null;const getLeaflet=()=>leafletP||(leafletP=(loadCSS('assets/vendor/leaflet/leaflet.css'),loadScript('assets/vendor/leaflet/leaflet.js').then(()=>window.L)));
 const geoP={};const getGeo=b=>geoP[b]||(geoP[b]=fetch('assets/geo/'+b+'.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}));
 const yearOf=w=>{const m=String(w).match(/\d{3,4}/);return m?+m[0]:9999};
 function curve(a,b,bend){const n=24,mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],cx=mx-dy*bend,cy=my+dx*bend,pts=[];for(let i=0;i<=n;i++){const t=i/n,u=1-t;pts.push([u*u*a[0]+2*u*t*cx+t*t*b[0],u*u*a[1]+2*u*t*cy+t*t*b[1]])}return pts}
+const SEAS={eu:[[56.2,3.2,'北 海'],[46.5,-9.5,'大 西 洋'],[54.6,-12.5,'爱尔兰海外'],[40.5,5.5,'地 中 海'],[56.5,19.5,'波罗的海']],asia:[[29.5,125.5,'东 海'],[35.6,123.6,'黄 海'],[20.8,116,'南 海'],[24,121.9,'台 湾'],[38.8,120.8,'渤海']],world:[[33,-42,'大 西 洋'],[30,-140,'太 平 洋'],[25,165,'太 平 洋'],[-5,75,'印 度 洋'],[48,-38,'北 大 西 洋']]};
 function liveMap(box,data,onPick){
   const el=$('.lmap',box);el.textContent='🗺️ 地图加载中…';
   return getLeaflet().then(L=>{el.textContent='';const coarse=matchMedia('(pointer:coarse)').matches;
     const map=L.map(el,{zoomSnap:.5,scrollWheelZoom:false,dragging:!coarse,tap:false,worldCopyJump:true,preferCanvas:false});
-    map.createPane('basePane').style.zIndex=150;const rend=L.canvas({pane:'basePane',padding:.3});
+    map.createPane('basePane').style.zIndex=150;map.createPane('seaPane').style.zIndex=160;map.getPane('seaPane').style.pointerEvents='none';
+    const rend=L.canvas({pane:'basePane',padding:.3});
     map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
-    map.attributionControl.addAttribution('底图 <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>（公有领域）');
-    const st={map,base:null,layer:null,idx:-1,ok:0,err:0,timer:0};
-    /* self-hosted vector base (never fails): Natural Earth land/rivers/lakes, or the Thames for the London map */
+    map.attributionControl.addAttribution('离线底图 <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>（公有领域）');
+    const st={map,base:null,layer:null,idx:-1,ok:0,err:0,timer:0,gcj:false,order:[]};
+    /* self-hosted vector base (never fails): Natural Earth land/rivers/lakes + graticule + sea names, or the Thames for the London map */
     function baseStyle(f){const k=f&&f.properties&&f.properties.k;const land=probe('var(--geo-land)'),coast=probe('var(--geo-coast)'),riv=probe('var(--geo-river)');
-      return k==='river'?{color:riv,weight:1.2,opacity:.8,fill:false}:k==='lake'?{color:riv,weight:.6,fillColor:probe('var(--geo-sea)'),fillOpacity:1}:k==='thames'?{color:riv,weight:22,opacity:.55,lineCap:'round'}:{color:coast,weight:1,fillColor:land,fillOpacity:1}}
+      return k==='river'?{color:riv,weight:1.2,opacity:.8,fill:false}:k==='lake'?{color:riv,weight:.6,fillColor:probe('var(--geo-sea)'),fillOpacity:1}:k==='thames'?{color:riv,weight:22,opacity:.55,lineCap:'round'}:k==='grat'?{color:coast,weight:.6,opacity:.22,dashArray:'3 5',fill:false}:{color:coast,weight:1.1,fillColor:land,fillOpacity:1}}
     el.style.background=probe('var(--geo-sea)');
     const addBase=gj=>{st.base=L.geoJSON(gj,{renderer:rend,pane:'basePane',interactive:false,style:baseStyle}).addTo(map)};
     if(data.base==='london'){addBase({type:'Feature',properties:{k:'thames'},geometry:{type:'LineString',coordinates:(data.thames||[]).map(p=>[p[1],p[0]])}})}
-    else getGeo(data.base).then(addBase).catch(e=>console.warn('geo base',e));
-    st.restyle=()=>{el.style.background=probe('var(--geo-sea)');st.base&&st.base.setStyle(baseStyle);drawRoutes()};
-    /* places + routes */
+    else{const step=data.base==='world'?15:5,gr=[];for(let lo=-180;lo<=180;lo+=step)gr.push([[lo,-80],[lo,84]]);for(let la=-75;la<=80;la+=step)gr.push([[-180,la],[180,la]]);
+      getGeo(data.base).then(gj=>{gj.features.unshift({type:'Feature',properties:{k:'grat'},geometry:{type:'MultiLineString',coordinates:gr}});addBase(gj)}).catch(e=>console.warn('geo base',e));
+      (SEAS[data.base]||[]).forEach(s=>L.marker([s[0],s[1]],{pane:'seaPane',interactive:false,keyboard:false,icon:L.divIcon({className:'lsea',html:s[2],iconSize:[120,20],iconAnchor:[60,10]})}).addTo(map))}
+    st.restyle=()=>{el.style.background=probe('var(--geo-sea)');st.base&&st.base.setStyle(baseStyle);drawRoutes();if(sel.value==='auto'&&st.idx>=0){const want=pref(TILES[st.idx].id);if(want!==TILES[st.idx].id)use(TILES.findIndex(t=>t.id===want))}};
+    /* places + routes (shifted to GCJ-02 while a Gaode layer is shown) */
+    const ll=p=>st.gcj?wgs2gcj(p.lat,p.lng):[p.lat,p.lng];
     const P=new Map(data.places.map((p,i)=>[p.k,Object.assign({i},p)]));
-    const mk=data.places.map((p,i)=>L.marker([p.lat,p.lng],{title:p.n,riseOnHover:true,icon:L.divIcon({className:'',html:`<div class="lpin" style="--c:${p.c}">${p.i}</div>`,iconSize:[28,28],iconAnchor:[14,14]})})
+    const mk=data.places.map((p,i)=>L.marker(ll(p),{title:p.n,riseOnHover:true,icon:L.divIcon({className:'',html:`<div class="lpin" style="--c:${p.c}">${p.i}</div>`,iconSize:[28,28],iconAnchor:[14,14]})})
       .bindTooltip(escH(p.n),{className:'ltip',direction:'right',offset:[12,0]})
       .bindPopup(`<b>${p.i} ${escH(p.n)}</b><br><span class="hl-date">${escH(p.w)}</span><p style="margin:.4em 0 0">${escH(p.d)}</p>`,{maxWidth:260})
       .on('click',()=>onPick(i,true)).addTo(map));
     let rl=null;function drawRoutes(){rl&&map.removeLayer(rl);const cs=getComputedStyle(root),c1=cs.getPropertyValue('--a1').trim(),c2=cs.getPropertyValue('--a2').trim(),cb=cs.getPropertyValue('--bad').trim();
       rl=L.layerGroup(data.routes.map(r=>{const a=P.get(r.a),b=P.get(r.b);if(!a||!b)return null;const col=r.k==='march'?cb:r.k==='flow'?c1:c2;
-        return L.polyline(curve([a.lat,a.lng],[b.lat,b.lng],r.k==='sea'?.22:.16),{color:col,weight:3,opacity:.85,dashArray:r.k==='sea'?'6 7':null,interactive:!!r.l}).bindTooltip(escH(r.l||''),{sticky:true,className:'ltip'})}).filter(Boolean)).addTo(map)}
+        return L.polyline(curve(ll(a),ll(b),r.k==='sea'?.22:.16),{color:col,weight:3,opacity:.85,dashArray:r.k==='sea'?'6 7':null,interactive:!!r.l}).bindTooltip(escH(r.l||''),{sticky:true,className:'ltip'})}).filter(Boolean)).addTo(map)}
+    function relocate(g){if(st.gcj===g)return;st.gcj=g;mk.forEach((m,i)=>m.setLatLng(ll(data.places[i])));drawRoutes()}
     drawRoutes();
     const b=L.latLngBounds(data.places.map(p=>[p.lat,p.lng]));map.fitBounds(b,{padding:[30,30],maxZoom:data.base==='london'?17:7});
-    /* control: provider select + live status */
-    const Ctl=L.Control.extend({onAdd(){const d=L.DomUtil.create('div','mctl');d.innerHTML='<span class="mst wait">⏳ 准备瓦片…</span><select aria-label="在线瓦片来源"><option value="auto">自动（失败时切换）</option>'+TILES.map(t=>`<option value="${t.id}">${t.n}</option>`).join('')+'<option value="none">仅离线底图</option></select>';L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d}});
+    /* control: grouped provider select + live status + retry */
+    const opts=Object.entries(TGROUP).map(([g,n])=>`<optgroup label="${n}">`+TILES.filter(t=>t.g===g).map(t=>`<option value="${t.id}">${t.n}</option>`).join('')+'</optgroup>').join('');
+    const Ctl=L.Control.extend({onAdd(){const d=L.DomUtil.create('div','mctl');d.innerHTML='<span class="mst wait">⏳ 准备瓦片…</span><div class="mrow"><select aria-label="地图底图来源"><option value="auto">⚡ 自动：测速选最快，失败自动切换</option>'+opts+'<optgroup label="🧭 离线"><option value="none">仅离线底图（Natural Earth）</option></optgroup></select><button type="button" class="mre" title="重新测速并重试" aria-label="重新测速并重试">↻</button></div>';L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d}});
     const ctl=new Ctl({position:'topright'}).addTo(map),cd=ctl.getContainer(),stEl=$('.mst',cd),sel=$('select',cd);
     const status=(c,t)=>{stEl.className='mst '+c;stEl.textContent=t;box.dataset.tiles=c+':'+(st.idx>=0?TILES[st.idx].id:'none')};
     const T=()=>window.__tileTimeout||6000;
+    /* dark theme: prefer the dark CARTO style when CARTO is the reachable host */
+    const pref=id=>{const dk=root.dataset.theme==='dark';return dk&&id==='carto'?'cartodark':!dk&&id==='cartodark'?'carto':id};
     function clear(){clearTimeout(st.timer);if(st.layer){const ly=st.layer;st.layer=null;map.removeLayer(ly);ly.off('tileload tileerror')}}
-    function use(i){clear();const mode=sel.value;
-      if(i<0||i>=TILES.length){st.idx=-1;status('off',mode==='none'?'🧭 仅离线底图（已手动选择）':'🧭 离线底图（在线瓦片均不可用）');window.__tileLog.push([data.base,'offline']);return}
-      st.idx=i;st.ok=0;st.err=0;const t=TILES[i];status('wait','⏳ 正在连接 '+t.n+'…');
-      const ly=L.tileLayer(t.u,Object.assign({updateWhenIdle:true,keepBuffer:1,referrerPolicy:'strict-origin-when-cross-origin'},t.o));st.layer=ly;
-      ly.on('tileload',()=>{if(st.layer!==ly)return;st.ok++;if(st.ok===1){clearTimeout(st.timer);status('on','✅ 在线瓦片：'+t.n);window.__tileLog.push([data.base,t.id,'ok'])}});
+    function off(msg){clear();st.idx=-1;relocate(false);status('off',msg);window.__tileLog.push([data.base,'offline'])}
+    function use(i){clear();
+      if(i<0||i>=TILES.length){off(sel.value==='none'?'🧭 仅离线底图（已手动选择）':'🧭 离线底图（在线地图均不可用，可点 ↻ 重试）');return}
+      st.idx=i;st.ok=0;st.err=0;const t=TILES[i];status('wait','⏳ 正在连接 '+t.n+'…');relocate(!!t.gcj);
+      const ly=L.tileLayer(t.u,Object.assign({updateWhenIdle:true,keepBuffer:1,referrerPolicy:'strict-origin-when-cross-origin',detectRetina:false},t.o));st.layer=ly;
+      ly.on('tileload',()=>{if(st.layer!==ly)return;st.ok++;if(st.ok===1){clearTimeout(st.timer);status('on','✅ '+t.n+(sel.value==='auto'?'（自动）':''));window.__tileLog.push([data.base,t.id,'ok'])}});
       ly.on('tileerror',()=>{if(st.layer!==ly)return;st.err++;if((st.ok===0&&st.err>=3)||st.err-st.ok>=8)fail('error')});
       st.timer=setTimeout(()=>{if(st.layer===ly&&st.ok===0)fail('timeout')},T());ly.addTo(map)}
+    const nextAuto=()=>{const k=st.order.shift();return k?TILES.findIndex(t=>t.id===pref(k)):-1};
     function fail(why){const t=TILES[st.idx];window.__tileLog.push([data.base,t&&t.id,why]);
-      if(sel.value==='auto')use(st.idx+1);else{clear();st.idx=-1;status('off','❌ '+(t?t.n:'')+' 不可用，已保留离线底图')}}
-    function apply(){const v=sel.value;v==='auto'?use(0):v==='none'?use(-1):use(TILES.findIndex(t=>t.id===v))}
+      if(sel.value==='auto')use(nextAuto());else off('❌ '+(t?t.n:'')+' 暂不可用，已显示离线底图；可改选其他来源');}
+    function auto(){status('wait','⚡ 正在测速 '+AUTO_IDS.length+' 个地图源…');const c=map.getCenter();
+      tileRank(c.lat,c.lng).then(r=>{if(sel.value!=='auto')return;st.order=r.ok.concat(r.rest);use(nextAuto())})}
+    function apply(){const v=sel.value;v==='auto'?auto():v==='none'?use(-1):use(TILES.findIndex(t=>t.id===v))}
     sel.value=LS.get('tiles','auto');if(![...sel.options].some(o=>o.value===sel.value))sel.value='auto';
-    sel.addEventListener('change',()=>{LS.set('tiles',sel.value);apply()});apply();
+    sel.addEventListener('change',()=>{LS.set('tiles',sel.value);apply()});
+    $('.mre',cd).addEventListener('click',()=>{rankP=null;try{sessionStorage.removeItem('wsg_tilerank')}catch(e){}apply()});apply();
     /* wheel zoom / drag only after the user engages the map (no scroll-jacking) */
     if(coarse){const h=L.DomUtil.create('div','lhint',el);h.textContent='👆 点按地图以启用拖动；双指缩放';map.once('click',()=>{map.dragging.enable();h.remove()})}
     map.on('focus click',()=>map.scrollWheelZoom.enable());map.on('blur',()=>map.scrollWheelZoom.disable());
     st.focus=(i,pan)=>{const m=mk[i];if(!m)return;if(pan)map.panTo(m.getLatLng(),{animate:!NM()});m.openPopup()};
     LMAPS.push(st);return st})
-   .catch(e=>{console.warn(e);el.innerHTML='<p style="padding:20px">交互地图组件加载失败；请使用「🎨 手绘示意图」（离线可用）。</p>'})}
+   .catch(e=>{console.warn(e);el.innerHTML='<p style="padding:20px">交互地图组件加载失败；请使用「🎨 手绘示意图」或「🎬 情景讲解」（离线可用）。</p>'})}
 function initMapbox(box){
   let data;try{data=JSON.parse($('.mdata',box).textContent)}catch(e){return}
-  const cm=$('.cmap',box),pins=$$('.pin',box),info=$('.minfo',box),lis=$$('.mplaces li',box),tabs=$$('.mtabs [data-v]',box),views={c:$('.mv-c',box),l:$('.mv-l',box)},play=$('.mplay',box);
+  const cm=$('.cmap',box),pins=$$('.pin',box),info=$('.minfo',box),lis=$$('.mplaces li',box),tabs=$$('.mtabs [data-v]',box),views={c:$('.mv-c',box),s:$('.mv-s',box),l:$('.mv-l',box)},play=$('.mplay',box);
   let live=null,liveP=null,cur=-1,timer=0;
   function show(i,fromMap){const p=data.places[i];if(!p)return;cur=i;pins.forEach((x,j)=>x.classList.toggle('on',j===i));lis.forEach((x,j)=>x.classList.toggle('on',j===i));
     info.style.setProperty('--c',p.c);info.innerHTML=`<div class="mi-h"><b>${p.i} ${escH(p.n)}</b><span class="hl-date">${escH(p.w)}</span><span class="muted small">${i+1} / ${data.places.length}</span></div><div>${escH(p.d)}</div>`;
     if(live&&!fromMap&&views.l.classList.contains('on'))live.focus(i,true)}
-  function view(v){tabs.forEach(t=>{const on=t.dataset.v===v;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});views.c.classList.toggle('on',v==='c');views.l.classList.toggle('on',v==='l');
+  function view(v){tabs.forEach(t=>{const on=t.dataset.v===v;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});Object.entries(views).forEach(([k,e])=>e&&e.classList.toggle('on',k===v));
     if(v==='l'){if(!liveP)liveP=liveMap(box,data,(i,fm)=>show(i,fm)).then(s=>{live=s||null;if(live&&cur>=0)live.focus(cur,false)});else live&&live.map.invalidateSize()}}
   tabs.forEach(t=>t.addEventListener('click',()=>view(t.dataset.v)));
   pins.forEach(p=>p.addEventListener('click',()=>{stop();show(+p.dataset.i)}));
@@ -223,6 +276,24 @@ function initMapbox(box){
   if(cm){const io=new IntersectionObserver(es=>es.forEach(e=>{cm.classList.toggle('play',e.isIntersecting);if(e.isIntersecting)cm.classList.add('seen')}),{rootMargin:'0px 0px -10% 0px'});io.observe(cm)}
 }
 $$('.mapbox').forEach(initMapbox);
+/* v3.2 情景讲解：story reels cycle a spotlight only while on screen; animated scenes start when seen */
+function initViz(sc){$$('.story:not(.inited)',sc).forEach(sr=>{sr.classList.add('inited');const li=$$('.st-reel li',sr),bar=$('.st-bar i',sr);let k=-1,t=0;
+  const go=i=>{k=i%li.length;li.forEach((x,j)=>{x.classList.toggle('cur',j===k);x.classList.toggle('past',j<k)});bar&&(bar.style.transform=`scaleX(${(k+1)/li.length})`)};
+  li.forEach((x,i)=>x.addEventListener('click',()=>{clearInterval(t);t=0;go(i)}));
+  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){sr.classList.add('seen');if(!NM()&&!t){go(k<0?0:k);t=setInterval(()=>go(k+1),2600)}else if(NM())go(li.length-1)}else{clearInterval(t);t=0}}),{rootMargin:'0px 0px -12% 0px'}).observe(sr)});
+$$('.scene:not(.inited)',sc).forEach(x=>{x.classList.add('inited');new IntersectionObserver(es=>es.forEach(e=>{x.classList.toggle('run',e.isIntersecting);if(e.isIntersecting)x.classList.add('seen')}),{rootMargin:'0px 0px -10% 0px'}).observe(x)});}
+initViz(document);
+/* v3.2 地图源体检: probe every provider once on the user's own network */
+$$('.tilecheck').forEach(tc=>{const btn=$('.tc-run',tc),out=$('.tc-out',tc);btn.addEventListener('click',()=>{btn.disabled=true;btn.textContent='⏳ 测速中…';
+  const z=4,x=8,y=5,T0=performance.now(),res={};
+  out.innerHTML='<ul class="tc-list">'+TILES.map(t=>`<li data-id="${t.id}"><span class="tc-s">⏳</span><b>${escH(t.n)}</b><span class="tc-g">${escH(TGROUP[t.g].split('（')[0])}</span><span class="tc-ms"></span></li>`).join('')+'<li><span class="tc-s">✅</span><b>Natural Earth 离线底图</b><span class="tc-g">🧭 本站自带</span><span class="tc-ms">永远可用</span></li></ul>';
+  let left=TILES.length;TILES.forEach(t=>{const im=new Image(),li=$(`li[data-id="${t.id}"]`,out),t0=performance.now();let done=false;
+    const fin=(ok)=>{if(done)return;done=true;clearTimeout(tm);li.classList.add(ok?'ok':'bad');$('.tc-s',li).textContent=ok?'✅':'❌';$('.tc-ms',li).textContent=ok?Math.round(performance.now()-t0)+' ms':'无法连接';
+      if(--left===0){btn.disabled=false;btn.textContent='↻ 再测一次';const n=$$('li.ok',out).length;out.insertAdjacentHTML('beforeend',`<p class="tc-sum">${n} / ${TILES.length} 个在线地图源可用${n?'；实景地图的「⚡自动」会优先用最快的那一家':'；请使用手绘示意图或离线底图'}。</p>`)}};
+    const tm=setTimeout(()=>{im.src='';fin(false)},8000);im.onload=()=>fin(true);im.onerror=()=>fin(false);im.referrerPolicy='strict-origin-when-cross-origin';
+    const zz=t.o.minZoom>z?t.o.minZoom:z;im.src=t.u.replace('{s}',(t.o.subdomains||'a')[0]).replace('{z}',zz).replace('{x}',x).replace('{y}',y).replace('{r}','')})})});
+
+
 
 /* v3.1: Lenis removed — native scrolling (smoother on phones/trackpads, zero main-thread scroll work) */
 const PREVENT='.toc,.tbl,.mermaid,.lmap,.hscroll,.pop,.leaflet-container,.flash .face,.topnav,.tbar,select,textarea';

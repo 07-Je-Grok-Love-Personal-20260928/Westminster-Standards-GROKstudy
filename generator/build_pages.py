@@ -63,7 +63,7 @@ def build_index():
            ('wlc.html','📗','大要理问答 · 196问','15个主题板块，牧者与成熟信徒的「讲道手册」'),
            ('wsc.html','📙','小要理问答 · 107问','10个主题板块，最适合家庭与初学者背诵'),
            ('history.html','🗺️','历史 · 地理 · 文化','时间线、故事线、总览地图、人物与派别、文化区域'),
-           ('atlas.html','🧭','历史地图集','宗教改革传播、1640年代不列颠、西敏寺与耶路撒冷厅、全球传播、两大改革宗家族'),
+           ('atlas.html','🧭','历史地图集','宗教改革传播、多特 vs 西敏、1640年代不列颠、苏格兰盟约之地、西敏寺与耶路撒冷厅、全球传播、东亚、两大改革宗家族'),
            ('compare.html','⚖️','深度对比','三份文件异同、为何三份而非一份、与三项联合信条对照矩阵'),
            ('recite.html','🎙️','干净阅读版 · 背诵','遮盖答案、首字提示、字号调节、已背进度'),
            ('memory.html','🧠','记忆训练','口诀、记忆宫殿、翻转卡片、小测验'),
@@ -204,7 +204,7 @@ def build_history():
     b.append('<div class="grid g2">'+''.join(f'<div class="card rv"><h3>{i} {t}</h3><p>{mk(d)}</p></div>' for t,d,i in acts)+'</div>')
     b.append(h2('总览地图：从尼西亚到西敏','📍','mapsec'))
     b.append(mapblock(OVERVIEW,intro=False))
-    b.append('<p class="cta"><a class="btn" href="atlas.html">🧭 打开「历史地图集」：宗教改革传播 · 1640年代不列颠 · 伦敦西敏区 · 全球传播 · 两大改革宗家族 →</a></p>')
+    b.append('<p class="cta"><a class="btn" href="atlas.html">🧭 打开「历史地图集」（8幅）：宗教改革 · 多特vs西敏 · 1640年代不列颠 · 苏格兰盟约之地 · 西敏区 · 全球传播 · 东亚 · 两大家族 →</a></p>')
     b.append('<div class="grid">'+fig('abbey.jpg','西敏寺西立面（约翰·布拉克 版画）')+fig('jerusalem-chamber.jpg','耶路撒冷厅——西敏会议的主要会场（19世纪插图）')+fig('assembly.jpg','约翰·罗杰斯·赫伯特所绘：西敏会议中独立派为良心自由辩护（1644年情景的19世纪历史画）')+'</div>')
     b.append('<div class="grid">'+fig('covenant.jpg','《庄严联盟与圣约》（1643）')+fig('dort.jpg','多特大会（17世纪荷兰版画）')+fig('heidelberg1563.jpg','1563年《海德堡要理问答》扉页')+'</div>')
     b.append(h2('会议中的人物与派别','👥','people'))
@@ -223,10 +223,11 @@ def build_history():
 def build_atlas():
     b=[]
     b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.webp)"><div class="shine"></div><div class="floaty">🧭</div><h1>历史地图集</h1>
-<p>五幅主题地图，每幅都有<b>手绘示意图</b>（离线可用、带动画路线）和<b>可缩放的实景地图</b>（自带底图 + 在线瓦片自动切换），并配本图时间线与文化区域特征。所有日期与地点均附来源。</p></section>''')
+<p>八幅主题地图，每幅三种看法：<b>🎨 手绘示意图</b>（离线可用、动画路线）、<b>🎬 情景讲解</b>（动画情景图 + 分镜故事）、<b>🛰️ 实景地图</b>（13 个免密钥地图源测速择优、自动切换，另有永不失效的离线底图）。每幅图都配时间线、文化区域特征与事实来源。</p></section>''')
     n=sum(len(m['places']) for m in MAPS)
-    b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('5','主题地图'),(str(n),'标注地点'),('1517','起点：维登堡'),('1643','西敏会议开幕'),('1872','马偕抵淡水')])+'</div>')
+    b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [(str(len(MAPS)),'主题地图'),(str(n),'标注地点'),('13','在线地图源 + 离线底图'),('1517','起点：维登堡'),('1643','西敏会议开幕'),('1885','改革宗信仰到朝鲜')])+'</div>')
     b.append('<nav class="mapnav rv" aria-label="地图目录">'+''.join(f'<a href="#map-{m["id"]}"><span>{m["icon"]}</span>{esc(m["title"].split("：")[0].split("（")[0])}</a>' for m in MAPS)+'</nav>')
+    b.append('<details class="tilecheck rv"><summary>🛰️ 地图打不开？点这里给 13 个地图源「体检」</summary><p class="muted small">在你当前的网络下逐一测试每个地图源（各下载一张约 10 KB 的小图），显示是否可用与响应时间。实景地图的「⚡自动」模式也是这样挑选最快的一家。</p><button type="button" class="btn tc-run">▶ 开始测速</button><div class="tc-out" aria-live="polite"></div></details>')
     b.append(h2('信条年代图：一百多年里的告白浪潮','📊','confchart'))
     b.append('<p>把宗教改革时期的主要信条放在同一条时间轴上，就能看见西敏标准的位置：它是这场告白运动<mark>最晚、也最系统</mark>的成果之一，吸收了此前欧陆与不列颠一百多年的神学积累。</p>')
     b.append(confession_chart())

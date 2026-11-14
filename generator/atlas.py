@@ -47,7 +47,7 @@ def concept(m):
         extra=(f'<path class="cm-river big" style="stroke-width:{rw:.0f}px" d="{riv}"/><text class="cm-rvl" transform="translate({rmx:.0f} {rmy:.0f}) rotate({ang:.0f})" dy="7">泰晤士河 River Thames</text>'
                f'<g class="cm-bld"><path d="M{a[0]:.1f},{a[1]-9:.1f}L{b[0]:.1f},{b[1]-9:.1f}L{b[0]:.1f},{b[1]+9:.1f}L{a[0]:.1f},{a[1]+9:.1f}Z"/><path d="M{(a[0]+b[0])/2-8:.1f},{(a[1]+b[1])/2-40:.1f}h16v80h-16z"/></g>')
     else:
-        P,landd=svg_land(m['bbox'],VW,res='50m' if base=='eu' else '110m',tol=0.7 if base=='eu' else 0.9)
+        P,landd=svg_land(m['bbox'],VW,res='50m' if base in ('eu','asia') else '110m',tol=0.7 if base in ('eu','asia') else 0.9)
         H=P.H; riv=svg_rivers(P,RIVERS.get(base,[])) if base=='eu' else ''
         extra=f'<path class="cm-river" d="{riv}"/>' if riv else ''
     ids={p[0]:p for p in m['places']}
@@ -116,14 +116,15 @@ def mapblock(m, intro=True):
     if m.get('thames'): data['thames']=m['thames']
     tl=''.join(f'<li><b>{esc(y)}</b><span>{mk(esc(t))}</span></li>' for y,t in m['timeline'])
     pl=''.join(f'<li data-i="{i}"><span class="pn" style="--c:{CATCOL[p[6]]}">{i+1}</span><span class="pe">{p[5]}</span><b>{esc(p[3])}</b> <span class="hl-date">{esc(p[4])}</span><br><span class="muted">{mk(esc(p[7]))}</span></li>' for i,p in enumerate(m['places']))
-    hdr=('维度','欧陆改革宗','长老会（西敏）') if mid=='geo' else ('区域','教会与社会','文化与敬虔')
+    hdr=('维度','欧陆改革宗','长老会（西敏）') if mid=='geo' else ('维度','⚖️ 多特 1618–1619','🏛️ 西敏 1643–1649') if mid=='dortwm' else ('区域','教会与社会','文化与敬虔')
     cul='<div class="tbl rv"><table><thead><tr>'+''.join(f'<th>{h}</th>' for h in hdr)+'</tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{mk(esc(x))}</td>' for x in r)+'</tr>' for r in m['culture'])+'</tbody></table></div>'
     src='<details class="msrc"><summary>📚 本图事实来源（'+str(len(m['src']))+'）</summary><ul>'+''.join(f'<li><a href="{esc(u)}" target="_blank" rel="noopener">{esc(n)}</a></li>' for n,u in m['src'])+'</ul></details>'
     return f'''<div class="mapbox" id="mb-{mid}">
 {f'<p class="lead">{mk(esc(m["intro"]))}</p>' if intro else ''}
-<div class="mtabs" role="tablist" aria-label="地图视图"><button role="tab" class="on" aria-selected="true" data-v="c">🎨 手绘示意图</button><button role="tab" aria-selected="false" data-v="l">🛰️ 实景地图（可缩放）</button><button class="mplay" type="button" aria-label="按时间顺序播放">▶ 按时间播放</button></div>
+<div class="mtabs" role="tablist" aria-label="地图视图"><button role="tab" class="on" aria-selected="true" data-v="c">🎨 手绘示意图</button>{'<button role="tab" aria-selected="false" data-v="s">🎬 情景讲解</button>' if STORY.get(mid) else ''}<button role="tab" aria-selected="false" data-v="l">🛰️ 实景地图</button><button class="mplay" type="button" aria-label="按时间顺序播放">▶ 按时间播放</button></div>
 <div class="mview mv-c on">{concept(m)}</div>
-<div class="mview mv-l"><div class="lmap" data-base="{m['base']}" data-lenis-prevent></div><p class="muted small">底图：本站自带 Natural Earth 矢量海岸线（永不失效）；在线瓦片按 OpenStreetMap → OSM France（HOT）→ OpenTopoMap 自动切换，全部失败时保留离线底图。瓦片版权见地图右下角。</p></div>
+{f'<div class="mview mv-s">{SCENES[mid]() if mid in SCENES else ""}{story(mid,m["title"])}</div>' if STORY.get(mid) else ''}
+<div class="mview mv-l"><div class="lmap" data-base="{m['base']}"></div><p class="muted small lcap">🛰️ <b>13 个免密钥地图源</b>（CARTO · Esri · OpenStreetMap · OSM 德国/法国 · CyclOSM · OpenTopoMap · 高德等），「⚡自动」先测速再选最快的一家，失败自动换下一家；全部不可用时显示本站自带的 <b>Natural Earth 离线底图</b>（永不失效）。右上角可手动切换来源、↻ 重新测速。高德地图采用 GCJ-02 坐标，切换到高德时标记会自动校正。</p></div>
 <script type="application/json" class="mdata">{json.dumps(data,ensure_ascii=False,separators=(',',':'))}</script>
 <div class="minfo" aria-live="polite"><span class="muted">👆 点按地图上的地点，或点「▶ 按时间播放」。</span></div>
 <div class="grid g2 mside"><div class="card"><h4>📍 地点（按编号）</h4><ol class="mplaces">{pl}</ol></div><div class="card"><h4>⏳ 本图时间线</h4><ol class="mtl">{tl}</ol></div></div>
@@ -148,3 +149,50 @@ def confession_chart():
     ticks=''.join(f'<g class="tk"><line x1="{X(t):.1f}" y1="{C-5}" x2="{X(t):.1f}" y2="{C+5}"/><text x="{X(t):.1f}" y="{C+21}" text-anchor="middle">{t}</text></g>' for t in range(1530,1651,20))
     leg=''.join(f'<span><i style="background:{c}"></i>{n}</span>' for k,(n,c) in FAMNAME.items())
     return f'''<figure class="cfchart rv"><div class="hscroll"><svg viewBox="0 0 {W} {H}" role="img" aria-label="宗教改革时期主要信条年代图"><line class="ax" x1="30" y1="{C}" x2="{W-30}" y2="{C}"/>{ticks}{''.join(out)}</svg></div><figcaption class="cm-leg">{leg}</figcaption></figure>'''
+# ---------------- v3.2 情景讲解图 ----------------
+from content_v32 import STORY
+def story(mid,title=''):
+    beats=STORY.get(mid)
+    if not beats: return ''
+    lis=''.join(f'<li style="--i:{i}"><span class="st-n">{i+1}</span><span class="st-ic" aria-hidden="true">{ic}</span><span class="st-y">{esc(y)}</span><b>{esc(h)}</b><span class="st-t">{mk(esc(t))}</span></li>' for i,(ic,y,h,t) in enumerate(beats))
+    return f'<figure class="story" aria-label="情景讲解：{esc(title)}"><ol class="st-reel" style="--n:{len(beats)}">{lis}</ol><div class="st-bar" aria-hidden="true"><i></i></div><figcaption class="muted small">🎬 {len(beats)} 个镜头讲完这张图 · 自动轮播（离开屏幕即暂停），点任一镜头可定格</figcaption></figure>'
+def _t(x,y,s,cls='',anchor='middle',extra=''):
+    return f'<text x="{x}" y="{y}" class="{cls}" text-anchor="{anchor}"{extra}>{esc(s)}</text>'
+def scene_brit():
+    """三王国关系：王权 vs 盟约；1643 英苏结盟"""
+    K=[('苏格兰','🏴',330,92,'sco','1637 祈祷书骚乱','1638 国民圣约'),('英格兰','🏛️',470,300,'eng','1642 内战爆发','1643 西敏会议'),('爱尔兰','☘️',150,300,'ire','1641 叛乱','1642 苏格兰军登陆阿尔斯特')]
+    g=''
+    for n,ic,x,y,c,a,b in K:
+        g+=f'<g class="sc-k sc-{c}"><circle cx="{x}" cy="{y}" r="74"/>{_t(x,y-14,ic,"sc-ic")}{_t(x,y+20,n,"sc-h")}{_t(x,y+46,a,"sc-s")}{_t(x,y+68,b,"sc-s")}</g>'
+    crown='<g class="sc-crown"><circle cx="320" cy="222" r="38"/>'+_t(320,218,'👑','sc-ic')+_t(320,246,'查理一世','sc-s2')+'</g>'
+    arrows=('<path class="sc-ar sc-bad" pathLength="1" d="M300 188Q300 160 318 168"/><path class="sc-ar sc-bad" pathLength="1" d="M356 238Q392 262 404 272"/><path class="sc-ar sc-bad" pathLength="1" d="M284 236Q240 262 222 272"/>'
+            '<path class="sc-link" d="M392 132Q520 190 498 232"/>'+_t(560,170,'1643 庄严联盟与圣约','sc-lk','middle'))
+    goal='<g class="sc-goal"><rect x="30" y="396" width="580" height="54" rx="14"/>'+_t(320,430,'🎯 目标：三国在 信仰告白 · 教会治理 · 敬拜 · 要理问答 上统一','sc-gt')+'</g>'
+    return f'<figure class="scene sc-brit"><div class="sc-wrap hscroll" tabindex="0" aria-label="情景图（窄屏可横向滑动）"><svg viewBox="0 0 640 464" role="img" aria-label="三王国关系示意：王权强推礼仪，苏格兰与英格兰国会结盟，目标是三国宗教统一">{arrows}{g}{crown}{goal}</svg></div><figcaption class="muted small">🎭 情景图：红色箭头＝王权施压与冲突；金色连线＝1643年英格兰国会与苏格兰结盟。</figcaption></figure>'
+def scene_london():
+    """文件诞生流水线"""
+    S=[('🗂️','委员会起草','分组起草初稿'),('🗣️','全体辩论','逐条、逐句辩论'),('📖','附上经文','国会要求附经文'),('🏛️','呈交国会','送往隔壁国会'),('🏴','苏格兰批准','1647 / 1648 总会')]
+    w=124; g=''
+    for i,(ic,h,s) in enumerate(S):
+        x=20+i*w
+        g+=f'<g class="sc-st" style="--i:{i}"><rect x="{x}" y="60" width="{w-16}" height="150" rx="16"/>{_t(x+(w-16)/2,108,ic,"sc-ic")}{_t(x+(w-16)/2,148,h,"sc-h2")}{_t(x+(w-16)/2,176,s,"sc-s")}</g>'
+        if i<len(S)-1: g+=f'<path class="sc-arrow" d="M{x+w-14} 135h12"/>'
+    doc='<g class="sc-doc"><rect x="-14" y="-18" width="28" height="36" rx="4"/><path d="M-8-8h16M-8 0h16M-8 8h10"/></g>'
+    return f'<figure class="scene sc-london"><div class="sc-wrap hscroll" tabindex="0" aria-label="情景图（窄屏可横向滑动）"><svg viewBox="0 0 640 250" role="img" aria-label="西敏文件的产生流程：委员会起草、全体辩论、附经文、呈交国会、苏格兰总会批准">{_t(320,34,"一份文件是怎样诞生的（1643–1648）","sc-title")}{g}<g class="sc-mv">{doc}</g></svg></div><figcaption class="muted small">📄 动画：文件从起草一路走到苏格兰总会批准。信仰告白1646年12月完成、1647年附经文；苏格兰总会1647年8月批准；大小要理问答1648年批准。</figcaption></figure>'
+def scene_dortwm():
+    """两个会议的结构：国际 vs 三国"""
+    L=[('英格兰',-90),('苏格兰',-52),('普法尔茨',-14),('黑森',24),('拿骚',62),('不来梅',100),('瑞士',138),('日内瓦',176),('法国（缺席）',214)]
+    cx,cy,R=165,230,128; g=''
+    for i,(n,a) in enumerate(L):
+        import math as _m
+        x=cx+R*_m.cos(_m.radians(a)); y=cy+R*_m.sin(_m.radians(a)); miss='缺席' in n
+        g+=f'<path class="sc-sp{" miss" if miss else ""}" pathLength="1" style="--i:{i}" d="M{x:.0f} {y:.0f}L{cx} {cy}"/><g class="sc-nd{" miss" if miss else ""}" style="--i:{i}"><circle cx="{x:.0f}" cy="{y:.0f}" r="9"/>{_t(round(x+(14 if x>=cx else -14)),round(y+6),n,"sc-s3","start" if x>=cx else "end")}</g>'
+    left=f'<g>{g}<circle class="sc-hub" cx="{cx}" cy="{cy}" r="44"/>{_t(cx,cy-4,"⚖️ 多特","sc-h2")}{_t(cx,cy+20,"1618–1619","sc-s")}</g>'
+    rx=480
+    right=(f'<g class="sc-r"><circle class="sc-hub wa" cx="{rx}" cy="230" r="50"/>{_t(rx,226,"🏛️ 西敏","sc-h2")}{_t(rx,250,"1643–1649","sc-s")}'
+           f'<g class="sc-box b1"><rect x="{rx-90}" y="66" width="180" height="56" rx="12"/>{_t(rx,92,"英格兰神学家","sc-h3")}{_t(rx,113,"最多121位牧师（投票）","sc-s")}</g><path class="sc-sp2" pathLength="1" d="M{rx} 122V180"/>'
+           f'<g class="sc-box b2"><rect x="{rx-90}" y="338" width="180" height="56" rx="12"/>{_t(rx,364,"国会议员 30 位","sc-h3")}{_t(rx,385,"上院10 · 下院20（列席）","sc-s")}</g><path class="sc-sp2" pathLength="1" d="M{rx} 338V280"/>'
+                      f'<path class="sc-sp2 sco" pathLength="1" d="M{rx+130} 150Q{rx+90} 190 {rx+48} 214"/><g class="sc-box b4"><rect x="{rx+70}" y="112" width="96" height="44" rx="12"/>{_t(rx+118,140,"苏格兰专员","sc-s3")}</g></g>')
+    mid=f'<line class="sc-div" x1="330" y1="40" x2="330" y2="420"/>{_t(165,40,"国际性：各国教会来「会诊」","sc-title")}{_t(480,40,"三国性：国会召集、苏格兰参与","sc-title")}'
+    return f'<figure class="scene sc-dortwm"><div class="sc-wrap hscroll" tabindex="0" aria-label="情景图（窄屏可横向滑动）"><svg viewBox="0 0 640 430" role="img" aria-label="多特大会与西敏会议的组成对比">{mid}{left}{right}</svg></div><figcaption class="muted small">🧩 结构图：多特的外国代表来自英格兰、苏格兰、普法尔茨、黑森、拿骚、不来梅、瑞士各城与日内瓦；法国代表被国王禁止出境。西敏的苏格兰专员不投票，以本国教会专员身份参与。</figcaption></figure>'
+SCENES={'brit':scene_brit,'london':scene_london,'dortwm':scene_dortwm}

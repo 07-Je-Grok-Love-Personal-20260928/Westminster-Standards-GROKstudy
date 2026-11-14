@@ -124,3 +124,8 @@ OVERVIEW=dict(id='overview',icon='📍',title='总览',base='eu',view=[49,8,4],b
  routes=[('gen','edi','诺克斯','flow'),('edi','wes','1643 苏格兰专员','flow'),('hei','dor','','flow'),('tou','dor','','flow')],
  timeline=[('325 / 381','尼西亚与君士坦丁堡'),('1536–1564','加尔文在日内瓦'),('1561–1563','比利时信条、海德堡问答'),('1615','爱尔兰信纲'),('1618–1619','多特大会'),('1637–1638','苏格兰祈祷书骚乱与国民圣约'),('1643–1649','西敏会议'),('1644–1645','马斯顿荒原、纳斯比')],
  culture=[],src=[('Westminster Assembly',W+'Westminster_Assembly'),('Synod of Dort',W+'Synod_of_Dort'),('National Covenant',W+'National_Covenant')])
+
+# v3.2: insert the three new maps in story order
+from content_v32 import DORTWM, SCOT, ASIA
+_by={m['id']:m for m in MAPS}
+MAPS=[_by['reform'],DORTWM,_by['brit'],SCOT,_by['london'],_by['global'],ASIA,_by['geo']]
