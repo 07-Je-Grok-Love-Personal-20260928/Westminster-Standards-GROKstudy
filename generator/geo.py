@@ -53,9 +53,16 @@ def export_layers():
         world={'type':'FeatureCollection','features':[{'type':'Feature','properties':{'k':'land'},'geometry':_rc(W,2)}]}
         cache['eu']=eu; cache['world']=world
         json.dump(cache,open(CACHE,'w'),separators=(',',':'))
-    for k in ('eu','world'):
+    if 'asia' not in cache:
+        ab=box(98,12,140,46)
+        L=land('50m').intersection(ab).simplify(0.02,preserve_topology=True)
+        R=[{'type':'Feature','properties':{'k':'river','n':n},'geometry':_rc(g.intersection(ab).simplify(0.02),2)} for n,g in rivers(maxrank=4) if g.intersects(ab)]
+        R=[f for f in R if f['geometry'].get('coordinates')]
+        cache['asia']={'type':'FeatureCollection','features':[{'type':'Feature','properties':{'k':'land'},'geometry':_rc(L,3)}]+R}
+        json.dump(cache,open(CACHE,'w'),separators=(',',':'))
+    for k in ('eu','world','asia'):
         json.dump(cache[k],open(os.path.join(OUTGEO,k+'.json'),'w'),separators=(',',':'))
-    return {k:os.path.getsize(os.path.join(OUTGEO,k+'.json')) for k in ('eu','world')}
+    return {k:os.path.getsize(os.path.join(OUTGEO,k+'.json')) for k in ('eu','world','asia')}
 # ---------------- projection + SVG ----------------
 class Proj:
     """equirectangular, x scaled by cos(mid-latitude); bbox=(lon0,lat0,lon1,lat1) -> W x H viewBox"""

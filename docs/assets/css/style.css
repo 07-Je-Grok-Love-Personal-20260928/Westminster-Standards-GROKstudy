@@ -435,3 +435,80 @@ h3.rqh{font-size:15px;font-family:var(--sans);color:var(--muted);letter-spacing:
 .rv:not(.in) .pbar i{transform:scaleX(0)}
 html[data-palette=nord][data-theme=dark]{--muted:#b4bdcf;--ink2:#d8dee9;--card:rgba(52,59,73,.85);--card2:rgba(56,63,78,.96)}
 html[data-palette=nord][data-theme=dark] .callout b.lbl{color:color-mix(in srgb,var(--k) 38%,#fff)}
+/* ===== v3.2 glass: ONLY small fixed/sticky elements (nav cluster, TOC header, popovers, map control). html.glass is set only when
+   backdrop-filter is supported, motion is on, prefers-reduced-motion is off and the device has >=4 cores / >=4 GB. ===== */
+html.glass .fab-b,html.glass .fab-main,html.glass .pop,html.glass .toc h4,html.glass .mctl{
+  background:color-mix(in srgb,var(--card2) 58%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.7);backdrop-filter:blur(14px) saturate(1.7);
+  border-color:color-mix(in srgb,#fff 38%,var(--line));box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 45%,transparent),0 10px 28px -12px rgba(15,23,42,.35)}
+html.glass[data-theme=dark] .fab-b,html.glass[data-theme=dark] .fab-main,html.glass[data-theme=dark] .pop,html.glass[data-theme=dark] .toc h4,html.glass[data-theme=dark] .mctl{
+  background:color-mix(in srgb,var(--card2) 55%,transparent);border-color:color-mix(in srgb,#fff 12%,var(--line));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 30px -12px rgba(0,0,0,.6)}
+html.glass .pop{background:color-mix(in srgb,var(--bg) 72%,transparent)}
+html.glass .fab-main{opacity:.85}
+html.glass .fab-b:hover{background:var(--grad)}
+.toc h4{position:sticky;top:-16px;z-index:2;margin:-16px -10px 10px -14px;padding:14px 16px 10px;border-bottom:1px solid transparent}
+html.glass .toc h4{border-bottom-color:var(--line)}
+/* ===== v3.2 reading/memory modes ===== */
+html.skim main .wrap :is(p,li,td,th,dd,.a,.st-t,.callout,.tp,figcaption){color:color-mix(in srgb,var(--ink) 34%,var(--bg))}
+html.skim main .wrap :is(mark,b,strong,.m-blue,.m-green,.u-key,.u-err,.u-cmp,.u-bib,.hl-place,.q-src,h1,h2,h3,h4,.lbl,summary){color:var(--ink)}
+html.skim main .wrap mark{background:linear-gradient(transparent 30%,var(--hl) 30%,var(--hl) 94%,transparent 94%)}
+html.skim main .wrap :is(img,.cmap,.lmap){opacity:.55}
+html.cloze main .wrap :is(mark,.u-key,.m-blue,.m-green,.hl-date):not(.rev){color:transparent!important;background:color-mix(in srgb,var(--a1) 16%,var(--card2))!important;border-radius:5px;text-decoration-color:transparent;cursor:pointer;box-shadow:inset 0 -2px 0 var(--a1)}
+html.cloze main .wrap :is(mark,.u-key,.m-blue,.m-green,.hl-date):not(.rev) *{color:transparent!important;background:none!important;text-decoration-color:transparent!important}
+html.cloze main .wrap .rev{animation:revpop .35s ease-out}
+@keyframes revpop{from{background-color:color-mix(in srgb,var(--a3) 45%,transparent)}}
+html.skim body::after,html.cloze body::after{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:44;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--ink);color:var(--bg);opacity:.86;pointer-events:none;white-space:nowrap}
+html.skim body::after{content:"🔦 重点模式：只亮标注 · 🎨 面板可关闭"}html.cloze body::after{content:"🙈 遮挡背诵：点空格揭晓 · 🎨 面板可关闭"}
+.lgmodes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.lgmodes button,.seg [data-opt]{cursor:pointer}
+.lgmodes button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font-weight:700;font-size:14px}
+.lgmodes button small{font-weight:500;font-size:11.5px;color:var(--muted);line-height:1.35}
+.lgmodes button.on{background:var(--grad);color:#fff;border-color:transparent}.lgmodes button.on small{color:rgba(255,255,255,.85)}
+.lgsteps{margin:0 0 6px;padding-left:1.4em;font-size:13.5px;line-height:1.7}.lgsteps b{color:var(--a1)}
+/* ===== v3.2 livelier palette accents ===== */
+main h2.h:nth-of-type(3n+2) .ic{background:linear-gradient(135deg,var(--a2),var(--a3))}
+main h2.h:nth-of-type(3n) .ic{background:linear-gradient(135deg,var(--a3),var(--a1))}
+.stat:nth-child(3n+2){background:linear-gradient(160deg,color-mix(in srgb,var(--a2) 9%,var(--card)),var(--card))}
+.stat:nth-child(3n){background:linear-gradient(160deg,color-mix(in srgb,var(--a3) 11%,var(--card)),var(--card))}
+.stat:nth-child(3n+1){background:linear-gradient(160deg,color-mix(in srgb,var(--a1) 9%,var(--card)),var(--card))}
+.card{transition:transform .35s cubic-bezier(.2,.9,.3,1.2),box-shadow .35s}
+@media (hover:hover){.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px color-mix(in srgb,var(--a1) 55%,transparent)}}
+.no-motion .card:hover{transform:none}
+@media (max-width:420px){.lgmodes{grid-template-columns:1fr}html.skim body::after,html.cloze body::after{font-size:11.5px}}
+/* ===== v3.2 救赎历史之河 (animated: one transform-only glow) ===== */
+.rvx{position:relative;margin:10px 0 22px;padding:16px 10px 10px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--a2) 7%,var(--card)),var(--card));overflow:hidden}
+.rvx ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:22px 8px;position:relative;z-index:1}
+.rvx li{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;min-width:0;opacity:0;transform:translateY(10px);transition:opacity .5s calc(var(--i)*.07s),transform .5s calc(var(--i)*.07s)}
+.rvx.in li,.no-motion .rvx li{opacity:1;transform:none}
+.rvx-ic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--card2);border:2px solid color-mix(in srgb,var(--a1) 40%,var(--line));box-shadow:0 6px 16px -8px var(--a1)}
+.rvx li:nth-child(-n+9) .rvx-ic{border-color:color-mix(in srgb,#0284c7 55%,var(--line))}
+.rvx li:nth-child(n+10) .rvx-ic{border-color:color-mix(in srgb,#16a34a 60%,var(--line))}
+.rvx li:nth-child(-n+3) .rvx-ic{border-color:color-mix(in srgb,#7c3aed 55%,var(--line))}
+.rvx li.hub .rvx-ic{width:58px;height:58px;font-size:28px;background:var(--grad);border-color:transparent;box-shadow:0 0 0 5px color-mix(in srgb,var(--a3) 35%,transparent),0 10px 24px -8px var(--a1)}
+.rvx-y{font:700 12px/1.3 var(--sans);color:var(--date);font-variant-numeric:tabular-nums;margin-top:4px}
+.rvx b{font-size:15px;line-height:1.3}.rvx small{font-size:12.5px;color:var(--ink2);line-height:1.4;overflow-wrap:anywhere}
+.rvx-line{position:absolute;left:4%;right:4%;top:40px;height:6px;border-radius:6px;background:linear-gradient(90deg,#7c3aed,#0284c7 25%,#0284c7 72%,var(--a3) 76%,#16a34a);opacity:.35;overflow:hidden;z-index:0}
+.rvx-line i{position:absolute;top:0;left:0;width:16%;height:100%;border-radius:6px;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.9;transform:translateX(-100%);will-change:transform}
+.rvx.run .rvx-line i{animation:rvflow 5.5s linear infinite}
+@keyframes rvflow{to{transform:translateX(650%)}}
+.rvx figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:14px;font-size:13px}
+.rvx-k i{display:inline-block;width:22px;height:6px;border-radius:4px;margin-right:6px;vertical-align:2px}.rvx-k .k1{background:#0284c7}.rvx-k .k2{background:#16a34a}
+.rvx{container-type:inline-size}
+.rvx ol{grid-template-columns:repeat(auto-fill,minmax(108px,1fr))}.rvx-line{display:none}
+@container (min-width:1180px){.rvx ol{grid-template-columns:repeat(12,minmax(0,1fr))}.rvx-line{display:block}}
+.rvx-ic{position:relative}
+.rvx-ic::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--a3);opacity:0;pointer-events:none}
+.rvx.run .rvx-ic::after{animation:rvping 6s ease-out calc(var(--i)*.45s) infinite}
+@keyframes rvping{0%{opacity:.9;transform:scale(.8)}9%{opacity:0;transform:scale(1.35)}100%{opacity:0;transform:scale(1.35)}}
+@media (max-width:420px){.rvx ol{grid-template-columns:repeat(3,minmax(0,1fr))}.rvx small{font-size:12px}}
+.no-motion .rvx-line i,.no-motion .rvx-ic::after{animation:none!important}
+@media (prefers-reduced-motion:reduce){.rvx li{opacity:1;transform:none;transition:none}.rvx-line i,.rvx-ic::after{animation:none!important}}
+/* ===== v3.2 同一真理 · 三种密度 ===== */
+.dens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin-top:6px}
+.dn{min-width:0;padding:12px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c)}
+.dn-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.dn-h b{font-size:15px}
+.dn-bar{position:relative;display:flex;align-items:center;height:20px;margin:8px 0 6px;border-radius:9px;background:color-mix(in srgb,var(--c) 12%,transparent);overflow:hidden}
+.dn-bar i{position:absolute;inset:0;background:var(--c);opacity:.75;border-radius:9px;transform-origin:left;transform:scaleX(var(--w));transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.dn-bar em{position:relative;font:700 12px/1 var(--sans);font-style:normal;padding-left:8px;color:var(--ink)}
+.dn-q{margin:4px 0;font-weight:700;font-size:14px;color:var(--ink2)}
+.dn-t{margin:4px 0 8px;font-size:15px;line-height:1.8}
+.dn-n{margin:0;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.65;color:var(--ink2)}
