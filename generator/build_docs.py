@@ -39,6 +39,11 @@ def contin(c):
         blocks.append(f'<details><summary>📙 多特信经 · {esc(s["title"])}</summary><div class="dbody"><p>本项条目（全文见「信经与联合信条」页）：</p><ol>{lst}</ol></div></details>')
     return ''.join(blocks) or '<p class="muted">三项联合信条无直接对应条目，可参「深度对比」页的说明。</p>'
 # ================= WCF =================
+def _lead(t,k=18):
+    t=re.sub(r'<[^>]+>','',t); t=re.sub(r'⟦[^⟧]*⟧','',t); t=re.sub(r'\s+','',t); t=re.sub(r'^[一二三四五六七八九十]+、','',t)
+    t=re.split(r'[，。；：]',t)[0] if len(re.split(r'[，。；：]',t)[0])>=6 else t
+    return t[:k]+('…' if len(t)>k else '')
+PART_AT={1:('启示：神如何说话（第1章）','📖','p-rev'),2:('神与他的作为（第2–5章）','✨','p-god'),6:('人、罪与约（第6–9章）','💔','p-man'),10:('救恩的施行（第10–18章）','🌱','p-sal'),19:('律法、自由、敬拜与社会（第19–24章）','📜','p-law'),25:('教会与圣礼（第25–31章）','⛪','p-chu'),32:('末后的事（第32–33章）','🌅','p-end')}
 def wcf_section(s, recite=False):
     num=s['sec']
     if 'ot' in s:
@@ -58,14 +63,15 @@ def build_wcf():
 <h1>《西敏信仰告白》逐章精解</h1>
 <p>1646年完成、1647年附经文呈交的<b>33章 · {sum(len(c['secs']) for c in W)}节</b>信仰告白。每章：<b>核心一句话</b> → <b>原文</b>（RTF-USA 2024 简体译本）→ 解读标签页（圣经神学 · 圣约神学 · 欧陆改革宗 · 长老会正统 · 难点 · 应用）→ 记忆钩子与常见误解 → 三项联合信条<b>原文</b>对照。</p>
 <div class="chips"><span class="chip">📖 33 章</span><span class="chip">🧩 {sum(len(c['secs']) for c in W)} 节</span><span class="chip">📎 附证明经文</span><span class="chip">🏛️ 1647 原文版本</span><span class="chip">🖍️ 统一标注系统</span></div></section>''')
+    parts.append(part('导览：先看全局，再读逐章','🧭','p-guide','七大板块 · 救恩的次序 · 搜索'))
     parts.append(h2('全局地图：33章的七大板块','🗺️','map33'))
     blocks=[('rev','启示：神如何说话',[1]),('god','神与他的作为',[2,3,4,5]),('man','人、罪与约',[6,7,8,9]),('sal','救恩的施行',list(range(10,19))),('law','律法、自由、敬拜与社会',list(range(19,25))),('chu','教会与圣礼',list(range(25,32))),('end','末后的事',[32,33])]
     g=''
     for cat,name,chs in blocks:
         chips=''.join(f'<a class="pill" href="#c{n}">{n}. {esc(W[n-1]["title"])}</a>' for n in chs)
-        g+=f'<div class="card bl-{cat} rv"><h3 style="margin:0 0 6px">{CATS[cat][1]} {name}<span class="muted small" style="margin-left:auto">{sum(len(W[n-1]["secs"]) for n in chs)} 节</span></h3>{chips}</div>'
+        g+=f'<div class="card bl-{cat} rv"><h3 data-notoc style="margin:0 0 6px">{CATS[cat][1]} {name}<span class="muted small" style="margin-left:auto">{sum(len(W[n-1]["secs"]) for n in chs)} 节</span></h3>{chips}</div>'
     parts.append(f'<div class="grid">{g}</div>')
-    parts.append('<div class="grid g2">'+'<div class="card rv"><h3 style="margin-top:0">📊 各章篇幅（节数，点击跳转）</h3>'+bars([(f"{c['no']}. {c['title']}",len(c['secs']),f"var(--c-{WCF[c['no']]['cat']})",f"#c{c['no']}") for c in W],cls='rv')+'<p class="muted small">数据：按本站所用 RTF-USA 2024 译本统计；第1章（圣经）10节最长，第12章（收养）只有1节。</p></div>'
+    parts.append('<div class="grid g2">'+'<div class="card rv"><h3 data-notoc style="margin-top:0">📊 各章篇幅（节数，点击跳转）</h3>'+bars([(f"{c['no']}. {c['title']}",len(c['secs']),f"var(--c-{WCF[c['no']]['cat']})",f"#c{c['no']}") for c in W],cls='rv')+'<p class="muted small">数据：按本站所用 RTF-USA 2024 译本统计；第1章（圣经）10节最长，第12章（收养）只有1节。</p></div>'
       +'<div>'+'<div class="mermaid">'+esc('''flowchart TB
   A["📖 圣经 1"] --> B["✨ 神 2-5"]
   B --> C["💔 堕落 6"]
@@ -83,7 +89,8 @@ def build_wcf():
     AM={r[0].split('.')[0] for r in AMREV}
     for ch in W:
         n=ch['no']; c=WCF[n]; cat=c['cat']
-        secs=''.join(f'<div data-search>{wcf_section(s)}</div>' for s in ch['secs'])
+        secs=''.join(f'<div data-search id="c{n}-{i}" data-lv="3" data-toc="{n}.{i} {esc(_lead(s["text"]))}">{wcf_section(s)}</div>' for i,s in enumerate(ch['secs'],1))
+        if n in PART_AT: parts.append(part(*PART_AT[n]))
         xs,xl=XREF[n]
         am=''
         if str(n) in AM:
@@ -103,7 +110,7 @@ def build_wcf():
     open(OUT+'wcf.html','w').write(page('wcf.html','西敏信仰告白 · 逐章精解','\n'.join(parts)))
 # ================= Catechisms =================
 def qa_card(doc,u):
-    return f'''<div class="qa" id="q{u['q']}" data-search><div class="q"><span class="n">{u['q']}</span><span style="flex:1">{fmt(u['ques'])}</span><button class="memo" data-k="{doc}-{u['q']}">☆ 标记</button></div><div class="a ansbody">{fmt(u['ans'])}</div>{refs_html(u['refs'])}</div>'''
+    return f'''<div class="qa" id="q{u['q']}" data-lv="3" data-toc="{u['q']} {esc(re.sub(r'<[^>]+>','',u['ques']))}" data-search><div class="q"><span class="n">{u['q']}</span><span style="flex:1">{fmt(u['ques'])}</span><button class="memo" data-k="{doc}-{u['q']}">☆ 标记</button></div><div class="a ansbody">{fmt(u['ans'])}</div>{refs_html(u['refs'])}</div>'''
 def build_cat(doc):
     data=D[doc]; groups=WSC_GROUPS if doc=='wsc' else WLC_GROUPS
     Q={u['q']:u for u in data}
@@ -127,6 +134,7 @@ def build_cat(doc):
         img='covenant.webp'
     parts=[f'''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/{img})"><div class="shine"></div><div class="floaty">{'📙' if doc=='wsc' else '📗'}</div><h1>{h1}</h1><p>{intro}</p>
 <div class="chips"><span class="chip">正文：RTF-USA 2024 简体译本</span><span class="chip">附证明经文</span><span class="chip">☆ 可标记「已背」</span><span class="chip">已背：<b data-count="{doc}-">0</b> / {len(data)}</span></div></section>''']
+    parts.append(part('导览：结构总览','🧭','p-guide','信与行的比例 · 各板块问数'))
     parts.append(h2('结构总览','🧭','overview'))
     parts.append(f'<div class="mermaid">{esc(mm)}</div>')
     parts.append(callout('key-pt','🧭 两部要理问答的分工',('先背<mark>小要理问答</mark>：用最少的字说准每条教义；需要展开时，查对应的<a href="wlc.html">大要理问答</a>与<a href="wcf.html">信仰告白</a>章节。' if doc=='wsc' else '大要理问答是<mark>讲台与教师的手册</mark>：比小要理多出「有形/无形教会」「恩典中/荣耀中与基督相交」「十诫解释八规则」「善用洗礼」等内容。'),raw=True))
@@ -136,8 +144,11 @@ def build_cat(doc):
     parts.append(legend())
     parts.append('<div class="grid g2">'+'<div class="card rv"><h3 style="margin-top:0">🍩 “信”与“行”的比例</h3>'+(donut([('序言 1–3',3,'var(--a3)'),('当信什么 4–38',35,'var(--a1)'),('当尽本分 39–107',69,'var(--a2)')],'107','问') if doc=='wsc' else donut([('序言 1–5',5,'var(--a3)'),('当信什么 6–90',85,'var(--a1)'),('当尽本分 91–196',106,'var(--a2)')],'196','问'))+'<p class="muted small">按问答编号统计。近三分之二篇幅讲“本分”——十诫、蒙恩之道与祷告，显示西敏传统「教义必须落实为敬虔」。</p></div>'
       +'<div class="card rv"><h3 style="margin-top:0">📊 各板块问数（点击跳转）</h3>'+bars([(f"{g['r'][0]}–{g['r'][1]} {g['title']}",g['r'][1]-g['r'][0]+1,f"var(--c-{g['cat']})",f"#g{g['r'][0]}") for g in groups],cls='rv')+'</div></div>')
+    LAST_BELIEVE=38 if doc=='wsc' else 90
     for g in groups:
         a,b=g['r']; cat=g['cat']
+        if a==1: parts.append(part(f'序言与「人当信什么」（第1–{LAST_BELIEVE}问）','📖','p-believe'))
+        if a==LAST_BELIEVE+1: parts.append(part(f'「神要求人尽什么本分」（第{a}–{len(data)}问）','📜','p-duty'))
         chunks=[]
         rng=list(range(a,b+1))
         for i in range(0,len(rng),8):
@@ -160,7 +171,7 @@ def build_recite():
         items=[x for x in D[doc]]
         return ''.join(f'<h3 class="h rqh" id="r-{doc}-c{i+1}" data-toc="第{i+1}–{min(i+10,len(items))}问">第{i+1}–{min(i+10,len(items))}问</h3>'+lzb(_cat(doc,items[i:i+10])) for i in range(0,len(items),10))
     def _cat(doc,items):
-        return ''.join(f'<div class="qa rq" id="r-{doc}-{u["q"]}" data-search><div class="q"><span class="n">{u["q"]}</span><span style="flex:1">{fmt(u["ques"])}</span><button class="memo" data-k="{doc}-{u["q"]}">☆ 标记</button></div><div class="a ansbody">{fmt(u["ans"])}</div>{refs_html(u["refs"])}</div>' for u in items)
+        return ''.join(f'<div class="qa rq" id="r-{doc}-{u["q"]}" data-lv="3" data-toc="{u["q"]} {esc(re.sub(r"<[^>]+>","",u["ques"]))}" data-search><div class="q"><span class="n">{u["q"]}</span><span style="flex:1">{fmt(u["ques"])}</span><button class="memo" data-k="{doc}-{u["q"]}">☆ 标记</button></div><div class="a ansbody">{fmt(u["ans"])}</div>{refs_html(u["refs"])}</div>' for u in items)
     wsc_groups=''.join(f'<h3 class="h" data-toc="小要理 {g["r"][0]}–{g["r"][1]} {g["title"]}">第{g["r"][0]}–{g["r"][1]}问 · {g["title"]}</h3>' for g in WSC_GROUPS)
     body=f'''<section class="hero"><div class="shine"></div><div class="floaty">🎙️</div><h1> 干净阅读版 · 背诵模式</h1>
 <p>三份西敏文件的<b>纯净全文</b>（无解读干扰），可切换：阅读 / 遮盖答案（点击揭开）/ 首字提示（填空背诵）；可调字号、隐藏证明经文、标记已背进度（保存在本机浏览器）。</p>
@@ -192,9 +203,7 @@ window.__pageInit=function(){
    all=false; $$('.ansbody').forEach(el=>{ el.classList.remove('show'); if(mode.value==='cloze'){cloze(el);el.innerHTML=el.dataset.cz} else if(el.dataset.orig){el.innerHTML=el.dataset.orig} });
    document.querySelector('.reading').style.setProperty('--rfs',size.value+'px');
    LSs('rdoc',doc.value);LSs('rmode',mode.value);LSs('rsize',size.value);
-   // rebuild TOC for visible doc
-   const toc=document.getElementById('tocList'); const vis=document.querySelector('.rdoc:not(.hide)');
-   toc.dataset.custom='1'; toc.innerHTML=[...vis.querySelectorAll('h2.h,h3.h')].map(e=>`<li class="${e.tagName==='H2'?'l2':'l3'}"><a href="#${e.id}">${e.dataset.toc||e.textContent}</a></li>`).join('');
+   // v3.3: the outline holds all three documents; the TOC shows only the visible one
    if(window.__rebuildToc)window.__rebuildToc();
  }
  [doc,mode,size].forEach(x=>x.addEventListener('input',apply));
@@ -218,7 +227,7 @@ def build_creeds():
         parts.append(f'''{h3(f"✝️ {esc(cr['title'])}",cr['id'])}<div class="card rv"><p class="muted">{cr['intro']}</p><div class="bigquote ansbody creedbody">{body}</div><p class="muted">原文：<a href="{cr['url']}" target="_blank" rel="noopener">{cr['url']}</a></p></div>''')
     parts.append(h2('比利时信条（1561）','📕','bc'))
     parts.append(f'<div class="card">{C["bc_intro"]}</div>')
-    parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="bc{a["no"]}"') for a in C['bc']))
+    parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="bc{a["no"]}" data-lv="2"') for a in C['bc']))
     parts.append(h2('海德堡要理问答（1563）','📗','hc'))
     parts.append(f'<div class="card">{C["hc_intro"]}</div>')
     sec_of=lambda ld: '引言' if ld==1 else ('第一部 论人的罪和愁苦' if ld<=4 else ('第二部 论我们的得救' if ld<=31 else '第三部 论感恩'))
@@ -227,13 +236,13 @@ def build_creeds():
         s=sec_of(x['ld'])
         if s!=cur: parts.append(h3('📘 '+s,'hc-'+str(x['ld']))); cur=s
         inner=''.join(f'<div class="qa"><div class="q"><span class="n">{i["q"]}</span><span>{esc(i["ques"])}</span></div><div class="a cbox">{i["html"]}</div></div>' for i in x['items'])
-        parts.append(lzd(f'主日 {x["ld"]}（第{x["items"][0]["q"]}–{x["items"][-1]["q"]}问）· {esc(x["items"][0]["ques"])}',f'<div class="dbody">{inner}<p class="muted"><a href="{x["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="ld{x["ld"]}"'))
+        parts.append(lzd(f'主日 {x["ld"]}（第{x["items"][0]["q"]}–{x["items"][-1]["q"]}问）· {esc(x["items"][0]["ques"])}',f'<div class="dbody">{inner}<p class="muted"><a href="{x["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="ld{x["ld"]}" data-lv="3"'))
     parts.append(h2('多特信经（1618–1619）','📙','cd'))
     parts.append(f'<div class="card">{C["cd_intro"]}</div>')
     for s in C['cd']:
         parts.append(h3('📙 '+esc(s['title']),'cd-'+s['id']))
         if s['intro'].strip(): parts.append(f'<div class="card">{s["intro"]}</div>')
-        parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>') for a in s['arts']))
+        parts.append(''.join(lzd(esc(a["title"]),f'<div class="dbody cbox">{a["html"]}<p class="muted"><a href="{a["url"]}" target="_blank" rel="noopener">原文链接</a></p></div>',f'id="cd-{s["id"]}-{i+1}" data-lv="3"') for i,a in enumerate(s['arts'])))
     js='<script>window.__pageInit=function(){const b=document.getElementById("creedHide");let on=false;b.onclick=()=>{on=!on;document.body.classList.toggle("mode-hide",on)}}</script>'
     open(OUT+'creeds.html','w').write(page('creeds.html','三大普世信经与三项联合信条（原文）','\n'.join(parts),js=js))
 if __name__=='__main__':

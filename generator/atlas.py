@@ -127,8 +127,8 @@ def mapblock(m, intro=True):
 <div class="mview mv-l"><div class="lmap" data-base="{m['base']}"></div><p class="muted small lcap">🛰️ <b>14 个免密钥地图源</b>（OpenStreetMap 及德国/法国镜像 · HOT · CyclOSM · OpenTopoMap · Esri · NASA · 高德），「⚡自动」先测速再选最快的一家，失败自动换下一家；全部不可用时显示本站自带的 <b>Natural Earth 离线底图</b>（永不失效）。右上角可手动切换来源、↻ 重新测速。高德地图采用 GCJ-02 坐标，切换到高德时标记会自动校正。</p></div>
 <script type="application/json" class="mdata">{json.dumps(data,ensure_ascii=False,separators=(',',':'))}</script>
 <div class="minfo" aria-live="polite"><span class="muted">👆 点按地图上的地点，或点「▶ 按时间播放」。</span></div>
-<div class="grid g2 mside"><div class="card"><h4>📍 地点（按编号）</h4><ol class="mplaces">{pl}</ol></div><div class="card"><h4>⏳ 本图时间线</h4><ol class="mtl">{tl}</ol></div></div>
-{('<h4 class="mcul">🏰 文化区域特征</h4>'+cul) if m['culture'] else ''}{src}
+<div class="grid g2 mside"><div class="card"><h4 data-toc="📍 地点">📍 地点（按编号）</h4><ol class="mplaces">{pl}</ol></div><div class="card"><h4 data-toc="⏳ 时间线">⏳ 本图时间线</h4><ol class="mtl">{tl}</ol></div></div>
+{('<h4 class="mcul" data-toc="🏰 文化特征">🏰 文化区域特征</h4>'+cul) if m['culture'] else ''}{src}
 </div>'''
 def confession_chart():
     """SVG dot-plot of real confession dates 1525–1650 (collision-free label lanes)"""

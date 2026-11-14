@@ -1,16 +1,16 @@
-# 威斯敏斯特标准-20261114-v3.2-GROKstudy
+# 威斯敏斯特标准-20261114-v3.3-GROKstudy
 
-**Westminster-Standards-20261114-v3.2-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.2 聚焦 **更稳的地图（14 个在线源 + 离线底图）· 情景讲解动画 · 更多历史地图 · 标注与背诵模式 · 小面积毛玻璃**（v3.1 为真机流畅度，v3.0 为历史 · 地图 · 文化）。
+**Westminster-Standards-20261114-v3.3-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.3 聚焦 **三级目录（可折叠、可拖动拉宽、滚动高亮）与全站结构分组**（v3.2 为地图 · 情景讲解 · 标注模式，v3.1 为真机流畅度，v3.0 为历史 · 地图 · 文化）。
 
-## 🌐 在线访问（v3.2，当前版本）
+## 🌐 在线访问（v3.3，当前版本）
 
 | 平台 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-grok-love-personal-20260928.github.io/Westminster-Standards-GROKstudy/ |
-| Surge | https://westminster-standards-20261114-v3-2-grokstudy.surge.sh |
-| Netlify | https://westminster-standards-20261114-v3-2-grokstudy.netlify.app |
+| Surge | https://westminster-standards-20261114-v3-3-grokstudy.surge.sh |
+| Netlify | https://westminster-standards-20261114-v3-3-grokstudy.netlify.app |
 
-GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.2-20261114
+GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.3-20261114
 
 源码仓库：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy
 
@@ -18,13 +18,21 @@ GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminste
 
 | 版本 | Git 标签 / Release（含整站 zip） | Surge | Netlify |
 |---|---|---|---|
+| v3.2（2026-11-14） | [v3.2-20261114](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.2-20261114) | https://westminster-standards-20261114-v3-2-grokstudy.surge.sh | https://westminster-standards-20261114-v3-2-grokstudy.netlify.app |
 | v3.1（2026-10-23） | [v3.1-20261023](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.1-20261023) | https://westminster-standards-20261023-v3-1-grokser.surge.sh | https://westminster-standards-20261023-v3-1-grokser.netlify.app |
 | v3.0（2026-10-23） | [v3.0-20261023](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.0-20261023) | https://westminster-standards-20261023-v3-grokser.surge.sh | https://westminster-standards-20261023-v3-grokser.netlify.app |
 | v2.1（2026-10-22） | [v2.1-20261022](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022) | https://westminster-standards-20261022-v2-1-grokser.surge.sh | https://westminster-standards-20261022-v2-1-grokser.netlify.app |
 | v2.0（2026-10-21） | [v2.0-20261021](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021) | https://westminster-standards-20261021-v2-grokser.surge.sh | https://westminster-standards-20261021-v2-grokser.netlify.app |
 | v1.0（2026-10-20） | [v1.0-20261020](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020) | https://westminster-standards-20261020-v1-grokser.surge.sh | https://westminster-standards-20261020-v1-grokser.netlify.app |
 
-GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v3.1-20261023`（或 `v3.0-20261023`、 `v2.1-20261022`、`v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
+GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v3.2-20261114`（或 `v3.1-20261023`、`v3.0-20261023`、 `v2.1-20261022`、`v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
+
+## 📑 目录（v3.3）
+
+- **三级目录**：每页的大纲在构建时生成（`generator/toc.py`，包括尚未挂载的渐进加载内容），一级标题加序号（一、二、三…，页面上的一级标题同步显示序号），二级、三级逐级折叠（▸ 箭头），顶部 ⊞ 全部展开 / ⊟ 全部折叠，可筛选。
+- **可拖动拉宽**：拖动目录右边缘（鼠标、触屏、笔均可；键盘聚焦后按 ←/→），宽度 220px 至屏幕宽度 60%（手机抽屉最多 90%），保存在本机、页面加载前即应用；双击边缘恢复默认 300px。长标题单行显示，被截断时悬停显示全文。
+- **滚动高亮**：滚动时高亮当前所在的条目并自动展开其上级（目录可见时才计算；二分查找，每 140ms 最多一次）。电脑端可隐藏，手机为左侧抽屉。
+- **各页结构**：信仰告白 = 导览 + 七大板块（一级）→ 33 章（二级）→ 172 节（三级）；大/小要理 = 导览 · 当信什么 · 当尽本分（一级）→ 各板块（二级）→ 每一问（三级）；背诵版 = 三份文件 → 每 10 问 / 每章 → 每一问；信经与联合信条 = 四部文献 → 信经 / 条目 / 部分 → 主日 / 条款；地图集 = 总览 · 欧陆 · 不列颠 · 走向世界 · 两大家族 → 各幅地图 → 地点 / 时间线 / 文化特征；总览、深度对比、记忆训练也各分为三个一级部分。
 
 ## 📚 内容
 
@@ -87,6 +95,16 @@ v3.2 新增两种阅读模式（主题面板「🖍️ 读与背」或图例面�
 - **悬浮导航**：每页右下角，半透明小圆钮（含阅读进度环）；悬停或点按展开：首页、本页目录、后退、前进、顶部、底部；向下滚动时自动收起，Esc 关闭，支持键盘与 iPhone 安全区。
 
 ## ⚡ 性能
+
+### v3.2 → v3.3（同一台机器、同一脚本、先后交替各测两次；本地 gzip 服务器；测试机与其他任务共用，负载 10–25，单次数字有波动）
+
+| 滚动测试（5 秒连续滚动） | v3.2 | v3.3 |
+|---|---|---|
+| 手机 390px（CPU 降速 4 倍）index / wcf / wlc / recite / atlas | 59.5–60.2 fps，长任务 0 | 59.7–60.2 fps，长任务 0 |
+| 电脑 1440px 同 5 页 | 60.0–60.2 fps | 59.9–60.2 fps（背诵版 recite 两次均为 60.0 / 60.1 fps） |
+
+- **背诵版电脑端掉帧**：v3.2 测到的 57–58 fps 这次没有复现（v3.3 recite 在 1440px 下为 60.0–60.1 fps）。关闭毛玻璃对比三次（开：60.1 / 59.9 / 58.3；关：58.8 / 51.3 / 60.2；v3.1：60.1 / 60.3 / 60.0），关闭并不更快，说明不是毛玻璃造成的，因此没有改动毛玻璃；当时的低值应是测试机负载波动。
+- **目录的代价**：三级目录的二、三级条目只在展开时才生成，首屏 DOM 增加 70–250 个节点（如 wcf 1356 → 1553、creeds 917 → 1169）；滚动高亮用二分查找，每 140ms 最多一次，目录隐藏时不计算。电脑端滚动 5 秒的主线程总耗时增加约 30–70ms。所有页面 CLS 仍为 0。
 
 ### v3.1 → v3.2（同一台机器、同一脚本；手机 390px、触屏模拟、CPU 降速 4 倍；本地 gzip 服务器）
 
@@ -208,6 +226,7 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 ```
 docs/            # 发布的静态网站（GitHub Pages / Surge / Netlify 均发布此目录）
 generator/           # 生成器（Python 3）
+  toc.py                # v3.3：构建时生成三级大纲（目录数据、一级序号）
   data/standards.json   # 从 RTF-USA PDF 提取的西敏三份文件（含证明经文）
   data/cci_struct.json  # 从 ccifellowship.org 抓取的信经与三项联合信条
   content_wcf.py        # 信仰告白逐章解读
@@ -231,7 +250,7 @@ generator/           # 生成器（Python 3）
 
 部署：
 ```bash
-npx -y surge docs westminster-standards-20261114-v3-2-grokstudy.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
+npx -y surge docs westminster-standards-20261114-v3-3-grokstudy.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
 env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --site <site-id>
 ```
 
@@ -239,6 +258,7 @@ env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --s
 
 | 版本 | 日期（台北时间） | 说明 |
 |---|---|---|
+| v3.3 | 2026-11-14 | **目录**：每页三级目录（构建时生成，含渐进加载的内容），一级加序号（页面一级标题同步显示），二、三级可逐级折叠，⊞ 全部展开 / ⊟ 全部折叠，可筛选；拖动右边缘横向拉宽拉窄（220px – 60% 屏宽，鼠标 / 触屏 / 键盘，记住宽度，双击恢复）；长标题单行省略、截断时悬停显示全文；滚动时高亮当前位置并展开上级（「全部折叠」后不再自动展开，直到再次滚动）。**结构**：信仰告白按七大板块分组、章为二级、172 节为三级；大 / 小要理分为导览 · 当信什么 · 当尽本分，每一问为三级；地图集分为总览 · 欧陆 · 不列颠 · 走向世界 · 两大家族；总览、深度对比、记忆训练各分三部分；首页去掉「第一层…第五层」的重复编号。**界面**：一级部分标题改为渐变色带 + 序号徽章；目录很宽、正文变窄时，网格与长网址自动换行不溢出。**检查**：11 页 × 360/390/768/1024/1440 × 10 配色 × 浅/深 = 1100 次加载（另有修复后复查 110 次），每次都展开全部折叠框、点击全部选项卡、地图视图、主题面板、图例、悬浮导航、速读 / 遮盖模式；目录全部展开 / 折叠、拉到最窄 / 最宽 / 双击复位，并点击目录跳转（各宽度、浅色首套配色）：无溢出、重叠、截断，无 JS 错误，对比度 ≥ 4.5；瓦片 10 种故障情形全部通过；引文核对通过。 |
 | v3.2 | 2026-11-14 | **地图**：在线源从 3 个增至 14 个（OSM / OSM 德国 / OSM 法国 / HOT / CyclOSM / Esri 街道 · 浅灰 · 深灰 · NatGeo · 卫星 / OpenTopoMap / NASA GIBS / 高德街道 · 卫星），中国大陆可用高德（GCJ-02 换算）；打开时并行测速选最快一家，失败自动切换，全部失败退回离线底图；分组切换器 + ↻ 重试；「🛰️ 地图源体检」；离线底图加经纬网、海洋名、1:50m 海岸线；移除已需密钥的 CARTO。新增三幅地图：多特 1618 vs 西敏 1643、苏格兰盟约运动 1638–1690、亚洲与中国的长老会传播 1842–1885（共 8 幅）；每幅图新增「🎬 情景讲解」（自动播放故事卡，三幅配动画情景图）。**内容 · 可视化**：总览「救赎历史之河」12 站圣约动态图；深度对比「同一真理 · 三种密度」5 个主题逐字对照 + 字数条；历史「六幕连播」；配色更生动（标题图标、统计渐变、卡片悬浮）。**标注**：速读 / 遮盖两种阅读模式，图例「三遍法」。**界面**：小面积毛玻璃（低配自动关闭，可手动开关）。**检查**：11 页 × 360/390/768/1024/1440 × 10 配色 × 浅/深 = 1100 次加载，每次展开全部折叠框、点击全部选项卡与地图视图、目录、主题面板、图例、悬浮导航、速读 / 遮盖模式：无溢出、重叠、截断、JS 错误，对比度 ≥ 4.5；瓦片 10 种故障情形全部按预期切换或退回离线底图；引文核对通过。 |
 | v3.1 | 2026-10-23 | **真机流畅度**：长页面渐进加载（信仰告白首屏 DOM 8572 → 1336 节点，背诵版 7452 → 1207，大要理 5193 → 977）；去掉 Lenis（原生滚动）、顶栏毛玻璃、滤镜与阴影动画；阅读进度改用 CSS 滚动时间线；WebP 图片异步解码；Speculation Rules 预渲染 + 跨页 View Transitions。**配色**：新增水墨 · 樱粉 · 皇家 · 北境（共 10 套 × 浅/深），主题面板改为双色预览卡，全部组合对比度 ≥ 4.5。**标注与排版**：红色字＝信条拒绝的错误立场；定义句自动蓝底、应用首句绿底、「而是 / 所以」双下划线；逐字引文衬线体、概括「」琥珀色；图例按用途分组；中文行高、字距、行宽（约 42 字）、标题层级与动画下划线、中英文自动间距。**可视化**：总览页新增「经文版图」——按全部 2116 条经文出处统计的书卷 Top 12 条形图、新旧约环形图与三份文件对比表（由数据自动计算）。**检查**：11 页 × 390/768/1440 × 10 配色 × 浅/深 = 660 次加载，无溢出、重叠、JS 错误，对比度达标；瓦片封锁 6 种情形全部正确切换；引文核对通过。 |
 | v3.0 | 2026-10-23 | **历史 · 地图 · 文化**：新增「🧭 地图集」页——信条年代图与五幅主题地图（宗教改革欧洲、1640 年代不列颠群岛、伦敦西敏区与耶路撒冷厅、全球传播：费城 1706/1729/1788 · 厦门/台南/淡水 · 朝鲜、欧陆改革宗 vs 长老会）；每幅图都有离线手绘示意图（动画路线、地标）和实景地图（Natural Earth 自带底图 + OSM → OSM France HOT → OpenTopoMap 自动切换，有错误与超时检测，懒加载），配本图时间线、文化特征和来源。历史页的旧 Leaflet 地图换成同一组件。**界面**：右下角悬浮导航（首页/目录/后退/前进/顶部/底部 + 阅读进度环）；新配色「史卷」；标注系统新增年代、地名、人物、蓝/绿底、双下划线、左色条段落，图例同步。**流畅度**：View Transitions、悬停预取、信仰告白分块渲染、地图 CSS 按需加载。**检查**：11 页 × 3 种宽度 × 12 种主题组合；瓦片封锁测试（单家/两家/全部失败、超时）全部按预期切换或退回离线底图；引文核对通过。 |
@@ -246,6 +266,6 @@ env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --s
 | v2.0 | 2026-10-21 | **性能**：移除大面积 backdrop-filter 与模糊动画（仅顶栏保留轻度毛玻璃）；Mermaid（ESM 分包）与 Leaflet 改为进入视口才加载；长内容 `content-visibility:auto`；滚动处理 rAF 节流 + passive；脚本 defer；去掉阻塞渲染的网络字体；电脑端 Lenis 丝滑滚动（手机原生）；尊重“减少动态效果”。**主题**：5 套配色 × 浅/深/跟随系统，无闪烁。**标注系统**：统一图例（粗体/彩色术语/荧光/实线·虚线·波浪下划线/交叉索引/提示框）。**内容**：每章新增「长老会正统」与「常见误解」，解读改为标签页以精简篇幅；1647原文 vs 美国修订本对照；救恩次序链；篇幅统计、环形图、韦恩图、问题→文件流程图、两大传统谱系图、背诵进度环。**引文规范**：“ ”只用于逐字原文（程序核对 RTF 译本与 ccifellowship 语料，圣经引文按和合本核对），其余改用「 」。 |
 | v1.0 | 2026-10-20 | 首次发布：10 个页面；三份西敏文件全文与证明经文；逐章/分组解读；时间线、故事线、互动地图；Mermaid 流程图与思维导图；深度对比；背诵模式与记忆训练；三大普世信经与三项联合信条原文；毛玻璃 UI、深浅色主题、可隐藏目录、手机/平板/电脑自适应。 |
 
-归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`、`v3.0-20261023`、`v3.1-20261023`、`v3.2-20261114`，每个都有对应的 GitHub Release（含整站 zip）。
+归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`、`v3.0-20261023`、`v3.1-20261023`、`v3.2-20261114`、`v3.3-20261114`，每个都有对应的 GitHub Release（含整站 zip）。
 
 后续版本请按 `主题-日期-版本号-GROKstudy` 规则（v3.1 及以前为 `-grokser`）更新 Surge / Netlify 域名，并在此表追加记录。

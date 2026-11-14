@@ -59,6 +59,7 @@ def build_index():
     import re as _re
     strip=lambda t:_re.sub(r'⟦\d+⟧','',t)
     nw=sum(len(strip(x['text'])) for c in D['wcf'] for x in c['secs']); nl=sum(len(strip(u['ques']+u['ans'])) for u in D['wlc']); ns=sum(len(strip(u['ques']+u['ans'])) for u in D['wsc'])
+    b.append(part('入门：这是什么，怎样用','🚀','p-start','各页导航 · 标注系统 · 主题'))
     b.append(h2('从这里开始','🚀','start'))
     cards=[('wcf.html','📘','信仰告白 · 逐章精解','原文 + 核心要义 + 圣经神学 + 圣约神学 + 欧陆对照 + 难点 + 应用 + 记忆钩子'),
            ('wlc.html','📗','大要理问答 · 196问','15个主题板块，牧者与成熟信徒的「讲道手册」'),
@@ -89,7 +90,8 @@ def build_index():
      ('🛠️ 怎样应用（How）','<p>个人：以第1问校准人生目的；家庭：以小要理问答作家庭敬拜教材；教会：作为讲道、门训、按立与教会纪律的教义标准；宣教：为华人教会提供成熟、经过历史检验的信仰语言。</p>','bl-sal')])+'</div>')
     b.append(callout('key-pt','📖 学习顺序（本站所用译本卷末托马斯·曼顿〔Thomas Manton〕序言原句）','<span class="verse">“先学习《小要理问答》，其次是《大要理问答》，最后是《信仰告白》。”</span>'))
     # whole bible
-    b.append(h2('第一层：跳出框架——从整本圣经看','🌏','bible'))
+    b.append(part('骨架：整本圣经与圣约','🌏','p-core','救赎历史 · 经文版图 · 两约'))
+    b.append(h2('跳出框架：从整本圣经看','🌏','bible'))
     b.append('<p class="lead">西敏标准不是一套抽象哲学，而是对<b>圣经整体叙事</b>的系统总结。下表把圣经的救赎历史主线，与西敏标准、三项联合信条的对应位置并列，帮助你先看见「森林」，再看「树木」。</p>')
     rows=[('🌳 创造','创1–2','神是创造主，人按神形像受造，伊甸是圣所','WCF 4；WSC 9–10；WLC 15–17','HC 6；BC 12, 14'),
           ('🍎 行为之约·堕落','创2:16-17；创3；罗5','亚当作为代表元首违约，全人类在他里面堕落','WCF 6–7.2；WSC 12–19；WLC 20–29','HC 3–11；BC 14–15；CD III/IV'),
@@ -111,7 +113,7 @@ def build_index():
     b.append(river())
     # covenant theology
     b.append(proof_section())
-    b.append(h2('第二层：神学核心——圣约神学','🤝','covenant'))
+    b.append(h2('神学核心：圣约神学','🤝','covenant'))
     b.append('<p class="lead">西敏标准最显著的结构特征是<b>圣约</b>：神与人之间“距离是如此之远”，人要得着祝福，唯有神<b>屈尊降卑</b>以约的方式与人相交（WCF 7.1）。欧陆改革宗（布林格、乌尔西努、俄利维亚努等）是圣约神学的源头之一；西敏会议把它以信条形式系统化。</p>')
     b.append('<div class="mermaid">'+esc('''flowchart TB
   PS["🕊️ 救赎之约（永恒中·父与子）<br/>神学传统中的概念，WCF 8.1 与 WLC 31 隐含其意"]:::a
@@ -135,7 +137,8 @@ def build_index():
       ('📜 一约两施行','旧约与新约不是两种救法，而是同一恩典之约在不同时期的施行（WCF 7.5–7.6）。这是婴儿洗礼、教会连续性、以经解经的基础。','bl-sal'),
       ('🇳🇱 与欧陆的连接','海德堡第74问以婴孩“与父母同属于神的圣约和教会”为洗礼根据；《比利时信条》第17条描写神在人堕落后“来寻找战兢地躲避他面的人”。两大传统共享同一圣约骨架，西敏在术语上更系统。','bl-chr')])+'</div>')
     # mind map
-    b.append(h2('第三层：思维导图——三份文件一张图','🧠','mindmap'))
+    b.append(part('读法：全景与视角','🧠','p-read','思维导图 · 两大传统 · 多视角'))
+    b.append(h2('思维导图：三份文件一张图','🧠','mindmap'))
     b.append('<div class="mermaid">'+esc('''mindmap
   root((西敏标准))
     信仰告白 33章
@@ -160,7 +163,7 @@ def build_index():
         十诫 45-81
         主祷文 99-107''')+'</div>')
     # continental lens
-    b.append(h2('第四层：两大改革宗传统的阅读视角','🇳🇱','continental',toc='第四层：欧陆 + 长老会视角'))
+    b.append(h2('两大改革宗传统的阅读视角','🇳🇱','continental',toc='🇳🇱 两大传统：欧陆 + 长老会'))
     b.append('<div class="mermaid">'+esc('''flowchart LR
   R["🔥 宗教改革 16世纪"] --> EU["🇳🇱🇩🇪🇨🇭 欧陆改革宗"]
   R --> BR["🏴 不列颠改革宗"]
@@ -184,7 +187,7 @@ def build_index():
       +callout('eu-pt','🤝 两大传统怎样互相成全','<span class="u-cmp">欧陆传统</span>给西敏标准带来<b>温暖的安慰语言</b>（HC 1）、殉道与护教的视野（BC）、最详尽的预定论牧养（CD）；<span class="u-cmp">长老会传统</span>给欧陆读者带来<b>精密的定义</b>、清楚的圣约结构与详尽的伦理和蒙恩之道。核心教义完全一致，侧重点互补。',raw=True)+'</div>')
     b.append(callout('eu-pt','🏛️ 洛杉矶改革宗·恩约教会《我们的信仰》（原文摘录，来源 ccreformed.org/our-belief）','<span class="verse">“在恩约教会，我们相信并宣告：古代的基督教信经，即《使徒信经》、《尼西亚信经》、《亚他那修信经》，以及三联合信条，即《比利时信条》、《海德堡要理问答》、《多特信经》，包含了我们的教义准则，及公开宣告的信仰内容。这些信仰文件不是我们独有的。古代信经把我们连结在古代基督教会上，而三联合信条把我们连结在十六、十七世纪广大的改革宗传统中。”</span>'))
     b.append(callout('eu-pt','✍️ 改革宗初学者《信仰告白》（原文摘录，来源 reformedbeginner.net/statement-of-faith）','<span class="verse">“改革宗初学者博客认信普世大公教会所共同持守的大公信经：使徒信经、尼西亚信经、亚他那修信经； 并继承改革宗的认信传统，与历代改革宗基督徒同口承认以下的信仰文件忠心总结了圣经的教义系统：三联合信条（即海德堡要理问答、比利时信条、多特信经）；威敏斯特准则（威敏斯特信仰告白、威敏斯特大、小要理问答）。”</span>'))
-    b.append(h2('第五层：从不同视角读','👓','lenses'))
+    b.append(h2('从不同视角读','👓','lenses'))
     lenses=[('🏺','历史视角','把文件放回1640年代的战争、国会与盟约中：它们是「危机中的信仰告白」。'),('📚','圣经神学视角','跟随救赎历史的主线（创造—堕落—救赎—成全），看每一条教义在圣经故事中的位置。'),('🤝','圣约神学视角','以行为之约与恩典之约为骨架，理解律法与福音、旧约与新约、亚当与基督。'),('🏛️','系统神学视角','按「神论—人论—基督论—救恩论—教会论—末世论」检查体系的完整与一致。'),('🎶','敬拜视角','规范原则、安息日、圣礼、祷告：教义如何塑造主日。'),('👨‍👩‍👧','家庭与教育视角','要理问答原本就是为家庭与儿女写的：曼顿序言强调家长的教导责任。'),('⚖️','伦理与社会视角','大要理的十诫详解是一部完整的基督徒伦理学：家庭、经济、言语、心思。'),('🌏','华人教会视角','在没有基督教王国背景的处境中，学习区分永恒教义与17世纪的政治安排（如官员条款）。')]
     b.append('<div class="tbl rv"><table><thead><tr><th>视角</th><th>问什么</th></tr></thead><tbody>'+''.join(f'<tr><td><b>{i} {t}</b></td><td>{mk(d)}</td></tr>' for i,t,d in lenses)+'</tbody></table></div>')
     open(OUT+'index.html','w').write(page('index.html','总览：从整本圣经看西敏标准','\n'.join(b)))
@@ -232,10 +235,13 @@ def build_atlas():
     b.append('<div class="stats rv" style="margin-top:18px">'+''.join(f'<div class="stat"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [(str(len(MAPS)),'主题地图'),(str(n),'标注地点'),('14','在线地图源 + 离线底图'),('1517','起点：维登堡'),('1643','西敏会议开幕'),('1885','改革宗信仰到朝鲜')])+'</div>')
     b.append('<nav class="mapnav rv" aria-label="地图目录">'+''.join(f'<a href="#map-{m["id"]}"><span>{m["icon"]}</span>{esc(m["title"].split("：")[0].split("（")[0])}</a>' for m in MAPS)+'</nav>')
     b.append('<details class="tilecheck rv"><summary>🛰️ 地图打不开？点这里给 14 个地图源「体检」</summary><p class="muted small">在你当前的网络下逐一测试每个地图源（各下载一张约 10 KB 的小图），显示是否可用与响应时间。实景地图的「⚡自动」模式也是这样挑选最快的一家。</p><button type="button" class="btn tc-run">▶ 开始测速</button><div class="tc-out" aria-live="polite"></div></details>')
+    b.append(part('总览：一百年的告白浪潮','📊','p-wave'))
     b.append(h2('信条年代图：一百多年里的告白浪潮','📊','confchart'))
     b.append('<p>把宗教改革时期的主要信条放在同一条时间轴上，就能看见西敏标准的位置：它是这场告白运动<mark>最晚、也最系统</mark>的成果之一，吸收了此前欧陆与不列颠一百多年的神学积累。</p>')
     b.append(confession_chart())
+    PARTS={'reform':('欧陆：改教与会议','🇪🇺','p-eu','维登堡 · 日内瓦 · 海德堡 · 多特'),'brit':('不列颠：盟约、内战与会议','🏴','p-brit','三个王国 · 苏格兰盟约 · 西敏区'),'global':('走向世界：北美与东亚','🌏','p-world','费城 · 厦门 · 台湾 · 朝鲜'),'geo':('两大改革宗家族与读图要点','🧭','p-fam','欧陆改革宗 vs 长老会')}
     for m in MAPS:
+        if m['id'] in PARTS: b.append(part(*PARTS[m['id']]))
         b.append(h2(esc(m['title']),m['icon'],'map-'+m['id']))
         b.append(mapblock(m))
     b.append(h2('读图要点','🧠','takeaways'))
@@ -249,6 +255,7 @@ def build_compare():
     b=[]
     b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/dort.webp)"><div class="shine"></div><div class="floaty">⚖️</div><h1> 深度对比</h1>
 <p>三份西敏文件之间的异同；为什么需要三份而不是一份；它们各自要解决什么问题；以及西敏标准与欧陆<b>三项联合信条</b>、<b>三大普世信经</b>的系统对照。</p></section>''')
+    b.append(part('三份文件之间：分工与对照','📊','p-three','总览 · 为何三份 · 逐字对照 · 位置矩阵'))
     b.append(h2('三份西敏文件总览','📊','three'))
     rows=[('体裁','系统性信条（章·节）','详尽的问答','精炼的问答'),
           ('完成/呈交','1646年12月；1647年附经文','1647年10月；1648年附经文','1647年11月；1648年附经文'),
@@ -290,6 +297,7 @@ def build_compare():
     mx=[('圣经','1','2–5','2–3','2–7','—（参21、22）','—'),('神与三一','2','6–11','4–6','1, 8–11','25','—'),('预定','3','12–14','7–8','16','54','第一项'),('创造与护理','4–5','15–19','9–11','12–13','26–28','—'),('堕落与原罪','6','21–29','13–19','14–15','3–11','第三、四项'),('圣约','7','20, 30–35','12, 20','17（应许）','74（洗礼与约）','—'),('中保基督','8','36–56','21–28','18–21, 26','12–19, 29–52','第二项'),('自由意志','9','25, 149','—','14','8','第三、四项'),('有效呼召','10','67–68','31','—','54, 65','第三、四项'),('称义','11','70–73','33','22–23','59–64','第二项'),('成圣与善行','13, 16','75, 77–78','35','24','86–91','—'),('坚忍与确据','17–18','79–81','36','—','1, 53–54','第五项'),('律法与十诫','19','91–152','39–84','25','92–115','—'),('敬拜与安息日','21','108–121','45–62','—','96–98, 103','—'),('教会','25–26','61–65','—','27–29','54–55','—'),('圣礼','27–29','161–177','91–97','33–35','65–82','—'),('教会惩戒与治理','30–31','—','—','30–32','83–85','—'),('政府官员','23','—','—','36','—','—'),('末后之事','32–33','82–90','37–38','37','52, 57–58','—')]
     b.append('<div class="tbl rv"><table><thead><tr><th>教义</th><th>📘 WCF 章</th><th>📗 WLC 问</th><th>📙 WSC 问</th><th>📕 BC 条</th><th>📗 HC 问</th><th>📙 CD</th></tr></thead><tbody>'+''.join('<tr>'+''.join(f'<td>{"<b>"+x+"</b>" if i==0 else x}</td>' for i,x in enumerate(r))+'</tr>' for r in mx)+'</tbody></table></div>')
     b.append('<p class="muted">对应关系为学习用的参考索引（并非逐字对应）。BC=比利时信条，HC=海德堡要理问答，CD=多特信经。</p>')
+    b.append(part('与其他信条：欧陆、美国修订与普世信经','🇳🇱','p-other'))
     b.append(h2('西敏标准 vs 三项联合信条','🇳🇱','vs3fu'))
     rows=[('年代','1643–1648','1561 / 1563 / 1618–1619'),
           ('地点','伦敦·西敏寺','南尼德兰 / 海德堡 / 多特'),
@@ -324,6 +332,7 @@ def build_memory():
     wcft=[c['title'] for c in D['wcf']]
     b=[]
     b.append('''<section class="hero" style="background-image:var(--hero-grad),url(assets/img/abbey.webp)"><div class="shine"></div><div class="floaty">🧠</div><h1>🧠 记忆训练营</h1><p>口诀 + 记忆宫殿 + 翻转卡片 + 小测验：把「读过」变成“记住”，把“记住”变成“活出”。</p></section>''')
+    b.append(part('起步：进度与全局','📈','p-start'))
     b.append(h2('我的背诵进度','📈','progress'))
     b.append('<div class="rings">'+''.join(f'<div class="pring rv" data-ring="{p}" data-total="{t}" style="--c:{c}"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="45"/><circle class="fgc" cx="55" cy="55" r="45" stroke-dasharray="283" stroke-dashoffset="283"/></svg><b>0 / {t}</b><span>{n}</span></div>' for p,t,c,n in [('wsc-',107,'var(--a3)','📙 小要理问答'),('wlc-',196,'var(--a2)','📗 大要理问答'),('wcf-',172,'var(--a1)','📘 信仰告白（节）')])+'</div>')
     b.append('<p class="muted">在<a href="recite.html">背诵版</a>或问答页点击「☆ 标记」，进度自动保存在本机。</p>')
@@ -331,6 +340,7 @@ def build_memory():
     b.append(h2('五个数字记住全局','🔢','numbers'))
     b.append('<div class="stats">'+''.join(f'<div class="stat rv"><div class="v">{v}</div><div class="k">{k}</div></div>' for v,k in [('1643','开会·立约'),('1646','信条完成'),('1647','两部要理问答呈交'),('1648','苏格兰批准要理问答'),('33·196·107','章·问·问')])+'</div>')
     b.append(callout('mem-pt','🎵 年代口诀','<b>「四三开会立盟约，四六信条交国会，四七要理双出炉，四八苏格兰全通过。」</b>'))
+    b.append(part('记忆：口诀与记忆宫殿','🏛️','p-mem'))
     b.append(h2('信仰告白33章口诀','📘','wcf33'))
     rhyme=['一经二神三预旨，','四造五护六堕罪，','七约八保九意志，','十召十一称为义，','十二收养十三圣，','十四信心十五悔，','十六善行十七坚，','十八确据十九律，','二十自由二一拜，','二二誓愿二三官，','二四婚姻二五会，','二六相通二七礼，','二八洗礼二九餐，','三十惩戒三一议，','三二死后三三审。']
     b.append('<div class="bigquote rv">'+'<br>'.join(rhyme)+'</div>')
@@ -346,6 +356,7 @@ def build_memory():
     b.append('<div class="flow rv">'+''.join(f'<div class="st"><div class="e">{e}</div><b>{t}</b><small>{s}</small></div>' for e,t,s in [('🎯','1–5','目的·圣经'),('✨','6–20','神·预旨·创造·护理·生命之约'),('💔','21–29','堕落·罪·刑罚'),('🤝','30–35','恩典之约'),('✝️','36–56','中保：位格·三职·两状态'),('⛪','57–65','施行·教会'),('🌱','66–81','恩典中相交'),('🌅','82–90','荣耀中相交'),('📜','91–97','道德律三用'),('🔟','98–148','十诫'),('⚖️','149–153','罪的轻重与出路'),('💧','154–177','圣道与圣礼'),('🙏','178–196','祷告')])+'</div>')
     b.append(callout('mem-pt','🧠 「前90信、后106行」',raw=True,content='大要理问答以<b>第90问</b>为分水岭：<b>1–90</b> 当信什么（神 → 人 → 约 → 基督 → 恩典中 → 荣耀中），<b>91–196</b> 当尽何本分（律法 → 十诫 → 罪与出路 → 蒙恩之道）。口诀：「<b>神人约主，恩荣两交；律诫罪道，祷告收尾</b>」。'))
     b.append(callout('mem-pt','📏 十诫解释八规则（WLC 99，概括）',raw=True,content='<ol style="margin:.3em 0 0 1.2em"><li><b>完全</b>：律法要求全人完全的顺服。</li><li><b>属灵</b>：管到悟性、意志、情感与心灵。</li><li><b>互见</b>：同一件事可在几条诫命中从不同角度被要求或禁止。</li><li><b>正反</b>：吩咐一项本分，就禁止相反的罪；禁止一项罪，就吩咐相反的本分。</li><li><b>时机</b>：所禁止的任何时候都不可行；所吩咐的总是本分，但不是每项本分时时都要做。</li><li><b>同类</b>：一项罪或本分之下，同类的一切连同其原因、手段、机会都包括在内。</li><li><b>推己</b>：自己当守的，也要按身份帮助别人守。</li><li><b>助人</b>：别人当守的，我们要按身份与呼召帮助他们。</li></ol>口诀：「<b>全灵互反，时类己人</b>」。逐字原文见 <a href="wlc.html#q99">大要理第99问</a>。'))
+    b.append(part('自测：卡片与小测验','✅','p-test'))
     b.append(h2('翻转卡片：小要理问答','🃏','flashsec'))
     b.append('''<div class="card"><div class="filters"><select id="fRange" class="btn"><option value="1-107">全部 1–107</option><option value="1-38">当信 1–38</option><option value="39-81">十诫 39–81</option><option value="82-107">蒙恩之道 82–107</option></select>
 <button class="btn" id="fPrev">⬅️ 上一张</button><button class="btn pri" id="fFlip">🔄 翻转</button><button class="btn" id="fNext">下一张 ➡️</button><button class="btn" id="fRand">🎲 随机</button></div>
@@ -390,7 +401,7 @@ def build_sources():
     links=[('欧陆改革宗','https://canrc.org','Canadian Reformed Churches'),('欧陆改革宗','https://www.urcna.org','United Reformed Churches in North America'),('欧陆改革宗','https://heritagereformed.com','Heritage Reformed Congregations'),('欧陆改革宗','https://www.prca.org','Protestant Reformed Churches in America'),('长老会改革宗','https://opc.org','Orthodox Presbyterian Church（含西敏标准英文本）'),('神学院','https://www.wts.edu','Westminster Theological Seminary（含 WCF 英文本 wts.edu/wcf）'),('神学院','https://crts.edu','Canadian Reformed Theological Seminary'),('神学院','https://canadianreformedseminary.ca','Canadian Reformed Seminary'),('中文','https://ccifellowship.org','中国改革宗教会（敬拜手册、海德堡要理问答证道）'),('中文','https://www.ccreformed.org','洛杉矶改革宗·恩约教会'),('中文','https://www.reformedbeginner.net','改革宗初学者'),('中文','https://rtf-usa.com','RTF-USA 改革宗翻译社')]
     b.append('<div class="grid g4">'+''.join(f'<a class="card navcard" href="{u}" target="_blank" rel="noopener"><span class="pill">{k}</span><h3 style="font-size:16px">{u.replace("https://","")}</h3><p>{d}</p></a>' for k,u,d in links)+'</div>')
     b.append(h2('版本记录','🗂️','versions'))
-    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a3)"><span class="y">v3.2 · 2026-11-14</span>地图：实景地图改为 <b>14 个免密钥地图源</b>（OpenStreetMap 及德国/法国镜像、HOT、CyclOSM、OpenTopoMap、Esri 街道/浅灰/深灰/国家地理/卫星、NASA 蓝色弹珠、高德地图/高德卫星），「⚡自动」先并行测速、按快慢排序，失败自动换下一家；高德采用 GCJ-02，切换时标记自动校正；离线 Natural Earth 底图加经纬网与海名；右上角分组切换 + ↻ 重新测速；地图集新增「地图源体检」。新增三幅地图：多特（1618）vs 西敏（1643）、苏格兰盟约之地（1638–1690）、改革宗信仰来到东亚（1842–1885），共 8 幅；每幅图新增「🎬 情景讲解」分镜，另有三幅动画情景图（三王国关系、文件诞生流程、两场会议的组成）。内容：总览新增「救赎历史之河」动态图；深度对比新增「同一真理 · 三种密度」——称义、恩典之约、成圣、神、信心五项教义在三份文件中的原文逐字并排与字数对比；历史页新增六幕分镜。标注：新增「🔦 重点模式」（只亮标注）与「🙈 遮挡背诵」（荧光/定义/日期变空格，点击揭晓），图例加「三遍法」。体验：导航按钮、目录标题、面板、地图控件适度毛玻璃（低配设备与减少动态效果时自动关闭，可在主题面板关闭）；配色更活泼（标题图标与统计卡三色轮换）。v3.1 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.1-20261023" target="_blank" rel="noopener">GitHub Release v3.1-20261023</a>。</div><div class="ev big" style="--dot:var(--a2)"><span class="y">v3.1 · 2026-10-23</span>流畅度：长页面改为渐进加载（信仰告白首屏 DOM 节点 8572 → 约 1300，大要理 5193 → 约 1000，背诵版 7452 → 约 1200），去掉 Lenis 改用浏览器原生滚动，去掉顶栏毛玻璃与滤镜动画，阅读进度改用 CSS 滚动时间线，图片改为 WebP 并异步解码，站内链接预渲染（Speculation Rules）+ 跨页 View Transitions。新增 4 套配色（水墨 · 樱粉 · 皇家 · 北境，共 10 套 × 浅/深），主题面板改为浅/深双色预览卡。标注系统新增「红色字＝信条拒绝的错误立场」、定义自动蓝底、应用首句绿底、「而是 / 所以」双下划线，图例分组；中文排版优化（行高、字距、行宽、标题层级、中英文间距）。新增「经文版图」统计图（全部经文出处按书卷计数、新旧约占比）。</div><div class="ev big" style="--dot:var(--a1)"><span class="y">v3.0 · 2026-10-23</span>聚焦「历史 · 地图 · 文化」：新增<a href="atlas.html">🧭 地图集</a>（宗教改革欧洲、1640年代不列颠群岛、伦敦西敏区与耶路撒冷厅、西敏标准的全球旅程、欧陆改革宗 vs 长老会地理），每张图都有离线可用的手绘示意图（动画路线与地标）和可缩放的实景地图（自带 Natural Earth 底图 + 三家免密钥瓦片自动切换）、本图时间线、文化特征与来源；主要信条年代图；右下角悬浮导航（首页/目录/后退/前进/顶部/底部 + 阅读进度）；页面间视图过渡与悬停预取；新增「史卷」配色；标注系统扩充（年代、地名、人物、蓝/绿底、双下划线、左色条段落）；信仰告白页渲染分块以减少长任务。v2.1 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022" target="_blank" rel="noopener">GitHub Release v2.1-20261022</a>。</div><div class="ev" style="--dot:#0891b2"><span class="y">v2.1 · 2026-10-22</span>流程图与思维导图改为构建时预渲染的 SVG（页面不再运行 Mermaid，颜色随主题切换）；Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN（只有地图底图来自 OpenStreetMap）；大、小要理问答每个板块新增「圣约神学 · 长老会正统 · 生活应用」三个视角；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。v2.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021" target="_blank" rel="noopener">GitHub Release v2.0-20261021</a>。</div><div class="ev" style="--dot:#7c3aed"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
+    b.append('<div class="tl"><div class="ev big" style="--dot:var(--a1)"><span class="y">v3.3 · 2026-11-14</span>目录：每页改为<b>三级目录</b>——一级加序号（一、二、三…），二级、三级可逐级折叠（▸ 箭头），顶部「⊞ 全部展开 / ⊟ 全部折叠」；目录可<b>拖动右边缘横向拉宽拉窄</b>（220px 至屏幕 60%，鼠标、触屏、键盘 ←/→ 均可，宽度记在本机，双击恢复默认）；长标题单行显示、被截断时悬停显示全文；滚动时自动高亮当前位置并展开其上级。各页重新分组：信仰告白按七大板块分组、章为二级、每一节为三级；大/小要理按「当信什么 / 当尽本分」分组、问为三级；地图集按欧陆 / 不列颠 / 走向世界分组；总览、深度对比、记忆训练也分为三个大部分，页面上的一级标题同步加序号。v3.2 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.2-20261114" target="_blank" rel="noopener">GitHub Release v3.2-20261114</a>。</div><div class="ev big" style="--dot:var(--a3)"><span class="y">v3.2 · 2026-11-14</span>地图：实景地图改为 <b>14 个免密钥地图源</b>（OpenStreetMap 及德国/法国镜像、HOT、CyclOSM、OpenTopoMap、Esri 街道/浅灰/深灰/国家地理/卫星、NASA 蓝色弹珠、高德地图/高德卫星），「⚡自动」先并行测速、按快慢排序，失败自动换下一家；高德采用 GCJ-02，切换时标记自动校正；离线 Natural Earth 底图加经纬网与海名；右上角分组切换 + ↻ 重新测速；地图集新增「地图源体检」。新增三幅地图：多特（1618）vs 西敏（1643）、苏格兰盟约之地（1638–1690）、改革宗信仰来到东亚（1842–1885），共 8 幅；每幅图新增「🎬 情景讲解」分镜，另有三幅动画情景图（三王国关系、文件诞生流程、两场会议的组成）。内容：总览新增「救赎历史之河」动态图；深度对比新增「同一真理 · 三种密度」——称义、恩典之约、成圣、神、信心五项教义在三份文件中的原文逐字并排与字数对比；历史页新增六幕分镜。标注：新增「🔦 重点模式」（只亮标注）与「🙈 遮挡背诵」（荧光/定义/日期变空格，点击揭晓），图例加「三遍法」。体验：导航按钮、目录标题、面板、地图控件适度毛玻璃（低配设备与减少动态效果时自动关闭，可在主题面板关闭）；配色更活泼（标题图标与统计卡三色轮换）。v3.1 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.1-20261023" target="_blank" rel="noopener">GitHub Release v3.1-20261023</a>。</div><div class="ev big" style="--dot:var(--a2)"><span class="y">v3.1 · 2026-10-23</span>流畅度：长页面改为渐进加载（信仰告白首屏 DOM 节点 8572 → 约 1300，大要理 5193 → 约 1000，背诵版 7452 → 约 1200），去掉 Lenis 改用浏览器原生滚动，去掉顶栏毛玻璃与滤镜动画，阅读进度改用 CSS 滚动时间线，图片改为 WebP 并异步解码，站内链接预渲染（Speculation Rules）+ 跨页 View Transitions。新增 4 套配色（水墨 · 樱粉 · 皇家 · 北境，共 10 套 × 浅/深），主题面板改为浅/深双色预览卡。标注系统新增「红色字＝信条拒绝的错误立场」、定义自动蓝底、应用首句绿底、「而是 / 所以」双下划线，图例分组；中文排版优化（行高、字距、行宽、标题层级、中英文间距）。新增「经文版图」统计图（全部经文出处按书卷计数、新旧约占比）。</div><div class="ev big" style="--dot:var(--a1)"><span class="y">v3.0 · 2026-10-23</span>聚焦「历史 · 地图 · 文化」：新增<a href="atlas.html">🧭 地图集</a>（宗教改革欧洲、1640年代不列颠群岛、伦敦西敏区与耶路撒冷厅、西敏标准的全球旅程、欧陆改革宗 vs 长老会地理），每张图都有离线可用的手绘示意图（动画路线与地标）和可缩放的实景地图（自带 Natural Earth 底图 + 三家免密钥瓦片自动切换）、本图时间线、文化特征与来源；主要信条年代图；右下角悬浮导航（首页/目录/后退/前进/顶部/底部 + 阅读进度）；页面间视图过渡与悬停预取；新增「史卷」配色；标注系统扩充（年代、地名、人物、蓝/绿底、双下划线、左色条段落）；信仰告白页渲染分块以减少长任务。v2.1 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022" target="_blank" rel="noopener">GitHub Release v2.1-20261022</a>。</div><div class="ev" style="--dot:#0891b2"><span class="y">v2.1 · 2026-10-22</span>流程图与思维导图改为构建时预渲染的 SVG（页面不再运行 Mermaid，颜色随主题切换）；Mermaid / Leaflet / Lenis 全部自托管，不依赖 CDN（只有地图底图来自 OpenStreetMap）；大、小要理问答每个板块新增「圣约神学 · 长老会正统 · 生活应用」三个视角；记忆训练新增大要理结构口诀与「十诫解释八规则」口诀。v2.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021" target="_blank" rel="noopener">GitHub Release v2.0-20261021</a>。</div><div class="ev" style="--dot:#7c3aed"><span class="y">v2.0 · 2026-10-21</span>性能重构（移除大面积毛玻璃与模糊动画、Mermaid/Leaflet 按需懒加载、content-visibility、rAF 节流、脚本 defer、电脑端丝滑滚动）；5 套配色 × 浅/深/跟随系统；全站统一标注系统与图例；每章新增「长老会正统」与「常见误解」；1647 原文 vs 美国修订本对照；救恩次序链、篇幅统计图、环形图、韦恩图、背诵进度环；引文规范（“ ”=逐字原文，「 」=概括）并全面复核。v1.0 存档：<a href="https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020" target="_blank" rel="noopener">GitHub Release v1.0-20261020</a>。</div><div class="ev" style="--dot:#16a34a"><span class="y">v1.0 · 2026-10-20</span>首次发布：总览（整本圣经/圣约神学/思维导图/欧陆视角/多视角）、历史地理（时间线/故事线/Leaflet地图/人物/文化区域）、信仰告白33章逐章精解、大要理196问与小要理107问分组精解、深度对比、背诵版、记忆训练、信经与三项联合信条原文、来源页。</div></div>')
     b.append(h2('图片署名','🖼️','credits'))
     b.append('<ul>'+''.join(f'<li><a href="{m["page"]}" target="_blank" rel="noopener">{esc(m["title"])}</a> — {esc(m["license"])}</li>' for m in CRED.values())+'</ul>')
     open(OUT+'sources.html','w').write(page('sources.html','来源 · 致谢 · 版本','\n'.join(b)))

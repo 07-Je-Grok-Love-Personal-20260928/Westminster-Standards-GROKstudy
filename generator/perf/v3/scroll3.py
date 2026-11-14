@@ -1,4 +1,4 @@
-import sys,json
+import sys,json,os
 from playwright.sync_api import sync_playwright
 port,tag=sys.argv[1],sys.argv[2]
 pages=sys.argv[3].split(',') if len(sys.argv)>3 else ['index','wcf','recite','history','compare']
@@ -10,8 +10,10 @@ JS='''()=>new Promise(res=>{const d=[];let last=performance.now(),t0=last;let lt
 out={}
 with sync_playwright() as p:
     b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox','--enable-gpu-rasterization'])
-    for w,h,thr in ((390,844,4),(1440,900,1)):
+    WS=[int(x) for x in os.environ.get('WIDTHS','390,1440').split(',')]
+    for w,h,thr in [c for c in ((390,844,4),(1440,900,1)) if c[0] in WS]:
         ctx=b.new_context(viewport={'width':w,'height':h},device_scale_factor=2 if w<500 else 1)
+        if os.environ.get('GLASS')=='off': ctx.add_init_script("localStorage.setItem('wsg_glass',JSON.stringify('off'))")
         for n in pages:
             pg=ctx.new_page();cdp=ctx.new_cdp_session(pg)
             cdp.send('Emulation.setCPUThrottlingRate',{'rate':thr})
