@@ -2,17 +2,18 @@
 import sys,json,re
 from playwright.sync_api import sync_playwright
 base=sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:18931/'
-H={'carto':r'basemaps\.cartocdn\.com','esri':r'server\.arcgisonline\.com','osm':r'tile\.openstreetmap\.org','osmde':r'tile\.openstreetmap\.de','hot':r'tile\.openstreetmap\.fr/hot',
+H={'nasa':r'gibs\.earthdata\.nasa\.gov','esri':r'server\.arcgisonline\.com','osm':r'tile\.openstreetmap\.org','osmde':r'tile\.openstreetmap\.de','hot':r'tile\.openstreetmap\.fr/hot','osmfr':r'tile\.openstreetmap\.fr/osmfr',
    'cyclosm':r'tile-cyclosm\.openstreetmap\.fr','topo':r'opentopomap\.org','gaode':r'autonavi\.com'}
+H['esri']=r'server\.arcgisonline\.com'
 ALL=list(H)
 cases=[
  dict(name='1 正常网络（无拦截）',blk=[],how='abort'),
- dict(name='2 CARTO+Esri+OSM 拦截',blk=['carto','esri','osm'],how='abort'),
+ dict(name='2 OSM+Esri+OSM德国 拦截',blk=['osm','esri','osmde'],how='abort'),
  dict(name='3 仅高德可用（模拟中国大陆）',blk=[k for k in ALL if k!='gaode'],how='abort',map='asia'),
  dict(name='4 全部拦截',blk=ALL,how='abort'),
  dict(name='5 全部无响应（超时）',blk=ALL,how='hang'),
  dict(name='6 测速通过、但正式瓦片失败（OSM）',blk=[],how='abort',late='osm',only='osm'),
- dict(name='7 深色主题 + 仅 CARTO 可用',blk=[k for k in ALL if k!='carto'],how='abort',dark=True),
+ dict(name='7 深色主题 + 仅 NASA GIBS 可用',blk=[k for k in ALL if k!='nasa'],how='abort',dark=True),
  dict(name='8 手动选择 Esri 卫星',blk=[],how='abort',pick='esrisat'),
  dict(name='9 手动选择被拦截的源（OSM 德国）',blk=['osmde'],how='abort',pick='osmde'),
  dict(name='10 伦敦街区图：仅 Esri 可用',blk=[k for k in ALL if k!='esri'],how='abort',map='london'),
@@ -40,7 +41,7 @@ with sync_playwright() as p:
         x.wait_for_timeout(1500)
         st=x.evaluate(f"document.getElementById('mb-{mid}').dataset.tiles");txt=x.inner_text(f'#mb-{mid} .mst')
         loaded=x.evaluate(f"document.querySelectorAll('#mb-{mid} .leaflet-tile-loaded').length")
-        base_ok=x.evaluate(f"document.querySelectorAll('#mb-{mid} .leaflet-basePane-pane canvas').length")
+        base_ok=x.evaluate(f"document.querySelectorAll('#mb-{mid} .lmap canvas').length")
         pins=x.evaluate(f"document.querySelectorAll('#mb-{mid} .lpin').length")
         x.locator(f'#mb-{mid} .mv-l').screenshot(path=f"/workspace/perf/v32/tiles_{len(res)+1}.png")
         res.append(dict(case=c['name'],status=st,text=txt,tilesLoaded=loaded,offlineBase=base_ok,pins=pins,log=x.evaluate('window.__tileLog'),errs=errs))

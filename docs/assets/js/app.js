@@ -152,28 +152,30 @@ const mEls=$$('.mermaid:not([data-done])');if(mEls.length){mEls.forEach(el=>mmSr
 /* ---------- v3.0 maps: hand-drawn concept maps + live Leaflet maps with tile failover ---------- */
 const NM=()=>RM||root.classList.contains('no-motion');
 const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-/* v3.2: 13 keyless providers in 4 groups. Auto mode races one probe tile per provider (fastest reachable first, cached per session),
-   then fails over down that ranking; the self-hosted Natural Earth layer is always underneath. Gaode uses GCJ-02: markers are shifted to match. */
+/* v3.2: 14 keyless tile providers in 3 groups (checked 2026-11-14; CARTO dropped: since 2026-09-25 it serves "API KEY REQUIRED" tiles without a key).
+   Auto mode races one probe tile per provider (fastest reachable first, cached 30 min per session), then fails over down that ranking;
+   the self-hosted Natural Earth layer is always underneath. Gaode uses GCJ-02: markers are shifted to match while it is shown. */
 const OSMA='© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
-const CARTOA=OSMA+' © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>';
-const ESRIA=t=>'Tiles © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>'+(t?' — '+t:'');
+const ESRIA=t=>'Powered by <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>'+(t?' | Sources: '+t:'');
 const GDA='© <a href="https://www.amap.com/" target="_blank" rel="noopener">高德地图 AutoNavi</a>';
+const ESRI='https://server.arcgisonline.com/ArcGIS/rest/services/';
 const TILES=[
- {id:'carto',g:'w',n:'CARTO Voyager（彩色）',u:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
- {id:'esri',g:'w',n:'Esri World Street',u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Source: Esri, HERE, Garmin, USGS, NGA, OpenStreetMap contributors')}},
  {id:'osm',g:'w',n:'OpenStreetMap',u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',o:{maxZoom:19,attribution:OSMA}},
  {id:'osmde',g:'w',n:'OpenStreetMap 德国',u:'https://tile.openstreetmap.de/{z}/{x}/{y}.png',o:{maxZoom:18,attribution:OSMA}},
- {id:'hot',g:'w',n:'OSM France · HOT',u:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · 风格 <a href="https://www.hotosm.org/" target="_blank" rel="noopener">HOT</a> · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
+ {id:'osmfr',g:'w',n:'OpenStreetMap 法国',u:'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
+ {id:'hot',g:'w',n:'OSM 人道主义（HOT）',u:'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · 风格 <a href="https://www.hotosm.org/" target="_blank" rel="noopener">HOT</a> · 托管 <a href="https://www.openstreetmap.fr/" target="_blank" rel="noopener">OSM France</a>'}},
  {id:'cyclosm',g:'w',n:'CyclOSM',u:'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',o:{maxZoom:19,subdomains:'abc',attribution:OSMA+' · <a href="https://www.cyclosm.org" target="_blank" rel="noopener">CyclOSM</a>'}},
- {id:'cartolight',g:'w',n:'CARTO Positron（浅色）',u:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
- {id:'cartodark',g:'w',n:'CARTO Dark Matter（深色）',u:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',o:{maxZoom:20,subdomains:'abcd',attribution:CARTOA}},
- {id:'natgeo',g:'t',n:'Esri 国家地理风格',u:'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:16,attribution:ESRIA('National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')}},
+ {id:'esri',g:'w',n:'Esri 街道图',u:ESRI+'World_Street_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Esri, HERE, Garmin, USGS, Intermap, NRCAN, Esri Japan, METI, Esri China (Hong Kong), TomTom')}},
+ {id:'esrigray',g:'w',n:'Esri 浅灰底图',u:ESRI+'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:16,attribution:ESRIA('Esri, HERE, Garmin, OpenStreetMap contributors')}},
+ {id:'esridark',g:'w',n:'Esri 深灰底图',u:ESRI+'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:16,attribution:ESRIA('Esri, HERE, Garmin, OpenStreetMap contributors')}},
+ {id:'natgeo',g:'t',n:'Esri 国家地理风格',u:ESRI+'NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:16,attribution:ESRIA('National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')}},
  {id:'topo',g:'t',n:'OpenTopoMap（地形）',u:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',o:{maxZoom:17,subdomains:'abc',attribution:'Kartendaten: '+OSMA+', SRTM | Kartendarstellung: © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC-BY-SA</a>)'}},
- {id:'esrisat',g:'t',n:'Esri 卫星影像',u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community')}},
+ {id:'esrisat',g:'t',n:'Esri 卫星影像',u:ESRI+'World_Imagery/MapServer/tile/{z}/{y}/{x}',o:{maxZoom:19,attribution:ESRIA('Esri, Maxar, Earthstar Geographics, and the GIS User Community')}},
+ {id:'nasa',g:'t',n:'NASA 蓝色弹珠（地形晕渲）',u:'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',o:{maxZoom:8,maxNativeZoom:8,attribution:'Imagery <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a> (Blue Marble)'}},
  {id:'gaode',g:'c',gcj:1,n:'高德地图（中文标注）',u:'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',o:{maxZoom:18,minZoom:3,subdomains:'1234',attribution:GDA}},
  {id:'gaodesat',g:'c',gcj:1,n:'高德卫星影像',u:'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',o:{maxZoom:18,minZoom:3,subdomains:'1234',attribution:GDA}}];
 const TGROUP={w:'🌍 全球街道图',t:'🏔️ 地形 · 卫星',c:'🇨🇳 中国大陆友好（GCJ-02，已自动校正标记）'};
-const AUTO_IDS=['carto','esri','osm','osmde','hot','gaode','natgeo','topo','cyclosm'];
+const AUTO_IDS=['osm','esri','osmde','osmfr','hot','gaode','natgeo','topo','cyclosm','nasa'];
 window.__tileLog=[];
 /* WGS-84 -> GCJ-02 (only inside mainland China; elsewhere the two are identical) */
 function wgs2gcj(lat,lng){const out=lng<72.004||lng>137.8347||lat<0.8293||lat>55.8271;if(out)return [lat,lng];
@@ -240,8 +242,8 @@ function liveMap(box,data,onPick){
     const ctl=new Ctl({position:'topright'}).addTo(map),cd=ctl.getContainer(),stEl=$('.mst',cd),sel=$('select',cd);
     const status=(c,t)=>{stEl.className='mst '+c;stEl.textContent=t;box.dataset.tiles=c+':'+(st.idx>=0?TILES[st.idx].id:'none')};
     const T=()=>window.__tileTimeout||6000;
-    /* dark theme: prefer the dark CARTO style when CARTO is the reachable host */
-    const pref=id=>{const dk=root.dataset.theme==='dark';return dk&&id==='carto'?'cartodark':!dk&&id==='cartodark'?'carto':id};
+    /* auto mode keeps the ranked provider as is (hook kept for future theme-specific styles) */
+    const pref=id=>id;
     function clear(){clearTimeout(st.timer);if(st.layer){const ly=st.layer;st.layer=null;map.removeLayer(ly);ly.off('tileload tileerror')}}
     function off(msg){clear();st.idx=-1;relocate(false);status('off',msg);window.__tileLog.push([data.base,'offline'])}
     function use(i){clear();

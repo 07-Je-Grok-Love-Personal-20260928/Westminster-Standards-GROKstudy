@@ -124,7 +124,7 @@ def mapblock(m, intro=True):
 <div class="mtabs" role="tablist" aria-label="地图视图"><button role="tab" class="on" aria-selected="true" data-v="c">🎨 手绘示意图</button>{'<button role="tab" aria-selected="false" data-v="s">🎬 情景讲解</button>' if STORY.get(mid) else ''}<button role="tab" aria-selected="false" data-v="l">🛰️ 实景地图</button><button class="mplay" type="button" aria-label="按时间顺序播放">▶ 按时间播放</button></div>
 <div class="mview mv-c on">{concept(m)}</div>
 {f'<div class="mview mv-s">{SCENES[mid]() if mid in SCENES else ""}{story(mid,m["title"])}</div>' if STORY.get(mid) else ''}
-<div class="mview mv-l"><div class="lmap" data-base="{m['base']}"></div><p class="muted small lcap">🛰️ <b>13 个免密钥地图源</b>（CARTO · Esri · OpenStreetMap · OSM 德国/法国 · CyclOSM · OpenTopoMap · 高德等），「⚡自动」先测速再选最快的一家，失败自动换下一家；全部不可用时显示本站自带的 <b>Natural Earth 离线底图</b>（永不失效）。右上角可手动切换来源、↻ 重新测速。高德地图采用 GCJ-02 坐标，切换到高德时标记会自动校正。</p></div>
+<div class="mview mv-l"><div class="lmap" data-base="{m['base']}"></div><p class="muted small lcap">🛰️ <b>14 个免密钥地图源</b>（OpenStreetMap 及德国/法国镜像 · HOT · CyclOSM · OpenTopoMap · Esri · NASA · 高德），「⚡自动」先测速再选最快的一家，失败自动换下一家；全部不可用时显示本站自带的 <b>Natural Earth 离线底图</b>（永不失效）。右上角可手动切换来源、↻ 重新测速。高德地图采用 GCJ-02 坐标，切换到高德时标记会自动校正。</p></div>
 <script type="application/json" class="mdata">{json.dumps(data,ensure_ascii=False,separators=(',',':'))}</script>
 <div class="minfo" aria-live="polite"><span class="muted">👆 点按地图上的地点，或点「▶ 按时间播放」。</span></div>
 <div class="grid g2 mside"><div class="card"><h4>📍 地点（按编号）</h4><ol class="mplaces">{pl}</ol></div><div class="card"><h4>⏳ 本图时间线</h4><ol class="mtl">{tl}</ol></div></div>
