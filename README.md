@@ -1,16 +1,16 @@
-# 威斯敏斯特标准-20261114-v3.2-GROKstudy
+# 威斯敏斯特标准-20261114-v3.3-GROKstudy
 
-**Westminster-Standards-20261114-v3.2-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.2 聚焦 **更稳的地图（14 个在线源 + 离线底图）· 情景讲解动画 · 更多历史地图 · 标注与背诵模式 · 小面积毛玻璃**（v3.1 为真机流畅度，v3.0 为历史 · 地图 · 文化）。
+**Westminster-Standards-20261114-v3.3-GROKstudy**：《威斯敏斯特信仰告白》《威斯敏斯特大要理问答》《威斯敏斯特小要理问答》深度学习站（简体中文）。v3.3 聚焦 **三级目录（可折叠、可拖动拉宽、滚动高亮）与全站结构分组**（v3.2 为地图 · 情景讲解 · 标注模式，v3.1 为真机流畅度，v3.0 为历史 · 地图 · 文化）。
 
-## 🌐 在线访问（v3.2，当前版本）
+## 🌐 在线访问（v3.3，当前版本）
 
 | 平台 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-grok-love-personal-20260928.github.io/Westminster-Standards-GROKstudy/ |
-| Surge | https://westminster-standards-20261114-v3-2-grokstudy.surge.sh |
-| Netlify | https://westminster-standards-20261114-v3-2-grokstudy.netlify.app |
+| Surge | https://westminster-standards-20261114-v3-3-grokstudy.surge.sh |
+| Netlify | https://westminster-standards-20261114-v3-3-grokstudy.netlify.app |
 
-GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.2-20261114
+GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.3-20261114
 
 源码仓库：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy
 
@@ -18,13 +18,21 @@ GitHub Release：https://github.com/07-Je-Grok-Love-Personal-20260928/Westminste
 
 | 版本 | Git 标签 / Release（含整站 zip） | Surge | Netlify |
 |---|---|---|---|
+| v3.2（2026-11-14） | [v3.2-20261114](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.2-20261114) | https://westminster-standards-20261114-v3-2-grokstudy.surge.sh | https://westminster-standards-20261114-v3-2-grokstudy.netlify.app |
 | v3.1（2026-10-23） | [v3.1-20261023](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.1-20261023) | https://westminster-standards-20261023-v3-1-grokser.surge.sh | https://westminster-standards-20261023-v3-1-grokser.netlify.app |
 | v3.0（2026-10-23） | [v3.0-20261023](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v3.0-20261023) | https://westminster-standards-20261023-v3-grokser.surge.sh | https://westminster-standards-20261023-v3-grokser.netlify.app |
 | v2.1（2026-10-22） | [v2.1-20261022](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.1-20261022) | https://westminster-standards-20261022-v2-1-grokser.surge.sh | https://westminster-standards-20261022-v2-1-grokser.netlify.app |
 | v2.0（2026-10-21） | [v2.0-20261021](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v2.0-20261021) | https://westminster-standards-20261021-v2-grokser.surge.sh | https://westminster-standards-20261021-v2-grokser.netlify.app |
 | v1.0（2026-10-20） | [v1.0-20261020](https://github.com/07-Je-Grok-Love-Personal-20260928/Westminster-Standards-GROKstudy/releases/tag/v1.0-20261020) | https://westminster-standards-20261020-v1-grokser.surge.sh | https://westminster-standards-20261020-v1-grokser.netlify.app |
 
-GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v3.1-20261023`（或 `v3.0-20261023`、 `v2.1-20261022`、`v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
+GitHub Pages 始终显示最新版本。恢复旧版：`git checkout v3.2-20261114`（或 `v3.1-20261023`、`v3.0-20261023`、 `v2.1-20261022`、`v2.0-20261021`、`v1.0-20261020`；静态站点在 `docs/`），或下载对应 Release 中的 zip。
+
+## 📑 目录（v3.3）
+
+- **三级目录**：每页的大纲在构建时生成（`generator/toc.py`，包括尚未挂载的渐进加载内容），一级标题加序号（一、二、三…，页面上的一级标题同步显示序号），二级、三级逐级折叠（▸ 箭头），顶部 ⊞ 全部展开 / ⊟ 全部折叠，可筛选。
+- **可拖动拉宽**：拖动目录右边缘（鼠标、触屏、笔均可；键盘聚焦后按 ←/→），宽度 220px 至屏幕宽度 60%（手机抽屉最多 90%），保存在本机、页面加载前即应用；双击边缘恢复默认 300px。长标题单行显示，被截断时悬停显示全文。
+- **滚动高亮**：滚动时高亮当前所在的条目并自动展开其上级（目录可见时才计算；二分查找，每 140ms 最多一次）。电脑端可隐藏，手机为左侧抽屉。
+- **各页结构**：信仰告白 = 导览 + 七大板块（一级）→ 33 章（二级）→ 172 节（三级）；大/小要理 = 导览 · 当信什么 · 当尽本分（一级）→ 各板块（二级）→ 每一问（三级）；背诵版 = 三份文件 → 每 10 问 / 每章 → 每一问；信经与联合信条 = 四部文献 → 信经 / 条目 / 部分 → 主日 / 条款；地图集 = 总览 · 欧陆 · 不列颠 · 走向世界 · 两大家族 → 各幅地图 → 地点 / 时间线 / 文化特征；总览、深度对比、记忆训练也各分为三个一级部分。
 
 ## 📚 内容
 
@@ -208,6 +216,7 @@ v2.1 的主要改进：流程图与思维导图在构建时预渲染为 SVG，�
 ```
 docs/            # 发布的静态网站（GitHub Pages / Surge / Netlify 均发布此目录）
 generator/           # 生成器（Python 3）
+  toc.py                # v3.3：构建时生成三级大纲（目录数据、一级序号）
   data/standards.json   # 从 RTF-USA PDF 提取的西敏三份文件（含证明经文）
   data/cci_struct.json  # 从 ccifellowship.org 抓取的信经与三项联合信条
   content_wcf.py        # 信仰告白逐章解读
@@ -231,7 +240,7 @@ generator/           # 生成器（Python 3）
 
 部署：
 ```bash
-npx -y surge docs westminster-standards-20261114-v3-2-grokstudy.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
+npx -y surge docs westminster-standards-20261114-v3-3-grokstudy.surge.sh   # 部署后删除 surge 生成的 docs/CNAME
 env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --site <site-id>
 ```
 
@@ -246,6 +255,6 @@ env -u NETLIFY_AUTH_TOKEN npx -y netlify-cli@latest deploy --prod --dir docs --s
 | v2.0 | 2026-10-21 | **性能**：移除大面积 backdrop-filter 与模糊动画（仅顶栏保留轻度毛玻璃）；Mermaid（ESM 分包）与 Leaflet 改为进入视口才加载；长内容 `content-visibility:auto`；滚动处理 rAF 节流 + passive；脚本 defer；去掉阻塞渲染的网络字体；电脑端 Lenis 丝滑滚动（手机原生）；尊重“减少动态效果”。**主题**：5 套配色 × 浅/深/跟随系统，无闪烁。**标注系统**：统一图例（粗体/彩色术语/荧光/实线·虚线·波浪下划线/交叉索引/提示框）。**内容**：每章新增「长老会正统」与「常见误解」，解读改为标签页以精简篇幅；1647原文 vs 美国修订本对照；救恩次序链；篇幅统计、环形图、韦恩图、问题→文件流程图、两大传统谱系图、背诵进度环。**引文规范**：“ ”只用于逐字原文（程序核对 RTF 译本与 ccifellowship 语料，圣经引文按和合本核对），其余改用「 」。 |
 | v1.0 | 2026-10-20 | 首次发布：10 个页面；三份西敏文件全文与证明经文；逐章/分组解读；时间线、故事线、互动地图；Mermaid 流程图与思维导图；深度对比；背诵模式与记忆训练；三大普世信经与三项联合信条原文；毛玻璃 UI、深浅色主题、可隐藏目录、手机/平板/电脑自适应。 |
 
-归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`、`v3.0-20261023`、`v3.1-20261023`、`v3.2-20261114`，每个都有对应的 GitHub Release（含整站 zip）。
+归档：Git 标签 `v1.0-20261020`、`v2.0-20261021`、`v2.1-20261022`、`v3.0-20261023`、`v3.1-20261023`、`v3.2-20261114`、`v3.3-20261114`，每个都有对应的 GitHub Release（含整站 zip）。
 
 后续版本请按 `主题-日期-版本号-GROKstudy` 规则（v3.1 及以前为 `-grokser`）更新 Surge / Netlify 域名，并在此表追加记录。
