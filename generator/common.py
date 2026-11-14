@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import html, re, json
-VERSION='v3.2'; DATE='2026-11-14'
+VERSION='v3.3'; DATE='2026-11-14'
 SITE_TITLE='威斯敏斯特标准 · 深度学习站'
 PAGES=[('index.html','🏠','总览'),('history.html','🗺️','历史·地理'),('atlas.html','🧭','地图集'),('wcf.html','📘','信仰告白'),('wlc.html','📗','大要理问答'),('wsc.html','📙','小要理问答'),('compare.html','⚖️','深度对比'),('recite.html','🎙️','背诵版'),('memory.html','🧠','记忆训练'),('creeds.html','📜','信经与联合信条'),('sources.html','🔗','来源')]
 CATS={'rev':('启示论','📖'),'god':('神论','✨'),'man':('人论·罪','💔'),'cov':('圣约','🤝'),'chr':('基督论','✝️'),'sal':('救恩论','🌱'),'law':('律法·伦理·敬拜','📜'),'chu':('教会·圣礼','⛪'),'end':('末世论','🌅')}
