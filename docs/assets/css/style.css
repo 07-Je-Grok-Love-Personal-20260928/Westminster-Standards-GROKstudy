@@ -492,18 +492,23 @@ main h2.h:nth-of-type(3n) .ic{background:linear-gradient(135deg,var(--a3),var(--
 @keyframes rvflow{to{transform:translateX(650%)}}
 .rvx figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:14px;font-size:13px}
 .rvx-k i{display:inline-block;width:22px;height:6px;border-radius:4px;margin-right:6px;vertical-align:2px}.rvx-k .k1{background:#0284c7}.rvx-k .k2{background:#16a34a}
-@media (min-width:1100px){.rvx ol{grid-template-columns:repeat(12,minmax(0,1fr))}.rvx-line{top:40px}}
-@media (max-width:1099px){.rvx-line{display:none}.rvx ol{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}}
-@media (max-width:420px){.rvx ol{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.no-motion .rvx-line i{animation:none}
-@media (prefers-reduced-motion:reduce){.rvx li{opacity:1;transform:none;transition:none}.rvx-line i{animation:none}}
+.rvx{container-type:inline-size}
+.rvx ol{grid-template-columns:repeat(auto-fill,minmax(108px,1fr))}.rvx-line{display:none}
+@container (min-width:1180px){.rvx ol{grid-template-columns:repeat(12,minmax(0,1fr))}.rvx-line{display:block}}
+.rvx-ic{position:relative}
+.rvx-ic::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--a3);opacity:0;pointer-events:none}
+.rvx.run .rvx-ic::after{animation:rvping 6s ease-out calc(var(--i)*.45s) infinite}
+@keyframes rvping{0%{opacity:.9;transform:scale(.8)}9%{opacity:0;transform:scale(1.35)}100%{opacity:0;transform:scale(1.35)}}
+@media (max-width:420px){.rvx ol{grid-template-columns:repeat(3,minmax(0,1fr))}.rvx small{font-size:12px}}
+.no-motion .rvx-line i,.no-motion .rvx-ic::after{animation:none!important}
+@media (prefers-reduced-motion:reduce){.rvx li{opacity:1;transform:none;transition:none}.rvx-line i,.rvx-ic::after{animation:none!important}}
 /* ===== v3.2 同一真理 · 三种密度 ===== */
 .dens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin-top:6px}
 .dn{min-width:0;padding:12px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c)}
 .dn-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.dn-h b{font-size:15px}
-.dn-bar{position:relative;height:18px;margin:8px 0 6px;border-radius:9px;background:color-mix(in srgb,var(--c) 12%,transparent);overflow:hidden}
+.dn-bar{position:relative;display:flex;align-items:center;height:20px;margin:8px 0 6px;border-radius:9px;background:color-mix(in srgb,var(--c) 12%,transparent);overflow:hidden}
 .dn-bar i{position:absolute;inset:0;background:var(--c);opacity:.75;border-radius:9px;transform-origin:left;transform:scaleX(var(--w));transition:transform .9s cubic-bezier(.2,.8,.2,1)}
-.dn-bar em{position:relative;font:700 12px/18px var(--sans);font-style:normal;padding-left:8px;color:var(--ink)}
+.dn-bar em{position:relative;font:700 12px/1 var(--sans);font-style:normal;padding-left:8px;color:var(--ink)}
 .dn-q{margin:4px 0;font-weight:700;font-size:14px;color:var(--ink2)}
 .dn-t{margin:4px 0 8px;font-size:15px;line-height:1.8}
 .dn-n{margin:0;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.65;color:var(--ink2)}
