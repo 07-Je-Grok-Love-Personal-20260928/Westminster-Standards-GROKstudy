@@ -240,7 +240,9 @@ function liveMap(box,data,onPick){
     const opts=Object.entries(TGROUP).map(([g,n])=>`<optgroup label="${n}">`+TILES.filter(t=>t.g===g).map(t=>`<option value="${t.id}">${t.n}</option>`).join('')+'</optgroup>').join('');
     const Ctl=L.Control.extend({onAdd(){const d=L.DomUtil.create('div','mctl');d.innerHTML='<span class="mst wait">⏳ 准备瓦片…</span><div class="mrow"><select aria-label="地图底图来源"><option value="auto">⚡ 自动：测速选最快，失败自动切换</option>'+opts+'<optgroup label="🧭 离线"><option value="none">仅离线底图（Natural Earth）</option></optgroup></select><button type="button" class="mre" title="重新测速并重试" aria-label="重新测速并重试">↻</button></div>';L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d}});
     const ctl=new Ctl({position:'topright'}).addTo(map),cd=ctl.getContainer(),stEl=$('.mst',cd),sel=$('select',cd);
-    const status=(c,t)=>{stEl.className='mst '+c;stEl.textContent=t;box.dataset.tiles=c+':'+(st.idx>=0?TILES[st.idx].id:'none')};
+    const status=(c,t)=>{stEl.className='mst '+c;stEl.textContent=t;box.dataset.tiles=c+':'+(st.idx>=0?TILES[st.idx].id:'none');
+      /* offline layer only shows while no online layer is up (some providers have transparent water; avoids double coastlines) */
+      const hide=c==='on';['basePane','seaPane'].forEach(n=>{const pn=map.getPane(n);if(pn)pn.style.visibility=hide?'hidden':''})};
     const T=()=>window.__tileTimeout||6000;
     /* auto mode keeps the ranked provider as is (hook kept for future theme-specific styles) */
     const pref=id=>id;
